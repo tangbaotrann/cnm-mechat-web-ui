@@ -1,0 +1,59 @@
+// header
+.fullname {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-left: 10px;
+    margin-bottom: 8px;
+}
+
+// body
+.body {
+    font-size: 1.4rem;
+    margin-left: 4px;
+
+    a[href] {
+        text-decoration: none;
+        color: var(--text);
+    }
+}
+
+.file {
+    padding: 8px;
+    margin-bottom: 4px;
+
+    &:hover {
+        background-color: var(--grey-400);
+    }
+}
+
+.setting {
+    padding: 6px;
+
+    &:hover {
+        background-color: var(--grey-400);
+    }
+}
+
+.separator {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 8px;
+}
+
+// footer
+.footer {
+    a[href] {
+        text-decoration: none;
+        color: var(--text);
+    }
+}
+
+.logout {
+    padding: 6px;
+    font-size: 1.4rem;
+    margin-left: 4px;
+
+    &:hover {
+        background-color: var(--grey-400);
+    }
+}

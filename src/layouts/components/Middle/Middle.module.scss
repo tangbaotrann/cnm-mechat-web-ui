@@ -1,0 +1,59 @@
+.wrapper {
+    flex: 3;
+}
+
+// Search info
+.search-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+// Items (add friend, create group)
+.items {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    margin-top: 10px;
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+.item {
+    margin-right: 12px;
+
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+// Sidebar hr 
+.sidebar-hr {
+    margin-top: 20px;
+}
+
+// Scrollbar Css
+::-webkit-scrollbar {
+    border-radius: 0;
+    width: 6px;
+}
+
+// Conversations
+.conversations {
+    margin-top: 6px;
+    top: 80px;
+    height: calc(100vh - 80px);
+    overflow-y: scroll;
+    overflow-y: overlay;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .15);
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+

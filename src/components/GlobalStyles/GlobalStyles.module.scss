@@ -1,0 +1,36 @@
+@import 'normalize.css';
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@200;300;400;500;600;700&display=swap');
+
+// init var
+:root {
+    // color
+    --primary: #0091ff;
+    --text: #001a33;
+    --text-opacity: #161823bf;
+    --white: #ffffff;
+    --red: #db342e;
+    --grey-400: #e8eaef;
+    --not-active: #bdb9b9;
+    --bg-message: #e5efff;
+    --border: #e5e7eb;
+
+    // font-family
+    --font-family: 'Segoe UI';
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+// default
+body {
+    font-family: var(--font-family);
+    color: var(--text);
+    overflow-y: overlay;
+}

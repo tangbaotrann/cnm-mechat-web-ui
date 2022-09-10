@@ -1,0 +1,92 @@
+.messenger {
+    display: flex;
+    flex-direction: column;
+    // height: calc(100vh - 10px);
+    height: 100vh;
+    padding: 10px;
+    flex: 1;
+}
+
+// Messenger header
+.messenger-header {
+    display: flex;
+    align-items: center;
+}
+
+.avatar-image {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.info {
+    flex: 1;
+    line-height: 18px;
+}
+
+.username {
+    font-size: 1.6rem;
+}
+
+.time-online {
+    font-size: 1.1rem;
+    color: var(--text-opacity);
+}
+
+.icon {
+    font-size: 1.4rem;
+    margin: 0 6px;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+// Messenger body
+.messenger-body {
+    overflow-y: scroll;
+    height: 100%;
+    margin: 10px 0 10px 0;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: var(--grey-400);
+}
+
+// Messenger footer
+.messenger-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.message-input {
+    width: 80%;
+    height: 120px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 1.4rem;
+    resize: none;
+
+    &:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+}
+
+.send-btn {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    margin-left: 6px;
+    flex: 1;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}

@@ -1,0 +1,45 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.message-top {
+    display: flex;
+}
+
+.message-top-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.message-top-text {
+    padding: 10px;
+    margin: 0 10px;
+    border-radius: 20px;
+    background-color: var(--white);
+    color: var(--text);
+    font-size: 1.4rem;
+    max-width: 300px;
+}
+
+.message-bottom {
+    font-size: 1rem;
+    margin-top: 6px;
+    color: var(--text-opacity);
+}
+
+// Own people
+.own {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 10px;
+}
+
+.own .message-top-text {
+    background-color: var(--bg-message);
+    color: var(--text);
+}

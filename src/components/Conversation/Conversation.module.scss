@@ -1,0 +1,58 @@
+// List conversation
+.list-conversation {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--grey-400);
+        transition: background-color ease-in-out 200ms;
+    }
+}
+
+// Avatar
+.avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+// Content message
+.content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: 12px;
+}
+
+.username {
+    font-size: 1.6rem;
+    padding: 0 0 4px 0;
+}
+
+.message {
+    font-size: 1.4rem;
+}
+
+// Show notification and time
+.notification {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.time {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.badge {
+    border-radius: 50%;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 4px;
+    color: var(--white);
+    background-color: var(--red);
+}
