@@ -35,7 +35,7 @@ function Middle({ directory }) {
             <div className={cx('option')}></div>
 
             {/* hr */}
-            <hr className={cx('sidebar-hr')} />
+            <div className={cx('separator')}></div>
 
             {/* Conversation or MiddleDirectory */}
             {!directory ? (

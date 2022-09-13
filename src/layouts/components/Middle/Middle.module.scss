@@ -27,8 +27,10 @@
     }
 }
 
-// Sidebar hr 
-.sidebar-hr {
+.separator {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 8px;
     margin-top: 20px;
 }
 
