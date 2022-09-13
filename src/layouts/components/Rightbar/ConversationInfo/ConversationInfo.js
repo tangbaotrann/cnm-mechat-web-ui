@@ -34,7 +34,7 @@ function ConversationInfo() {
                         <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
                     </div>
                     <div className={cx('body')}>
-                        {/* render image (map) */}
+                        {/* render image (map) after */}
                         <div className={cx('body-list-image')}>
                             <img className={cx('item-image')} src={images.avt} alt="avatar" />
                         </div>
