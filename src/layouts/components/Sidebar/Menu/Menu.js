@@ -4,24 +4,25 @@ import TippyHeadless from '@tippyjs/react/headless';
 
 // me
 import styles from './Menu.module.scss';
-import Popper from '../Popper';
-import MenuItem from './MenuItem';
+import Popper from '~/components/Popper';
+import { MenuSettingItem } from '~/layouts/components/Sidebar/Menu';
 
 const cx = classNames.bind(styles);
 
-function Menu({ children, hideOnClick = false }) {
+function Menu({ children }) {
     return (
         <TippyHeadless
             render={(attrs) => (
-                <div className={cx('menu-avatar')} tabIndex="-1" {...attrs}>
+                <div tabIndex="-1" {...attrs}>
+                    {/* Popper Menu parent */}
                     <Popper className={cx('menu-popper')}>
-                        <MenuItem />
+                        <MenuSettingItem />
                     </Popper>
                 </div>
             )}
-            delay={[200, 400]}
-            placement="right-end"
-            hideOnClick={hideOnClick}
+            delay={[0, 100]}
+            placement="top-end"
+            trigger="click"
             interactive
         >
             {children}

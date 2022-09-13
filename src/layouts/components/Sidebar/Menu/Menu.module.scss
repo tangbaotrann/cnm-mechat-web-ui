@@ -1,0 +1,77 @@
+// Popper parent
+.menu-popper {
+    width: 280px;
+}
+
+// Popper menu sub file
+.menu-popper-sub-file {
+    width: 110px;
+}
+
+// Popper menu sub language
+.menu-popper-sub-language {
+    width: 102px;
+}
+
+// Popper menu sub language
+.menu-popper-sub-intro {
+    width: 170px;
+}
+
+// Popper icon setting
+.setting-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-option {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 8px;
+    cursor: pointer;
+    position: relative;
+
+    .icon-right {
+        position: absolute;
+        right: 0;
+    }
+
+    &:hover {
+        background-color: var(--grey-400);
+    }
+}
+
+.setting-icon {
+    color: var(--not-active);
+    font-size: 1.4rem;
+    margin-right: 8px;
+}
+
+.setting-item {
+    font-size: 1.4rem;
+}
+
+.separator {
+    height: 0.5px;
+    background-color: var(--border);
+    margin: 4px 8px;
+}
+
+// body
+.setting-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--grey-400);
+    }
+}
+
+// footer
+.footer .setting-option .setting-item {
+    color: red;
+}
