@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import images from '~/assets/images';
 import Register from '../Register/Register';
 import {useState, useEffect} from "react";
-  import {PhoneIphone, Lock} from '@material-ui/icons';
+import {PhoneIphone, Lock} from '@material-ui/icons';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 
@@ -62,7 +62,8 @@ function Login()
                              />  
                             </div>
                             <div className={cx('form-button')}>
-                                <button type="submit" variant="contained" color="primary">ĐĂNG NHẬP</button>
+                                <Link to="/Home"> <button type="submit" variant="contained" color="primary">ĐĂNG NHẬP</button></Link>
+                               
                             </div>
                             <div className={cx('form-forget')}>
                                  <a>Quên mật khẩu?</a>

@@ -15,17 +15,17 @@ function App() {
         <Router>
               
             <Routes>
-               {/* Home page
-                <Route exact path="/" element={<Home />} />
+              {/* Home page */}
+                <Route exact path="/Home" element={<Home />} />
 
                 {/* Directory page *
-                <Route path="/directory" element={<Directory />} />  */}
+                <Route path="/directory" element={<Directory />} />  
                 {/* Login */}
                 <Route exact path='/' element={<Login/>} />
                 {/* Register */}
                 <Route exact path='/Register' element={<Register/>} />
                 {/* ConfirmOTP */}
-             {/* <Route exact path='/ConfirmOTP' element={<ConfirmOTP/>} />  */}
+             <Route exact path='/ConfirmOTP' element={<ConfirmOTP/>} /> 
             </Routes>
            
         </Router>
