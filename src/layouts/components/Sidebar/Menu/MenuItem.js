@@ -1,6 +1,8 @@
 // libs
 import classNames from 'classnames/bind';
 import TippyHeadless from '@tippyjs/react/headless';
+import { useState } from 'react';
+import { Modal } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faGear,
@@ -19,15 +21,29 @@ import Popper from '~/components/Popper';
 const cx = classNames.bind(styles);
 
 function MenuItem() {
+    const [open, setOpen] = useState(false);
+
+    // Handle open/ close model intro
+    const handleModelIntroOpen = () => {
+        setOpen(true);
+    };
+    const handleModelIntroClose = () => {
+        setOpen(false);
+    };
+
     // Menu popper sub language
     const renderMenuPopperSubLanguage = () => {
         return (
             <>
                 <div className={cx('setting-option')}>
-                    <p className={cx('setting-item')}>Tiếng Việt</p>
+                    <button className={cx('setting-item-btn')}>
+                        <p className={cx('setting-item')}>Tiếng Việt</p>
+                    </button>
                 </div>
                 <div className={cx('setting-option')}>
-                    <p className={cx('setting-item')}>Tiếng Anh</p>
+                    <button className={cx('setting-item-btn')}>
+                        <p className={cx('setting-item')}>Tiếng Anh</p>
+                    </button>
                 </div>
             </>
         );
@@ -38,10 +54,30 @@ function MenuItem() {
         return (
             <>
                 <div className={cx('setting-option')}>
-                    <p className={cx('setting-item')}>Thông tin phiên bản</p>
+                    <button className={cx('setting-item-btn')} onClick={handleModelIntroOpen}>
+                        <p className={cx('setting-item')}>Thông tin phiên bản</p>
+                    </button>
+                    {/* Model intro */}
+                    <Modal
+                        open={open}
+                        onClose={handleModelIntroClose}
+                        style={{
+                            position: 'absolute',
+                            border: '2px solid #000',
+                            backgroundColor: 'gray',
+                            boxShadow: '2px solid black',
+                            height: 80,
+                            width: 240,
+                            margin: 'auto',
+                        }}
+                    >
+                        <h1>Model me</h1>
+                    </Modal>
                 </div>
                 <div className={cx('setting-option')}>
-                    <p className={cx('setting-item')}>Trung tâm hỗ trợ</p>
+                    <button className={cx('setting-item-btn')}>
+                        <p className={cx('setting-item')}>Trung tâm hỗ trợ</p>
+                    </button>
                 </div>
             </>
         );
@@ -52,11 +88,15 @@ function MenuItem() {
             <div className={cx('setting-header')}>
                 <div className={cx('setting-option')}>
                     <FontAwesomeIcon className={cx('setting-icon')} icon={faUser} />
-                    <p className={cx('setting-item')}>Thông tin tài khoản</p>
+                    <button className={cx('setting-item-btn')}>
+                        <p className={cx('setting-item')}>Thông tin tài khoản</p>
+                    </button>
                 </div>
                 <div className={cx('setting-option')}>
                     <FontAwesomeIcon className={cx('setting-icon')} icon={faGear} />
-                    <p className={cx('setting-item')}>Cài đặt</p>
+                    <button className={cx('setting-item-btn')}>
+                        <p className={cx('setting-item')}>Cài đặt</p>
+                    </button>
                 </div>
             </div>
 
@@ -70,7 +110,9 @@ function MenuItem() {
                             <div tabIndex="-1" {...attrs}>
                                 <Popper className={cx('menu-popper-sub-file')}>
                                     <div className={cx('setting-option')}>
-                                        <p className={cx('setting-item')}>Quản lý file</p>
+                                        <button className={cx('setting-item-btn')}>
+                                            <p className={cx('setting-item')}>Quản lý file</p>
+                                        </button>
                                     </div>
                                 </Popper>
                             </div>
@@ -83,7 +125,9 @@ function MenuItem() {
                     >
                         <div className={cx('setting-option')}>
                             <FontAwesomeIcon className={cx('setting-icon')} icon={faFloppyDisk} />
-                            <p className={cx('setting-item')}>Lưu trữ</p>
+                            <button className={cx('setting-item-btn')}>
+                                <p className={cx('setting-item')}>Lưu trữ</p>
+                            </button>
                             <div className={cx('icon-right')}>
                                 <FontAwesomeIcon className={cx('setting-icon')} icon={faAngleRight} />
                             </div>
@@ -109,7 +153,9 @@ function MenuItem() {
                     >
                         <div className={cx('setting-option')}>
                             <FontAwesomeIcon className={cx('setting-icon')} icon={faGlobe} />
-                            <p className={cx('setting-item')}>Ngôn ngữ</p>
+                            <button className={cx('setting-item-btn')}>
+                                <p className={cx('setting-item')}>Ngôn ngữ</p>
+                            </button>
                             <div className={cx('icon-right')}>
                                 <FontAwesomeIcon className={cx('setting-icon')} icon={faAngleRight} />
                             </div>
@@ -133,7 +179,9 @@ function MenuItem() {
                     >
                         <div className={cx('setting-option')}>
                             <FontAwesomeIcon className={cx('setting-icon')} icon={faCircleInfo} />
-                            <p className={cx('setting-item')}>Giới thiệu</p>
+                            <button className={cx('setting-item-btn')}>
+                                <p className={cx('setting-item')}>Giới thiệu</p>
+                            </button>
                             <div className={cx('icon-right')}>
                                 <FontAwesomeIcon className={cx('setting-icon')} icon={faAngleRight} />
                             </div>
@@ -147,7 +195,9 @@ function MenuItem() {
             <div className={cx('footer')}>
                 <div className={cx('setting-option')}>
                     <FontAwesomeIcon className={cx('setting-icon')} icon={faRightFromBracket} />
-                    <p className={cx('setting-item')}>Đăng xuất</p>
+                    <button className={cx('setting-item-btn')}>
+                        <p className={cx('setting-item')}>Đăng xuất</p>
+                    </button>
                 </div>
             </div>
         </>

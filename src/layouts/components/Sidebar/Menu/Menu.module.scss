@@ -42,6 +42,14 @@
     }
 }
 
+.setting-item-btn {
+    background-color: transparent;
+    color: var(--text);
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
 .setting-icon {
     color: var(--not-active);
     font-size: 1.4rem;
