@@ -26,14 +26,13 @@ function Sidebar() {
                 </div>
 
                 <div className={cx('option-items')}>
-
-                    <NavLink className={(nav) => cx('item', { active: nav.isActive })} to="/Home">
+                    {/* <NavLink className={(nav) => cx('item', { active: nav.isActive })} to="/me.chat">
                         <FontAwesomeIcon icon={faComment} />
                         <span className={cx('badge')}>5+</span>
                     </NavLink>
                     <NavLink className={(nav) => cx('item', { active: nav.isActive })} to="/PhoneBook">
                         <FontAwesomeIcon icon={faAddressBook} />
-                    </NavLink>
+                    </NavLink> */}
 
                     <Tippy
                         className={cx('tool-tip')}
@@ -54,7 +53,7 @@ function Sidebar() {
                         placement="bottom-end"
                         offset={[40, -6]}
                     >
-                        <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="/directory">
+                        <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="/phonebook">
                             <FontAwesomeIcon icon={faAddressBook} />
                         </NavLink>
                     </Tippy>

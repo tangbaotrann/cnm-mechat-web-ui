@@ -29,71 +29,60 @@ function Register() {
     };
     const handleSubmitForm = (e) => {};
 
-
-      
-    
-
     return (
-        <body>
-            <div className={cx('wrapper')}>
-                <div className={cx('logo')}>
-                    <img className={cx('logo-image')} src={images.logo} alt="" />
-                </div>
-
-
-                <div className={cx('login-title')}>
-                    <h1>Đăng Ký</h1>
-                </div>
-
-                <div className={cx('register-form')}>
-                    <form onSubmit={handleSubmitForm}>
-                        <div className={cx('form-phoneNumber')}>
-                            <PhoneIphone className={cx('item')} />
-                            <input
-                                type="text"
-                                placeholder="Số điện thoại"
-                                name="phoneNumber"
-                                onChange={handleChangeInput}
-                            />
-                        </div>
-                        <div className={cx('form-user')}>
-                            <Person className={cx('item')} />
-                            <input
-                                type="text"
-                                placeholder="Tên người dùng"
-                                name="userName"
-                                onChange={handleChangeInput}
-                            />
-                        </div>
-                        <div className={cx('form-password')}>
-                            <Lock className={cx('item')} />
-                            <input
-                                type="password"
-                                placeholder="Mật khẩu"
-                                name="password"
-                                onChange={handleChangeInput}
-                            />
-                        </div>
-                        <div className={cx('form-password')}>
-                            <Lock className={cx('item')} />
-                            <input
-                                type="password"
-                                placeholder="Nhập lại mật khẩu"
-                                name="enterPassword"
-                                onChange={handleChangeInput}
-                            />  
-                            </div>
-                            <div className={cx('form-button')}>
-                            <Link to='/ConfirmOTP'><button type="submit" variant="contained" color="primary">ĐĂNG KÝ</button></Link>
-                            </div>
-                            <div className={cx('form-back')}>
-                            <ArrowLeft className={cx('item-back')}/><Link to="/" className={cx('back')}>Quay lại</Link>
-                            </div>    
-                        </form> 
-
-                </div>
+        <div className={cx('wrapper')}>
+            <div className={cx('logo')}>
+                <img className={cx('logo-image')} src={images.logo} alt="" />
             </div>
 
+            <div className={cx('login-title')}>
+                <h1>Đăng Ký</h1>
+            </div>
+
+            <div className={cx('register-form')}>
+                <form onSubmit={handleSubmitForm}>
+                    <div className={cx('form-phoneNumber')}>
+                        <PhoneIphone className={cx('item')} />
+                        <input
+                            type="text"
+                            placeholder="Số điện thoại"
+                            name="phoneNumber"
+                            onChange={handleChangeInput}
+                        />
+                    </div>
+                    <div className={cx('form-user')}>
+                        <Person className={cx('item')} />
+                        <input type="text" placeholder="Tên người dùng" name="userName" onChange={handleChangeInput} />
+                    </div>
+                    <div className={cx('form-password')}>
+                        <Lock className={cx('item')} />
+                        <input type="password" placeholder="Mật khẩu" name="password" onChange={handleChangeInput} />
+                    </div>
+                    <div className={cx('form-password')}>
+                        <Lock className={cx('item')} />
+                        <input
+                            type="password"
+                            placeholder="Nhập lại mật khẩu"
+                            name="enterPassword"
+                            onChange={handleChangeInput}
+                        />
+                    </div>
+                    <div className={cx('form-button')}>
+                        <Link to="/ConfirmOTP">
+                            <button type="submit" variant="contained" color="primary">
+                                ĐĂNG KÝ
+                            </button>
+                        </Link>
+                    </div>
+                    <div className={cx('form-back')}>
+                        <ArrowLeft className={cx('item-back')} />
+                        <Link to="/" className={cx('back')}>
+                            Quay lại
+                        </Link>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 }
 export default Register;
