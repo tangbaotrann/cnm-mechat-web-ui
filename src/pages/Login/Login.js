@@ -2,6 +2,7 @@ import styles from './Login.module.scss';
 import classNames from 'classnames/bind';
 import images from '~/assets/images';
 import Register from '../Register/Register';
+
 import {useState, useEffect} from "react";
 import {PhoneIphone, Lock} from '@material-ui/icons';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
@@ -32,24 +33,24 @@ function Login()
 
       };
     return(
-        <body>
-            <div className={cx('wrapper')}>
-                 <div className={cx('logo')}>
+            <div  className={cx('wrapper')}>
+                  <div className={cx('logo')}>
                     <img className={cx('logo-image')} src={images.logo} alt="" />
-                </div>
-                <div className={cx('login-title')}>
+                </div> 
+        
+                 <div className={cx('login-title')}>
                     <h1>Đăng Nhập
                     </h1>
-                </div>
+                </div> 
                 <div className={cx('login-form')}>
                        <form onSubmit={handleSubmit}>
-                            <div className={cx('form-phoneNumber')}>                                                  
+                       <div className={cx('form-phoneNumber')}>                                                  
                             <PhoneIphone className={cx('item')}/>
                             <input 
-                                    type="text"
-                                    placeholder='Số điện thoại'  
-                                    name="phoneNumber"
-                                    onChange={handleChangeInput}
+                                type="text"
+                                placeholder='Số điện thoại'
+                                name="phoneNumber"
+                                onChange={handleChangeInput}
                             />                           
                             </div> 
                             <div className={cx('form-password')}>
@@ -74,7 +75,7 @@ function Login()
                             <h1><a>Bạn chưa có tài khoản?</a> <Link to='/Register' className={cx('form-register-register')}>Đăng ký ngay </Link></h1>
                 </div>
             </div>
-        </body>
+ 
     );
 }
 export default Login;

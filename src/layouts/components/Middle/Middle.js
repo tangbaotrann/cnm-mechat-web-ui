@@ -41,7 +41,7 @@ function Middle({ directory }) {
             {!directory ? (
                 <div className={cx('conversations')}>
                     {users.map((user) => {
-                        return <Conversation key={user.id} user={user} />;
+                        return <Conversation key={user.id} user={user} />;                 
                     })}
                 </div>
             ) : (

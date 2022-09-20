@@ -34,15 +34,15 @@ function Register()
 
       
     return(
-        <body>
+     
             <div className={cx('wrapper')}>
                  <div className={cx('logo')}>
                     <img className={cx('logo-image')} src={images.logo} alt="" />
                 </div>
-                <div className={cx('login-title')}>
+                                <div className={cx('login-title')}>
                     <h1>Đăng Ký
                     </h1>
-                </div>
+                </div> 
                 <div className={cx('register-form')}>
                        <form onSubmit={handleSubmitForm} >
                             <div className={cx('form-phoneNumber')}>                                                  
@@ -82,7 +82,7 @@ function Register()
                             />  
                             </div>
                             <div className={cx('form-button')}>
-                                <button type="submit" variant="contained" color="primary"><Link to='/ConfirmOTP'/>ĐĂNG KÝ</button>
+                            <Link to='/ConfirmOTP'><button type="submit" variant="contained" color="primary">ĐĂNG KÝ</button></Link>
                             </div>
                             <div className={cx('form-back')}>
                             <ArrowLeft className={cx('item-back')}/><Link to="/" className={cx('back')}>Quay lại</Link>
@@ -92,7 +92,7 @@ function Register()
                 </div>
        
             </div>
-        </body>
+
     );
 }
 export default Register

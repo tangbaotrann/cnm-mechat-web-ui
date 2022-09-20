@@ -8,14 +8,15 @@ import Directory from './pages/Directory';
 //me too
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
-import ConfirmOTP from './pages/Register/ConfirmOTP/ConfirmOTP';
+import ConfirmOTP from './pages/ConfirmOTP/ConfirmOTP';
+import PhoneBook from './pages/PhoneBook/PhoneBook';
 function App() {
     return (
       
         <Router>
               
             <Routes>
-              {/* Home page */}
+           {/* Home page */}
                 <Route exact path="/Home" element={<Home />} />
 
                 {/* Directory page *
@@ -25,7 +26,9 @@ function App() {
                 {/* Register */}
                 <Route exact path='/Register' element={<Register/>} />
                 {/* ConfirmOTP */}
-             <Route exact path='/ConfirmOTP' element={<ConfirmOTP/>} /> 
+                <Route exact path='/ConfirmOTP' element={<ConfirmOTP/>} />  
+                {/* PhoneBook */} 
+                <Route exact path='/PhoneBook' element={<PhoneBook/>} /> 
             </Routes>
            
         </Router>

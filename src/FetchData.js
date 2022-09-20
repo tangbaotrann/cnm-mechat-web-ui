@@ -13,4 +13,22 @@ export const FetchUsers = [
         fullName: 'Nhựt Hào',
         userImg: '',
     },
+    {
+        id: 3,
+        username: 'Lê Tuấn',
+        fullName: 'Lê Tuấn',
+        userImg: `${images.tuan}`,
+    },
+    {
+        id: 4,
+        username: 'Minh Phương',
+        fullName: 'Minh Phương',
+        userImg: `${images.phuong}`,
+    },
+    {
+        id: 5,
+        username: 'Thành nhớ',
+        fullName: 'Thành nhớ',
+        userImg: `${images.nho}`,
+    },
 ];
