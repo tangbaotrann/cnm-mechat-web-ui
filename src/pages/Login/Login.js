@@ -1,9 +1,14 @@
 import styles from './Login.module.scss';
 import classNames from 'classnames/bind';
 import images from '~/assets/images';
-import { useState } from 'react';
-import { PhoneIphone, Lock } from '@material-ui/icons';
-import { Link } from 'react-router-dom';
+
+import Register from '../Register/Register';
+
+import {useState, useEffect} from "react";
+import {PhoneIphone, Lock} from '@material-ui/icons';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
+
 
 const cx = classNames.bind(styles);
 function Login() {
@@ -19,52 +24,48 @@ function Login() {
         console.log({ [name]: value });
         setUser({ ...user, [name]: value });
     };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // dispatch(user);
-        console.log(user);
-    };
-    return (
-        <body>
-            <div className={cx('wrapper')}>
-                <div className={cx('logo')}>
+      };
+    return(
+            <div  className={cx('wrapper')}>
+                  <div className={cx('logo')}>
                     <img className={cx('logo-image')} src={images.logo} alt="" />
-                </div>
-                <div className={cx('login-title')}>
-                    <h1>Đăng Nhập</h1>
-                </div>
+                </div> 
+        
+                 <div className={cx('login-title')}>
+                    <h1>Đăng Nhập
+                    </h1>
+                </div> 
                 <div className={cx('login-form')}>
-                    <form onSubmit={handleSubmit}>
-                        <div className={cx('form-phoneNumber')}>
-                            <PhoneIphone className={cx('item')} />
-                            <input
+                       <form onSubmit={handleSubmit}>
+                       <div className={cx('form-phoneNumber')}>                                                  
+                            <PhoneIphone className={cx('item')}/>
+                            <input 
                                 type="text"
-                                placeholder="Số điện thoại"
+                                placeholder='Số điện thoại'
                                 name="phoneNumber"
                                 onChange={handleChangeInput}
-                            />
-                        </div>
-                        <div className={cx('form-password')}>
-                            <Lock className={cx('password-item')} />
-                            <input
-                                type="password"
-                                placeholder="Mật khẩu"
-                                name="password"
-                                onChange={handleChangeInput}
-                            />
-                        </div>
-                        <div className={cx('form-button')}>
-                            <Link to="/me.chat">
-                                <button type="submit" variant="contained" color="primary">
-                                    ĐĂNG NHẬP
-                                </button>
-                            </Link>
-                        </div>
-                        <div className={cx('form-forget')}>
-                            <a href="/Register">Quên mật khẩu?</a>
-                        </div>
-                    </form>
+                            />                           
+                            </div> 
+                            <div className={cx('form-password')}>
+                             <Lock className={cx('password-item')}/>
+                             <input 
+                                    type="password" 
+                                    placeholder='Mật khẩu' 
+                                    name="password"
+                                    onChange={handleChangeInput}
+                             />  
+                            </div>
+                            <div className={cx('form-button')}>
+                                <Link to="/Home"> <button type="submit" variant="contained" color="primary">ĐĂNG NHẬP</button></Link>
+                               
+                            </div>
+                            <div className={cx('form-forget')}>
+                                 <a>Quên mật khẩu?</a>
+                            </div>    
+                        </form> 
+
+    
+
                 </div>
                 <div className={cx('form-register')}>
                     <h1>
@@ -75,7 +76,7 @@ function Login() {
                     </h1>
                 </div>
             </div>
-        </body>
+ 
     );
 }
 export default Login;

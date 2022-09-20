@@ -26,6 +26,15 @@ function Sidebar() {
                 </div>
 
                 <div className={cx('option-items')}>
+
+                    <NavLink className={(nav) => cx('item', { active: nav.isActive })} to="/Home">
+                        <FontAwesomeIcon icon={faComment} />
+                        <span className={cx('badge')}>5+</span>
+                    </NavLink>
+                    <NavLink className={(nav) => cx('item', { active: nav.isActive })} to="/PhoneBook">
+                        <FontAwesomeIcon icon={faAddressBook} />
+                    </NavLink>
+
                     <Tippy
                         className={cx('tool-tip')}
                         content="Tin nhắn"

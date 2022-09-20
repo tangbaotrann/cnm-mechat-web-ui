@@ -33,10 +33,12 @@
 ::-webkit-scrollbar-thumb {
     border-radius: 4px;
     background-color: rgba(0, 0, 0, .15);
+    background-color: red;
 }
 
 ::-webkit-scrollbar-track {
     border-radius: 0;
     background-color: rgba(0, 0, 0, 0);
+    
 }
 

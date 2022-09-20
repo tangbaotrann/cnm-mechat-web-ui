@@ -1,7 +1,3 @@
-// body{
-//     background-color: #87CEFA;
-//     width: 100%;
-// }
 .logo{
     display: block;
     margin-left: auto;
@@ -13,12 +9,10 @@
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-
-    border-radius: 50%
-    
+    border-radius: 50%   
 }
 .wrapper{
-    height: 750px;
+    // height: 750px;
     margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
@@ -35,7 +29,7 @@
 .login-form{
     margin-top: 20px;
     width: 100%;
-    height: 400px;
+    height: 350px;
     background-color: rgb(255, 255, 255);
     border-radius: 10px;
     box-sizing: border-box;
@@ -47,26 +41,27 @@
     width: 70%;
     height: auto;
     margin-left: 15%;
+    font-family:var(--font-family);
     border-bottom : solid 0.5px #D3D3D3;
-  
 }
 .form-phoneNumber input
 {
     width: 80%;
-    height: 40px;
+    height: 25px;
     margin-left: 8%;
     margin-top: 80px;
+    font-family:var(--font-family);
     margin-bottom: 10px;
    border: 0;
    outline: 0;
-   font-size: 2rem;
+   font-size: 1.7rem;
     background: transparent;
    transition: border-color 0.2s;
 }
 .form-phoneNumber .item
 {
     
-    font-size: 40px;
+    font-size: 25px;
     width: 10%;
     margin-top: 80px; 
 
@@ -82,25 +77,25 @@
 }
 .form-password .password-item
 {
-    font-size: 40px;
+    font-size: 25px;
     width: 10%;
 }
 .form-password input 
 {
     font-family:var(--font-family);
     width: 80%;
-    height: 40px;
+    height: 25px;
     margin-left: 8%;
     margin-bottom: 10px;
    border: 0;
    outline: 0;
-   font-size: 2rem;
+   font-size: 1.5rem;
    background: transparent;
    transition: border-color 0.2s;
 }
 .form-button button
 {
-    margin-top: 50px;
+    margin-top: 25px;
     margin-left: 15%;
     width: 70%;
     height: 40px;

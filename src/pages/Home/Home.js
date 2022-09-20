@@ -12,9 +12,11 @@ const cx = classNames.bind(styles);
 function Home() {
     return (
         <div className={cx('wrapper')}>
-            <Sidebar />
-            <Center />
-            <Rightbar />
+            <Sidebar
+            
+            />
+             <Center />
+             <Rightbar />  
         </div>
     );
 }
