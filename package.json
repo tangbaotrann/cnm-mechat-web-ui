@@ -27,6 +27,7 @@
     "sass": "^1.54.5",
     "socket.io-client": "^4.5.2",
     "timeago.js": "^4.0.2",
+    "tippy.js": "^6.3.7",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {

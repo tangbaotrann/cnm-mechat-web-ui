@@ -1,9 +1,9 @@
 // libs
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
 
 // me
 import styles from './Menu.module.scss';
+import ModelInfoAccount from '~/components/ModelWrapper/ModelInfoAccount';
 
 const cx = classNames.bind(styles);
 
@@ -14,21 +14,17 @@ function MenuItem() {
 
             <div className={cx('separator')}></div>
 
-            <div className={cx('body')}>
-                <Link to="/">
-                    <p className={cx('file')}>Hồ sơ của bạn</p>
-                </Link>
-                <Link to="/">
-                    <p className={cx('setting')}>Cài đặt</p>
-                </Link>
+            <div className={cx('body-inner')}>
+                {/* Model info account */}
+                <ModelInfoAccount yourProfile />
+
+                <button className={cx('item-btn')}>Cài đặt</button>
             </div>
 
             <div className={cx('separator')}></div>
 
             <div className={cx('footer')}>
-                <Link to="/">
-                    <p className={cx('logout')}>Đăng xuất</p>
-                </Link>
+                <button className={cx('item-btn')}>Đăng xuất</button>
             </div>
         </>
     );

@@ -12,27 +12,20 @@
 }
 
 // body
-.body {
+.body-inner {
+    display: flex;
+    flex-direction: column;
     font-size: 1.4rem;
     margin-left: 4px;
-
-    a[href] {
-        text-decoration: none;
-        color: var(--text);
-    }
 }
 
-.file {
+.item-btn {
+    text-align: left;
     padding: 8px;
-    margin-bottom: 4px;
-
-    &:hover {
-        background-color: var(--grey-400);
-    }
-}
-
-.setting {
-    padding: 6px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
 
     &:hover {
         background-color: var(--grey-400);
@@ -47,18 +40,7 @@
 
 // footer
 .footer {
-    a[href] {
-        text-decoration: none;
-        color: var(--text);
-    }
-}
-
-.logout {
-    padding: 6px;
-    font-size: 1.4rem;
+    display: flex;
+    flex-direction: column;
     margin-left: 4px;
-
-    &:hover {
-        background-color: var(--grey-400);
-    }
 }

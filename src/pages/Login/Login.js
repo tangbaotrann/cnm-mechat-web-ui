@@ -1,6 +1,7 @@
 import styles from './Login.module.scss';
 import classNames from 'classnames/bind';
 import images from '~/assets/images';
+
 import Register from '../Register/Register';
 
 import {useState, useEffect} from "react";
@@ -8,29 +9,21 @@ import {PhoneIphone, Lock} from '@material-ui/icons';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 
-const cx = classNames.bind(styles);
-function Login()
-{
-    useEffect(() => {
-        document.title = "Trang đăng nhập";
-      });
-    const [user, setUser] = useState({
-        phoneNumber: "0397548005",
-        password: "123456",
-      });
-      const handleChangeInput = (e) => {
-        const { name, value } = e.target;
-        console.log({[name]:value})
-       setUser({...user, [name]: value });
-      
-      
-      };
-    
-      const handleSubmit = (e) => {
-        e.preventDefault();
-       // dispatch(user);
-       console.log(user);
 
+const cx = classNames.bind(styles);
+function Login() {
+    // useEffect(() => {
+    //     document.title = 'Trang đăng nhập';
+    // });
+    const [user, setUser] = useState({
+        phoneNumber: '0397548005',
+        password: '123456',
+    });
+    const handleChangeInput = (e) => {
+        const { name, value } = e.target;
+        console.log({ [name]: value });
+        setUser({ ...user, [name]: value });
+    };
       };
     return(
             <div  className={cx('wrapper')}>
@@ -70,9 +63,17 @@ function Login()
                                  <a>Quên mật khẩu?</a>
                             </div>    
                         </form> 
+
+    
+
                 </div>
                 <div className={cx('form-register')}>
-                            <h1><a>Bạn chưa có tài khoản?</a> <Link to='/Register' className={cx('form-register-register')}>Đăng ký ngay </Link></h1>
+                    <h1>
+                        <a href="/Register">Bạn chưa có tài khoản?</a>{' '}
+                        <Link to="/Register" className={cx('form-register-register')}>
+                            Đăng ký ngay{' '}
+                        </Link>
+                    </h1>
                 </div>
             </div>
  
