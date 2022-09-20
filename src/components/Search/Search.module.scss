@@ -1,7 +1,7 @@
 .wrapper {
     display: flex;
-    flex: 1;
     align-items: center;
+    flex: 1;
     margin-top: 10px;
     margin-left: 10px;
     position: relative;
@@ -12,6 +12,7 @@
     display: flex;
     align-items: center;
     flex: 1;
+    position: relative;
 }
 
 // icon search
@@ -31,10 +32,11 @@
 .input-search {
     display: flex;
     flex: 1;
-    padding: 8px;
+    padding: 6px;
     padding-left: 26px;
-    border-radius: 16px;
+    border-radius: 6px;
     font-size: 1.2rem;
+    font-weight: 400;
     border: 1px solid var(--grey-400);
     background-color: var(--grey-400);
 
@@ -43,4 +45,89 @@
         outline: none;
         background-color: transparent;
     }
+}
+
+// clear button
+.clear-btn, .loading-icon {
+    position: absolute;
+    right: 55px;
+    font-size: 1.2rem;
+    border: none;
+    outline: none;
+    color: var(--text-opacity);
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.6;
+        color: var(--primary);
+    }
+}
+
+// icon loading
+.loading-icon {
+    cursor: default;
+    animation: spinner 1s linear infinite;
+}
+@keyframes spinner {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.items {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+.item {
+    margin-right: 12px;
+
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+// Menu list search
+.menu-list-search {
+    width: 328px;
+    height: calc(100vh - 60px);
+    overflow-y: scroll;
+    overflow-y: overlay;
+}
+
+.menu-search-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+
+// Button close result search
+.close-result-search-btn {
+    border: none;
+    outline: none;
+    padding: 6px;
+    margin-left: 6px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.8;
+        border-radius: 4px;
+        background-color: var(--grey-400);
+    }
+}
+
+// Tippy tool tip
+.tool-tip {
+    font-size: 1rem;
 }

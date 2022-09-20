@@ -1,12 +1,17 @@
 .wrapper {
-    padding: 10px;
-    flex: 0.5;
+    flex: 2.5;
+    top: 10px;
+    height: calc(100vh - 10px);
+    overflow-y: scroll;
+    overflow-y: overlay;
 }
 
 // Info
 .title-name {
+    margin-top: 10px;
     text-align: center;
     font-size: 1.8rem;
+    margin-bottom: 32px;
 }
 
 // hr
@@ -14,13 +19,14 @@
     height: 0.5px;
     background-color: var(--border);
     margin: 4px 8px;
-    margin-top: 32px;
+    margin-top: 16px;
 }
 
 .info {
     display: flex;
     flex-direction: column;
     margin-top: 26px;
+    z-index: -9999;
 }
 
 .info-avatar, .info-name {
@@ -42,6 +48,8 @@
 
 // List image
 .list-image {
+    overflow-y: scroll;
+    overflow-y: overlay;
     margin: 10px 10px;
 }
 
@@ -70,6 +78,9 @@
 
 // body
 .body {
+    height: calc(25vh - 100px);
+    overflow-y: scroll;
+    overflow-y: overlay;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
