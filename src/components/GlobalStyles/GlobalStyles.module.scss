@@ -5,6 +5,7 @@
 :root {
     // color
     --primary: #0091ff;
+    --B60: #0068ff;
     --text: #001a33;
     --text-opacity: #161823bf;
     --white: #ffffff;
@@ -33,4 +34,5 @@ body {
     font-family: var(--font-family);
     color: var(--text);
     overflow-y: overlay;
+    overflow-x: overlay;
 }
