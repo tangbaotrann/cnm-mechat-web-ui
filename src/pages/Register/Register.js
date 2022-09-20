@@ -33,8 +33,7 @@ function Register()
     };
 
       
-    return(
-     
+    return(     
             <div className={cx('wrapper')}>
                  <div className={cx('logo')}>
                     <img className={cx('logo-image')} src={images.logo} alt="" />
