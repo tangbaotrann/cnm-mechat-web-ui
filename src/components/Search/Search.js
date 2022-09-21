@@ -60,6 +60,8 @@ function Search() {
     // Handle close result search
     const handleCloseResultSearch = () => {
         setShowResult(false);
+
+        setSearchValue('');
     };
 
     return (
