@@ -112,10 +112,14 @@ function Search() {
                     ) : (
                         <div className={cx('items')}>
                             <Tippy className={cx('tool-tip')} content="Thêm bạn" delay={[200, 0]}>
-                                <FontAwesomeIcon className={cx('item')} icon={faUserPlus} />
+                                <button className={cx('btn-click-icon')}>
+                                    <FontAwesomeIcon className={cx('item')} icon={faUserPlus} />
+                                </button>
                             </Tippy>
                             <Tippy className={cx('tool-tip')} content="Tạo nhóm chat" delay={[200, 0]}>
-                                <FontAwesomeIcon className={cx('item')} icon={faUserGroup} />
+                                <button className={cx('btn-click-icon')}>
+                                    <FontAwesomeIcon className={cx('item')} icon={faUserGroup} />
+                                </button>
                             </Tippy>
                         </div>
                     )}

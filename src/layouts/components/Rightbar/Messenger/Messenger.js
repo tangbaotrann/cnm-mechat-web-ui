@@ -48,10 +48,14 @@ function Messenger() {
                 </div>
                 <div>
                     <Tippy className={cx('tool-tip')} content="Cuộc gọi video" delay={[200, 0]}>
-                        <FontAwesomeIcon className={cx('icon')} icon={faVideo} />
+                        <button className={cx('btn-click-icon')}>
+                            <FontAwesomeIcon className={cx('icon')} icon={faVideo} />
+                        </button>
                     </Tippy>
                     <Tippy className={cx('tool-tip')} content="Thêm bạn vào trò chuyện" delay={[200, 0]}>
-                        <FontAwesomeIcon className={cx('icon')} icon={faUserGroup} />
+                        <button className={cx('btn-click-icon')}>
+                            <FontAwesomeIcon className={cx('icon')} icon={faUserGroup} />
+                        </button>
                     </Tippy>
                 </div>
             </div>
