@@ -57,7 +57,7 @@
 .add-friend h2
 {
     font-size: 16px;
-       margin-top: 21px;
+    margin-top: 21px;
     margin-left: -5px;
     
     font-family: var( --font-family) ;
@@ -99,12 +99,19 @@
     font-size: 14px;
     margin-left: 10px;
     margin-top: 10px;
-}          
+}
+
+// add scrollbar
+.conversations {
+    height: calc(100vh - 270px);
+    overflow-y: scroll;
+    overflow-y: overlay;
+}
 
 ///Rightbar--------------------------------------------
 .wrapper-rightbar
 {
-    flex: 6.5;
+    flex: 9;
     width: 100%;
     background-color:#E8E8E8;
 

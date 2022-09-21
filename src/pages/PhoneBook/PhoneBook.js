@@ -80,7 +80,7 @@ function PhoneBook({ directory }) {
                     </div>
                 </div>
             </div>
-            <div className={cx('fix-layout')}></div>
+            {/* <div className={cx('fix-layout')}></div> */}
         </div>
     );
 }
