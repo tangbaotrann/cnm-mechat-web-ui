@@ -50,6 +50,13 @@
     }
 }
 
+.btn-click-icon {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
 // Messenger body
 .messenger-body {
     overflow-y: scroll;

@@ -84,12 +84,9 @@
     align-items: center;
     font-size: 1.4rem;
     margin-left: 12px;
-    cursor: pointer;
 }
 
 .item {
-    margin-right: 12px;
-
     &:hover {
         opacity: 0.6;
     }
@@ -131,4 +128,12 @@
 // Tippy tool tip
 .tool-tip {
     font-size: 1rem;
+}
+
+.btn-click-icon {
+    border: none;
+    outline: none;
+    margin-right: 16px;
+    background-color: transparent;
+    cursor: pointer;
 }
