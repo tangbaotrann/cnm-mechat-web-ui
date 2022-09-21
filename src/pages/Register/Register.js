@@ -88,10 +88,8 @@ function Register()
                             </div>    
                         </form> 
                        
-                </div>
-       
+                </div> 
             </div>
-
     );
 }
 export default Register
