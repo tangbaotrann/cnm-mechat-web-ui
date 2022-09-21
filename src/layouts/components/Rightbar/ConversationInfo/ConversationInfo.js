@@ -14,7 +14,6 @@ function ConversationInfo() {
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 <h2 className={cx('title-name')}>Thông tin hội thoại</h2>
-
                 <div className={cx('separator')}></div>
 
                 <div className={cx('info')}>
@@ -28,9 +27,58 @@ function ConversationInfo() {
 
                 <div className={cx('separator')}></div>
 
+                {/* Image and Video */}
                 <div className={cx('list-image')}>
                     <div className={cx('header')}>
                         <span className={cx('header-title')}>Ảnh/ Video</span>
+                        <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
+                    </div>
+                    <div className={cx('body')}>
+                        {/* render image (map) after */}
+                        <div className={cx('body-list-image')}>
+                            <img className={cx('item-image')} src={images.avt} alt="avatar" />
+                        </div>
+                        <div className={cx('body-list-image')}>
+                            <img className={cx('item-image')} src={images.avt} alt="avatar" />
+                        </div>
+                        <div className={cx('body-list-image')}>
+                            <img className={cx('item-image')} src={images.avt} alt="avatar" />
+                        </div>
+                    </div>
+                    <div className={cx('footer')}>
+                        <button className={cx('footer-btn-all')}>Xem tất cả</button>
+                    </div>
+                </div>
+
+                <div className={cx('separator')}></div>
+
+                {/* File */}
+                <div className={cx('list-image')}>
+                    <div className={cx('header')}>
+                        <span className={cx('header-title')}>File</span>
+                        <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
+                    </div>
+                    <div className={cx('body')}>
+                        {/* render image (map) after */}
+                        <div className={cx('body-list-image')}>
+                            <img className={cx('item-image')} src={images.avt} alt="avatar" />
+                        </div>
+                        <div className={cx('body-list-image')}>
+                            <img className={cx('item-image')} src={images.avt} alt="avatar" />
+                        </div>
+                        <div className={cx('body-list-image')}>
+                            <img className={cx('item-image')} src={images.avt} alt="avatar" />
+                        </div>
+                    </div>
+                    <div className={cx('footer')}>
+                        <button className={cx('footer-btn-all')}>Xem tất cả</button>
+                    </div>
+                </div>
+
+                {/* Link */}
+                <div className={cx('list-image')}>
+                    <div className={cx('header')}>
+                        <span className={cx('header-title')}>Link</span>
                         <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
                     </div>
                     <div className={cx('body')}>

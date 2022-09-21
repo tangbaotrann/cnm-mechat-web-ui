@@ -1,40 +1,42 @@
 // libs
 import classNames from 'classnames/bind';
-import { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import { useState } from 'react';
+// import { io } from 'socket.io-client';
+import TippyHeadless from '@tippyjs/react/headless';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup, faVideo } from '@fortawesome/free-solid-svg-icons';
+import { faGoogleDrive } from '@fortawesome/free-brands-svg-icons';
+import {
+    faFaceSmile,
+    faFile,
+    faImage,
+    faPaperclip,
+    faThumbsUp,
+    faUserGroup,
+    faVideo,
+} from '@fortawesome/free-solid-svg-icons';
 
 // me
 import styles from './Messenger.module.scss';
 import images from '~/assets/images';
 import Message from '~/components/Message';
+import Popper from '~/components/Popper';
 
 const cx = classNames.bind(styles);
 
 function Messenger() {
-    // const [username, setUsername] = useState('');
-    // const [user, setUser] = useState('');
-    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const [socket, setSocket] = useState(null);
 
-    console.log('message - ', newMessage);
-    console.log('socket - ', socket);
+    // Handle message
+    const handleChangeMessage = (e) => {
+        const messageValue = e.target.value;
 
-    // socket client
-    useEffect(() => {
-        setSocket(io('http://localhost:8900'));
-    }, []);
-
-    // handle button send message
-    const handleSendMessage = (e) => {
-        e.preventDefault();
-
-        setMessages(newMessage);
+        // Check no space first
+        if (!messageValue.startsWith(' ')) {
+            setNewMessage(messageValue);
+        }
     };
-
-    console.log(messages);
 
     return (
         <div className={cx('messenger')}>
@@ -45,8 +47,12 @@ function Messenger() {
                     <span className={cx('time-online')}>Truy cập 20 phút trước</span>
                 </div>
                 <div>
-                    <FontAwesomeIcon className={cx('icon')} icon={faVideo} />
-                    <FontAwesomeIcon className={cx('icon')} icon={faUserGroup} />
+                    <Tippy className={cx('tool-tip')} content="Cuộc gọi video" delay={[200, 0]}>
+                        <FontAwesomeIcon className={cx('icon')} icon={faVideo} />
+                    </Tippy>
+                    <Tippy className={cx('tool-tip')} content="Thêm bạn vào trò chuyện" delay={[200, 0]}>
+                        <FontAwesomeIcon className={cx('icon')} icon={faUserGroup} />
+                    </Tippy>
                 </div>
             </div>
 
@@ -57,15 +63,83 @@ function Messenger() {
             </div>
 
             <div className={cx('messenger-footer')}>
-                <textarea
-                    className={cx('message-input')}
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Nhập tin nhắn ..."
-                ></textarea>
-                <button className={cx('send-btn')} onClick={handleSendMessage}>
-                    Gửi
-                </button>
+                <div className={cx('toolbar-on-chat-input')}>
+                    {/* option image */}
+                    <label htmlFor="file">
+                        <div className={cx('option-image-icon')}>
+                            <Tippy className={cx('tool-tip')} content="Gửi hình ảnh" delay={[200, 0]}>
+                                <FontAwesomeIcon className={cx('option-icon')} icon={faImage} />
+                            </Tippy>
+                            <input className={cx('hide')} type="file" id="file" accept=".png, .jpg, .jpeg" />
+                        </div>
+                    </label>
+                    {/* option file */}
+                    <TippyHeadless
+                        render={(attrs) => (
+                            <div tabIndex="-1" {...attrs}>
+                                {/* Sub menu option footer */}
+                                <Popper className={cx('menu-option-file')}>
+                                    <>
+                                        <label htmlFor="file">
+                                            <div className={cx('option-file-btn-fix')}>
+                                                <FontAwesomeIcon className={cx('sub-menu-icon-footer')} icon={faFile} />
+                                                Chọn File
+                                                <input
+                                                    className={cx('hide')}
+                                                    type="file"
+                                                    id="file"
+                                                    accept=".png, .jpg, .jpeg"
+                                                />
+                                            </div>
+                                        </label>
+
+                                        <button className={cx('option-file-btn')}>
+                                            <FontAwesomeIcon
+                                                className={cx('sub-menu-icon-footer')}
+                                                icon={faGoogleDrive}
+                                            />
+                                            Gửi File từ Google Driver
+                                        </button>
+                                    </>
+                                </Popper>
+                            </div>
+                        )}
+                        delay={[0, 100]}
+                        placement="top-start"
+                        trigger="click"
+                        interactive
+                    >
+                        <Tippy className={cx('tool-tip')} content="Đính kèm File" delay={[200, 0]}>
+                            <div className={cx('option-file-icon')}>
+                                <FontAwesomeIcon className={cx('option-icon')} icon={faPaperclip} />
+                            </div>
+                        </Tippy>
+                    </TippyHeadless>
+                </div>
+                {/* Message */}
+                <div className={cx('message-container')}>
+                    {/* Input message */}
+                    <textarea
+                        className={cx('message-input')}
+                        value={newMessage}
+                        onChange={handleChangeMessage}
+                        placeholder="Nhập tin nhắn ..."
+                    ></textarea>
+
+                    <Tippy className={cx('tool-tip')} content="Biểu cảm" delay={[200, 0]}>
+                        <FontAwesomeIcon className={cx('icon-right')} icon={faFaceSmile} />
+                    </Tippy>
+                    {/* Button send message */}
+                    {newMessage ? (
+                        <button className={cx('send-message-btn')}>GỬI</button>
+                    ) : (
+                        <Tippy className={cx('tool-tip')} content="Gửi nhanh biểu tượng cảm xúc" delay={[200, 0]}>
+                            <button className={cx('send-message-like')}>
+                                <FontAwesomeIcon icon={faThumbsUp} />
+                            </button>
+                        </Tippy>
+                    )}
+                </div>
             </div>
         </div>
     );
