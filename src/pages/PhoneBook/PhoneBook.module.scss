@@ -6,7 +6,13 @@
     flex: 2.7;
     border-right: solid 0.5px #D3D3D3;
 }
+.wrapper-rightbar
+{
+    flex: 9;
+    width: 100%;
+    background-color:#E8E8E8;
 
+}
 // Search info
 .search-info {
     display: flex;
@@ -109,13 +115,7 @@
 }
 
 ///Rightbar--------------------------------------------
-.wrapper-rightbar
-{
-    flex: 9;
-    width: 100%;
-    background-color:#E8E8E8;
 
-}
 .wrapper-rightbar .header
 {
     height: 70px;
@@ -140,8 +140,3 @@
    
     background-color: rgb(150, 147, 147);
 }
-
-.fix-layout {
-    flex: 2.5;
-}
-

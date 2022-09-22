@@ -64,7 +64,7 @@ function PhoneBook({ directory }) {
                         <img className={cx('list-addfriend-image')} src={images.groupchat} alt="" />
                         <h2 className={cx('list-addfriend-title2')}>Danh sách nhóm</h2>
                     </div>
-                    <div className={cx('list-BoxChat')}>
+                    {/* <div className={cx('list-BoxChat')}>
                         <BoxChat />
                         <BoxChat />
                         <BoxChat />
@@ -77,10 +77,9 @@ function PhoneBook({ directory }) {
                         <BoxChat />
                         <BoxChat />
                         <BoxChat />
-                    </div>
+                    </div> */}
                 </div>
             </div>
-            {/* <div className={cx('fix-layout')}></div> */}
         </div>
     );
 }
