@@ -12,6 +12,7 @@
     display: flex;
     align-items: center;
     flex: 1;
+    margin-right: 2px;
     position: relative;
 }
 
@@ -34,9 +35,7 @@
     flex: 1;
     padding: 6px;
     padding-left: 26px;
-
     border-radius: 8px;
-
     font-size: 1.2rem;
     font-weight: 400;
     border: 1px solid var(--grey-400);
@@ -85,12 +84,9 @@
     align-items: center;
     font-size: 1.4rem;
     margin-left: 12px;
-    cursor: pointer;
 }
 
 .item {
-    margin-right: 12px;
-
     &:hover {
         opacity: 0.6;
     }
@@ -132,4 +128,12 @@
 // Tippy tool tip
 .tool-tip {
     font-size: 1rem;
+}
+
+.btn-click-icon {
+    border: none;
+    outline: none;
+    margin-right: 16px;
+    background-color: transparent;
+    cursor: pointer;
 }

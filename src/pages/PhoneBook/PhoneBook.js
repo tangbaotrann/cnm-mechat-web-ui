@@ -80,7 +80,6 @@ function PhoneBook({ directory }) {
                     </div> */}
                 </div>
             </div>
-        
         </div>
     );
 }
