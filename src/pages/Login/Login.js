@@ -4,7 +4,7 @@ import images from '~/assets/images';
 
 import { useState, useEffect } from 'react';
 import { PhoneIphone, Lock } from '@material-ui/icons';
-import { BrowserRouter as Link } from 'react-router-dom';
+import {  Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 function Login() {
@@ -66,7 +66,7 @@ function Login() {
             </div>
             <div className={cx('form-register')}>
                 <h1>
-                    <a href="/Register">Bạn chưa có tài khoản?</a>
+                    <a>Bạn chưa có tài khoản?</a>
                     <Link to="/Register" className={cx('form-register-register')}>
                         Đăng ký ngay
                     </Link>
