@@ -64,6 +64,8 @@ function Messenger() {
                 <Message />
                 <Message own />
                 <Message />
+                <Message own />
+                <Message />
             </div>
 
             <div className={cx('messenger-footer')}>

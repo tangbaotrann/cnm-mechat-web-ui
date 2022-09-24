@@ -43,3 +43,100 @@
     background-color: var(--bg-message);
     color: var(--text);
 }
+
+// Menu parent
+.own-menu-list {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    background-color: var(--white);
+    position: relative;
+}
+
+.like-icon, .like-icon-receiver {
+    position: absolute;
+    bottom: -26px;
+    right: -40px;
+    font-size: 1.2rem;
+    padding: 6px;
+    border-radius: 50%;
+    background-color: var(--white);
+    cursor: pointer;
+}
+
+.like-icon-receiver {
+    bottom: -26px;
+    left: -40px;
+}
+
+.options {
+    display: flex;
+    align-items: center;
+}
+
+.option-btn {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.option-icon {
+    margin-left: 6px;
+    margin-right: 6px;
+    font-size: 1.3rem;
+    color: var(--not-active);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--primary);
+    }
+}
+
+// Menu children
+.own-menu-list-children {
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    width: 200px;
+    flex: 1;
+}
+
+.options-children-btn, .options-children-copy-btn {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: var(--red);
+    flex: 1;
+
+    &:hover {
+        background-color: var(--grey-400);
+        opacity: 0.8;
+        cursor: pointer;
+    }
+}
+
+.recall-icon, .copy-icon {
+    font-size: 1.2rem;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+// hr
+.separator {
+    height: 0.5px;
+    background-color: var(--border);
+    margin: 4px 10px;
+}
+
+.options-children-copy-btn {
+    color: var(--text);
+}
+
+// Tippy tool tip
+.tool-tip {
+    font-size: 1rem;
+}
