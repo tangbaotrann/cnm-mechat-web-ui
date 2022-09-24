@@ -8,7 +8,6 @@ import styles from './PhoneBook.module.scss';
 import images from '~/assets/images';
 import Search from '~/components/Search';
 import Conversation from '~/components/Conversation';
-import BoxChat from '~/components/BoxChat';
 import Sidebar from '~/layouts/components/Sidebar';
 import { FetchUsers as users } from '~/FetchData';
 

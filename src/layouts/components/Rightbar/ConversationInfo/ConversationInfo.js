@@ -75,6 +75,8 @@ function ConversationInfo() {
                     </div>
                 </div>
 
+                <div className={cx('separator')}></div>
+
                 {/* Link */}
                 <div className={cx('list-image')}>
                     <div className={cx('header')}>
