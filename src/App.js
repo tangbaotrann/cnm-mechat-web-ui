@@ -6,7 +6,6 @@ import Home from './pages/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 
-
 import PhoneBook from './pages/PhoneBook/PhoneBook';
 
 function App() {
@@ -14,9 +13,9 @@ function App() {
         <Router>
             <Routes>
                 {/* Login */}
-             
-        {/* Home page */}
-        <Route exact path="/Login" element={<Login />} />
+
+                {/* Home page */}
+                <Route exact path="/Login" element={<Login />} />
                 {/* Home page */}
                 <Route exact path="/me.chat" element={<Home />} />
 
