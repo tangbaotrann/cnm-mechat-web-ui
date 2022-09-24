@@ -73,7 +73,7 @@ function Search() {
                             <div className={cx('menu-search-title')}>Trò chuyện</div>
                             {/* Render result search */}
                             {searchResult.map((result, index) => {
-                                return <Conversation key={index} user={result} />;
+                                return <Conversation key={index} user={result}/>;
                             })}
                         </Popper>
                     </div>
