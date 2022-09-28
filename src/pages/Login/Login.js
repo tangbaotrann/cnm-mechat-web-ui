@@ -130,9 +130,9 @@ function Login() {
                 null}
             {changeForm ===true ? 
              <>  
-                <div className={cx('login-form1')}>
+                <div className={cx('otp-form')}>
                     <form  onSubmit={handleconfirm}> 
-                        <div className={cx('form-otp1')}>    
+                        <div className={cx('form-otp')}>    
                         <input  
                         type="tel"  
                         placeholder='Nhập mã OTP'
@@ -141,11 +141,11 @@ function Login() {
                         name="otp"
                         />
                 </div>    
-                        <div className={cx('form-buttonotp1')}>
-                        <h5 className={cx('form-resend-code1')}>Gửi lại mã</h5>
+                        <div className={cx('form-buttonotp')}>
+                        <h5 className={cx('form-resend-code')}>Gửi lại mã</h5>
                             <button type="submit" variant="contained" color="primary">Xác nhận</button>
                         </div>
-                        <div className={cx('form-back1')}>
+                        <div className={cx('form-back')}>
                         <ArrowLeft className={cx('item')}/> <Link to="/Login" className={cx('back')}>Quay lại</Link>
                          </div> 
                     </form>
