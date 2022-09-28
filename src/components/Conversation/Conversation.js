@@ -13,8 +13,7 @@ function Conversation({ user,isPhoneBook }) {
 
             <div className={cx('content')}>
                 <h4 className={cx('username')}>{user.username}</h4>
-                {isPhoneBook ? null : <p className={cx('message')}>Hello my friend ...</p>}
-                
+                  {isPhoneBook ? null : <p className={cx('message')}>Hello my friend ...</p>}  
             </div>
             {isPhoneBook ? null : 
             <div className={cx('notification')}>

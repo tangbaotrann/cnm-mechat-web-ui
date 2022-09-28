@@ -2,7 +2,7 @@
 import classNames from 'classnames/bind';
 import { NavLink } from 'react-router-dom';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-
+import { useState } from 'react';
 // me
 import styles from './PhoneBook.module.scss';
 import images from '~/assets/images';
@@ -10,16 +10,26 @@ import Search from '~/components/Search';
 import Conversation from '~/components/Conversation';
 import Sidebar from '~/layouts/components/Sidebar';
 import { FetchUsers as users } from '~/FetchData';
+import BoxChat from '~/components/BoxChat';
 
+import ModelWrapper from '~/components/ModelWrapper';
+import AddFriend from '~/components/AddFriend';
 const cx = classNames.bind(styles);
 
 function PhoneBook({ directory }) {
+    const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const MiddleDirectory = () => {
         return (
             <div>
                 <h1>Content directory ...</h1>
             </div>
         );
+    };
+    const handleModelOpenInfoAccount = () => {
+        setOpenInfoAccount(true);
+    };
+    const handleModelCloseInfoAccount = () => {
+        setOpenInfoAccount(false);
     };
     return (
         <div className={cx('wrapper')}>
@@ -28,7 +38,7 @@ function PhoneBook({ directory }) {
                 <div className={cx('search-info')}>
                     <Search />
                 </div>
-                <div className={cx('add-friend')}>
+                <div className={cx('add-friend')} onClick={handleModelOpenInfoAccount}>
                     <NavLink>
                         <PersonAddAltIcon className={cx('item')} />
                     </NavLink>
@@ -63,7 +73,7 @@ function PhoneBook({ directory }) {
                         <img className={cx('list-addfriend-image')} src={images.groupchat} alt="" />
                         <h2 className={cx('list-addfriend-title2')}>Danh sách nhóm</h2>
                     </div>
-                    {/* <div className={cx('list-BoxChat')}>
+                    <div className={cx('list-BoxChat')}>
                         <BoxChat />
                         <BoxChat />
                         <BoxChat />
@@ -76,9 +86,12 @@ function PhoneBook({ directory }) {
                         <BoxChat />
                         <BoxChat />
                         <BoxChat />
-                    </div> */}
+                    </div>
                 </div>
             </div>
+            <ModelWrapper className={cx('model-add-friend')} open={openInfoAccount} onClose={handleModelCloseInfoAccount}>
+                            <AddFriend/>
+             </ModelWrapper>
         </div>
     );
 }
