@@ -1,4 +1,3 @@
-// libs
 import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -17,7 +16,8 @@ import {
 import styles from './Search.module.scss';
 import Popper from '../Popper';
 import Conversation from '../Conversation';
-
+import ModelWrapper from '../ModelWrapper';
+import AddFriend from '../AddFriend';
 const cx = classNames.bind(styles);
 
 function Search() {
@@ -25,7 +25,7 @@ function Search() {
     const [searchResult, setSearchResult] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const searchRef = useRef();
 
     useEffect(() => {
@@ -63,7 +63,12 @@ function Search() {
 
         setSearchValue('');
     };
-
+    const handleModelOpenInfoAccount = () => {
+        setOpenInfoAccount(true);
+    };
+    const handleModelCloseInfoAccount = () => {
+        setOpenInfoAccount(false);
+    };
     return (
         <div className={cx('wrapper')}>
             <TippyHeadless
@@ -113,7 +118,7 @@ function Search() {
                         <div className={cx('items')}>
                             <Tippy className={cx('tool-tip')} content="Thêm bạn" delay={[200, 0]}>
                                 <button className={cx('btn-click-icon')}>
-                                    <FontAwesomeIcon className={cx('item')} icon={faUserPlus} />
+                                    <FontAwesomeIcon className={cx('item')} icon={faUserPlus} onClick={handleModelOpenInfoAccount} />
                                 </button>
                             </Tippy>
                             <Tippy className={cx('tool-tip')} content="Tạo nhóm chat" delay={[200, 0]}>
@@ -125,6 +130,9 @@ function Search() {
                     )}
                 </div>
             </TippyHeadless>
+            <ModelWrapper className={cx('model-add-friend')} open={openInfoAccount} onClose={handleModelCloseInfoAccount}>
+                            <AddFriend/>
+             </ModelWrapper>
         </div>
     );
 }
