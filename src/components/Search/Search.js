@@ -10,6 +10,7 @@ import {
     faSpinner,
     faUserPlus,
     faUserGroup,
+    faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 // me
@@ -131,7 +132,23 @@ function Search() {
                 </div>
             </TippyHeadless>
             <ModelWrapper className={cx('model-add-friend')} open={openInfoAccount} onClose={handleModelCloseInfoAccount}>
-                            <AddFriend/>
+            <div className={cx('model-add-friend-bg')} >
+                    <div className={cx('add-friend-title')}>
+                            <span className={cx('friend-title')}>Thêm bạn</span>
+                            <button className={cx('close-btn')}>
+                                <FontAwesomeIcon
+                                    className={cx('friend-close-ic')}
+                                    icon={faXmark}
+                                    onClick={handleModelCloseInfoAccount}
+                                />
+                            </button>
+                        </div>
+               <AddFriend/>
+
+                        
+                       
+            </div>
+                            
              </ModelWrapper>
         </div>
     );

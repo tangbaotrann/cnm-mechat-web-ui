@@ -11,7 +11,7 @@ import {
     faCircleInfo,
     faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
-
+import { useNavigate } from 'react-router-dom';
 // me
 import styles from './Menu.module.scss';
 import images from '~/assets/images';
@@ -23,7 +23,7 @@ const cx = classNames.bind(styles);
 
 function MenuItem() {
     const [openIntroVersion, setOpenIntroVersion] = useState(false);
-
+    const navigate = useNavigate();
     // Handle open/ close model intro version
     const handleModelOpenIntroVersion = () => {
         setOpenIntroVersion(true);
@@ -45,7 +45,11 @@ function MenuItem() {
             </>
         );
     };
-
+//logout
+const userlogout = ()=>{
+    localStorage.removeItem("user_login")
+    navigate("/login");
+}
     // Menu popper sub intro
     const renderMenuPopperSubIntroVersion = () => {
         return (
@@ -192,7 +196,7 @@ function MenuItem() {
             <div className={cx('footer')}>
                 <div className={cx('setting-option')}>
                     <FontAwesomeIcon className={cx('setting-icon')} icon={faRightFromBracket} />
-                    <button className={cx('setting-item-btn')}>Đăng xuất</button>
+                    <button className={cx('setting-item-btn')} onClick={userlogout}>Đăng xuất</button>
                 </div>
             </div>
         </>

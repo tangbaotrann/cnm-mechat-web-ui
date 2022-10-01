@@ -1,34 +1,4 @@
-.model-add-friend-bg {
-    background-color: var(--white);
-    border-radius: 6px;
-    height: 420px
-}
-.add-friend-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    height: 50px;
-    border-bottom: solid 0.5px #D3D3D3;
-}
 
-.friend-title {
-    color: var(--text);
-    font-size: 1.8rem;
-    font-weight: 500;
-    font-family:var(--font-family);
-}
-.close-btn {
-    background-color: transparent;
-    border: none;
-}
-.friend-close-ic {
-    font-size: 2rem;
-    cursor: pointer;
-    &:hover {
-        opacity: 0.6;
-    }
-}
 .add-phoneNumber{
     margin-top: 20px;
 //    border-bottom : solid 0.5px #D3D3D3;

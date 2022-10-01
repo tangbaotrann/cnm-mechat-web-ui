@@ -5,9 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
-
 import PhoneBook from './pages/PhoneBook/PhoneBook';
-
+import ConFirmOTP from './pages/ConFirmOTP';
 function App() {
     return (
         <Router>
@@ -21,10 +20,12 @@ function App() {
 
                 {/* Register */}
                 <Route exact path="/register" element={<Register />} />
+                <Route exact path="/ConFirmOTP" element={<ConFirmOTP />} />
                 {/* PhoneBook */}
                 <Route exact path="/phonebook" element={<PhoneBook />} />
             </Routes>
         </Router>
+
     );
 }
 
