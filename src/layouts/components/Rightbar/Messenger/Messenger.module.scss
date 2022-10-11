@@ -16,28 +16,14 @@
 .messenger-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
-.avatar-image {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-}
-
-.info {
-    flex: 1;
-    line-height: 18px;
-}
-
-.username {
-    font-size: 1.6rem;
-}
-
-.time-online {
-    font-size: 1.1rem;
-    color: var(--text-opacity);
+.btn-click-icon {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
 }
 
 .icon {
@@ -48,13 +34,6 @@
     &:hover {
         opacity: 0.6;
     }
-}
-
-.btn-click-icon {
-    border: none;
-    outline: none;
-    background-color: transparent;
-    cursor: pointer;
 }
 
 // Messenger body

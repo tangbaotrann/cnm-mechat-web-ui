@@ -9,13 +9,13 @@ import MenuItem from './MenuItem';
 
 const cx = classNames.bind(styles);
 
-function Menu({ children, hideOnClick = false }) {
+function Menu({ children, hideOnClick = false, user }) {
     return (
         <TippyHeadless
             render={(attrs) => (
                 <div className={cx('menu-avatar')} tabIndex="-1" {...attrs}>
                     <Popper className={cx('menu-popper')}>
-                        <MenuItem />
+                        <MenuItem user={user} />
                     </Popper>
                 </div>
             )}
