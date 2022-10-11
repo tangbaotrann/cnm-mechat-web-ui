@@ -1,6 +1,7 @@
 // libs
 import classNames from 'classnames/bind';
 import { useState } from 'react';
+import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faUser } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,7 +13,7 @@ import SubModelInfoAccount from './SubModelInfoAccount';
 
 const cx = classNames.bind(styles);
 
-function ModelInfoAccount({ yourProfile }) {
+function ModelInfoAccount({ yourProfile, user }) {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
 
     // Handle open/ close model info account
@@ -52,11 +53,19 @@ function ModelInfoAccount({ yourProfile }) {
                         </div>
                         <div className={cx('info-acc')}>
                             <div className={cx('info-image')}>
-                                <img className={cx('img-cover')} src={images.noImg} alt="" />
-                                <img className={cx('img-avatar')} src={images.avt} alt="" />
+                                <img
+                                    className={cx('img-cover')}
+                                    src={user?.backgroundLink ? user?.backgroundLink : images.noImg}
+                                    alt="img-cover"
+                                />
+                                <img
+                                    className={cx('img-avatar')}
+                                    src={user?.avatarLink ? user?.avatarLink : images.noImg}
+                                    alt="img-avatar"
+                                />
                             </div>
                             <div className={cx('info-name')}>
-                                <div className={cx('name')}>Tăng Bảo Trấnn</div>
+                                <div className={cx('name')}>{user?.fullName}</div>
                             </div>
                         </div>
                     </div>
@@ -65,20 +74,20 @@ function ModelInfoAccount({ yourProfile }) {
                         <div className={cx('info-desc-title')}>Thông tin cá nhân</div>
                         <div className={cx('info-desc-line')}>
                             <div className={cx('info-title')}>Điện thoại: </div>
-                            <div>+84325676569</div>
+                            <div>{user?.phoneNumber}</div>
                         </div>
                         <div className={cx('info-desc-line')}>
                             <div className={cx('info-title')}>Giới tính: </div>
-                            <div>Nam</div>
+                            <div>{user?.gender === 0 ? 'Nam' : 'Nữ'}</div>
                         </div>
                         <div className={cx('info-desc-line')}>
                             <div className={cx('info-title')}>Ngày sinh: </div>
-                            <div>24 tháng 10, 2001</div>
+                            <div>{moment(user?.birthday).format('DD/MM/YYYY')}</div>
                         </div>
                     </div>
                     <div className={cx('model-info-acc-footer')}>
                         {/* model update info account */}
-                        <SubModelInfoAccount />
+                        <SubModelInfoAccount user={user} />
                     </div>
                 </div>
             </ModelWrapper>

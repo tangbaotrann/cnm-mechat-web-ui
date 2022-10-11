@@ -16,21 +16,16 @@ import ModelWrapper from '~/components/ModelWrapper';
 import AddFriend from '~/components/AddFriend';
 const cx = classNames.bind(styles);
 
-function PhoneBook({ directory }) {
+function PhoneBook() {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
-    const MiddleDirectory = () => {
-        return (
-            <div>
-                <h1>Content directory ...</h1>
-            </div>
-        );
-    };
+
     const handleModelOpenInfoAccount = () => {
         setOpenInfoAccount(true);
     };
     const handleModelCloseInfoAccount = () => {
         setOpenInfoAccount(false);
     };
+
     return (
         <div className={cx('wrapper')}>
             <Sidebar />
@@ -54,17 +49,12 @@ function PhoneBook({ directory }) {
                 </div>
                 <div className={cx('list-friend')}>
                     <h1>Bạn bè (5)</h1>
-
-                    {/* Conversation or MiddleDirectory */}
-                    {!directory ? (
-                        <div className={cx('conversations')}>
-                            {users.map((user) => {
-                                return <Conversation key={user.id} user={user} isPhoneBook />;
-                            })}
-                        </div>
-                    ) : (
-                        <MiddleDirectory />
-                    )}
+                    {/* Conversation */}
+                    <div className={cx('conversations')}>
+                        {users.map((user) => {
+                            return <Conversation key={user.id} user={user} isPhoneBook />;
+                        })}
+                    </div>
                 </div>
             </div>
             <div className={cx('wrapper-rightbar')}>
@@ -89,9 +79,15 @@ function PhoneBook({ directory }) {
                     </div>
                 </div>
             </div>
-            <ModelWrapper className={cx('model-add-friend')} open={openInfoAccount} onClose={handleModelCloseInfoAccount}>
-                            <AddFriend/>
-             </ModelWrapper>
+            <ModelWrapper
+                className={cx('model-add-friend')}
+                open={openInfoAccount}
+                onClose={handleModelCloseInfoAccount}
+            >
+                <>
+                    <AddFriend />
+                </>
+            </ModelWrapper>
         </div>
     );
 }
