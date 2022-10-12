@@ -42,18 +42,18 @@ function Messenger() {
 
     const dispatch = useDispatch();
 
-    console.log('ONLINE USER - ', onlineUsers);
+    // console.log('ONLINE USER - ', onlineUsers);
     // console.log('Messenger - Messenger', messages);
-    // console.log('conversation - messenger ', conversation);
+    console.log('conversation - messenger ', conversation);
 
     // console.log('USER - ', user);
     // console.log('MESSAGES - ', messages);
-    // console.log('USER - ', user);
+    console.log('USER - ', user);
 
     // fetch server socket
     useEffect(() => {
-        socket.current = io(process.env.REACT_APP_SOCKET, { transports: ['websocket', 'polling', 'flashsocket'] });
-        // console.log('SC - ', socket);
+        // socket.current = io(process.env.REACT_APP_SOCKET, { transports: ['websocket', 'polling', 'flashsocket'] });
+        socket.current = io('ws://localhost:8900');
 
         // get message
         socket.current.on('getMessage', (data) => {

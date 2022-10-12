@@ -17,7 +17,7 @@ function OnlineStatus({ onlineUsers, conversation }) {
     const user = useSelector((state) => state.user.data);
 
     // console.log('FRIEND - ', friends);
-    console.log('[onlineFriends] - ', onlineFriends);
+    // console.log('[onlineFriends] - ', onlineFriends);
     // console.log('[conversation] - ', conversation);
     // console.log('[onlineUsers] - ', onlineUsers);
 
