@@ -26,7 +26,7 @@ function OnlineStatus({ onlineUsers, conversation }) {
         const fetchApi = async () => {
             try {
                 const res = await axios.get(`${process.env.REACT_APP_BASE_URL}friends/${user._id}`);
-                // console.log('ONLINE FRIEND - ', res.data);
+                console.log('ONLINE FRIEND - ', res.data);
                 setFriends(res.data.data);
             } catch (err) {
                 console.log(err);
