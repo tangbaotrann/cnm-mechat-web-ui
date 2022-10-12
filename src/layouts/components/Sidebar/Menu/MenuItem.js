@@ -21,7 +21,7 @@ import ModelInfoAccount from '~/components/ModelWrapper/ModelInfoAccount';
 
 const cx = classNames.bind(styles);
 
-function MenuItem() {
+function MenuItem({ user }) {
     const [openIntroVersion, setOpenIntroVersion] = useState(false);
     const navigate = useNavigate();
     // Handle open/ close model intro version
@@ -46,7 +46,7 @@ function MenuItem() {
         );
     };
     //logout
-    const userLogout = () => {
+    const userlogout = () => {
         localStorage.removeItem('user_login');
         navigate('/login');
     };
@@ -99,7 +99,7 @@ function MenuItem() {
             <div className={cx('setting-header')}>
                 <div className={cx('setting-option')}>
                     {/* Model info account */}
-                    <ModelInfoAccount />
+                    <ModelInfoAccount user={user} />
                 </div>
                 <div className={cx('setting-option')}>
                     <FontAwesomeIcon className={cx('setting-icon')} icon={faGear} />
@@ -196,7 +196,7 @@ function MenuItem() {
             <div className={cx('footer')}>
                 <div className={cx('setting-option')}>
                     <FontAwesomeIcon className={cx('setting-icon')} icon={faRightFromBracket} />
-                    <button className={cx('setting-item-btn')} onClick={userLogout}>
+                    <button className={cx('setting-item-btn')} onClick={userlogout}>
                         Đăng xuất
                     </button>
                 </div>

@@ -9,14 +9,14 @@ import { MenuSettingItem } from '~/layouts/components/Sidebar/Menu';
 
 const cx = classNames.bind(styles);
 
-function Menu({ children }) {
+function Menu({ children, user }) {
     return (
         <TippyHeadless
             render={(attrs) => (
                 <div tabIndex="-1" {...attrs}>
                     {/* Popper Menu parent */}
                     <Popper className={cx('menu-popper')}>
-                        <MenuSettingItem />
+                        <MenuSettingItem user={user} />
                     </Popper>
                 </div>
             )}

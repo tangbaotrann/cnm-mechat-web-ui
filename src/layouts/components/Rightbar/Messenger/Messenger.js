@@ -1,10 +1,12 @@
 // libs
 import classNames from 'classnames/bind';
+import axios from 'axios';
+import TippyHeadless from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { useState } from 'react';
-// import { io } from 'socket.io-client';
-import TippyHeadless from '@tippyjs/react/headless';
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogleDrive } from '@fortawesome/free-brands-svg-icons';
 import {
@@ -19,33 +21,132 @@ import {
 
 // me
 import styles from './Messenger.module.scss';
-import images from '~/assets/images';
 import Message from '~/components/Message';
 import Popper from '~/components/Popper';
+import OnlineStatus from '~/components/OnlineStatus';
+import messagesSlice from '~/redux/features/messages/messagesSlice';
 
 const cx = classNames.bind(styles);
 
 function Messenger() {
+    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [arrivalMessage, setArrivalMessage] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
-    // Handle message
+    const conversation = useSelector((state) => state.conversations.conversationClick);
+    const user = useSelector((state) => state.user.data);
+
+    const scrollMessenger = useRef();
+    const socket = useRef();
+
+    const dispatch = useDispatch();
+
+    console.log('ONLINE USER - ', onlineUsers);
+    // console.log('Messenger - Messenger', messages);
+    // console.log('conversation - messenger ', conversation);
+
+    // console.log('USER - ', user);
+    // console.log('MESSAGES - ', messages);
+    // console.log('USER - ', user);
+
+    // fetch server socket
+    useEffect(() => {
+        socket.current = io(process.env.REACT_APP_SOCKET, { transports: ['websocket', 'polling', 'flashsocket'] });
+        // console.log('SC - ', socket);
+
+        // get message
+        socket.current.on('getMessage', (data) => {
+            setArrivalMessage({
+                senderID: data.senderID,
+                content: data.content,
+                createdAt: Date.now(),
+            });
+        });
+    }, []);
+
+    // handle socket io
+    useEffect(() => {
+        socket.current.emit('addUser', user._id);
+
+        socket.current.on('getUsers', (users) => {
+            console.log('USER - ONLINE -', users);
+            setOnlineUsers(conversation?.members.filter((member) => users.some((us) => us.userId === member)));
+        });
+    }, [user, conversation]);
+
+    // handle get message (senderId, content)
+    useEffect(() => {
+        arrivalMessage &&
+            conversation?.members.includes(arrivalMessage.senderID) &&
+            setMessages((prev) => [...prev, arrivalMessage]);
+    }, [arrivalMessage, conversation]);
+
+    // fetch message from conversationId
+    useEffect(() => {
+        const fetchApi = async () => {
+            try {
+                if (conversation !== null) {
+                    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}messages/${conversation.id}`);
+                    // console.log('RES - ', res.data);
+                    setMessages(res.data);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fetchApi();
+    }, [conversation]);
+
+    // Handle change message
     const handleChangeMessage = (e) => {
-        const messageValue = e.target.value;
+        setNewMessage(e.target.value);
+    };
 
-        // Check no space first
-        if (!messageValue.startsWith(' ')) {
-            setNewMessage(messageValue);
+    // Handle button send message
+    const handleSendMessage = async (e) => {
+        e.preventDefault();
+
+        const message = {
+            conversationID: conversation.id,
+            senderID: user._id,
+            content: newMessage,
+        };
+
+        const receiverID = conversation?.members.find((member) => member !== user._id);
+
+        // send message with socket
+        socket.current.emit('sendMessage', {
+            senderID: user._id,
+            receiverID: receiverID,
+            content: newMessage,
+        });
+
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}messages`, message);
+            // console.log('RES - ', res.data);
+            setMessages([...messages, res.data]);
+
+            dispatch(messagesSlice.actions.addMessages(res.data));
+
+            setNewMessage('');
+        } catch (err) {
+            console.log(err);
         }
     };
+
+    // scroll messenger
+    useEffect(() => {
+        conversation && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [conversation, messages]);
 
     return (
         <div className={cx('messenger')}>
             <div className={cx('messenger-header')}>
-                <img className={cx('avatar-image')} src={images.noImg} alt="" />
-                <div className={cx('info')}>
-                    <h3 className={cx('username')}>Nhựt Hào</h3>
-                    <span className={cx('time-online')}>Truy cập 20 phút trước</span>
-                </div>
+                {/* Online user (status) */}
+                <OnlineStatus onlineUsers={onlineUsers} conversation={conversation} />
+
                 <div>
                     <Tippy className={cx('tool-tip')} content="Cuộc gọi video" delay={[200, 0]}>
                         <button className={cx('btn-click-icon')}>
@@ -61,11 +162,20 @@ function Messenger() {
             </div>
 
             <div className={cx('messenger-body')}>
-                <Message />
-                <Message own />
-                <Message />
-                <Message own />
-                <Message />
+                {/* Messages */}
+                {messages.map((message) => {
+                    return (
+                        <div key={message.id} ref={scrollMessenger}>
+                            <Message
+                                message={message}
+                                own={message.senderID === user._id}
+                                conversation={conversation}
+                                user={user}
+                                socket={socket}
+                            />
+                        </div>
+                    );
+                })}
             </div>
 
             <div className={cx('messenger-footer')}>
@@ -137,7 +247,9 @@ function Messenger() {
                     </Tippy>
                     {/* Button send message */}
                     {newMessage ? (
-                        <button className={cx('send-message-btn')}>GỬI</button>
+                        <button className={cx('send-message-btn')} onClick={handleSendMessage}>
+                            GỬI
+                        </button>
                     ) : (
                         <Tippy className={cx('tool-tip')} content="Gửi nhanh biểu tượng cảm xúc" delay={[200, 0]}>
                             <button className={cx('send-message-like')}>

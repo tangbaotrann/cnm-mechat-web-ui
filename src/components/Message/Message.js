@@ -1,8 +1,9 @@
 // libs
 import classNames from 'classnames/bind';
+import TippyHeadless from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import TippyHeadless from '@tippyjs/react/headless';
+import { format } from 'timeago.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { faCopy, faEllipsis, faQuoteRight, faRepeat, faShare, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +15,14 @@ import Popper from '../Popper';
 
 const cx = classNames.bind(styles);
 
-function Message({ own }) {
+function Message({ message, own, conversation, user }) {
+    // const conversation = useSelector((state) => state.conversations.conversationClick);
+
+    // console.log('MESSAGE - Message', message);
+    // console.log('[conversation] - ', conversation);
+    // console.log('[user] - ', user);
+    // console.log('OWN - ', own);
+
     return (
         <>
             {own ? (
@@ -95,21 +103,29 @@ function Message({ own }) {
                                 </div>
                             )}
                             interactive
-                            placement="left-start"
-                            offset={[10, 4]}
-                            delay={[200, 0]}
+                            placement="bottom-start"
+                            offset={[-74, -18]} // 10 4
+                            delay={[200, 100]}
                         >
                             {/* render message (sender) */}
-                            <p className={cx('message-top-text')}>Hello my friend ...</p>
+                            <p className={cx('message-top-text')}>{message.content}</p>
                         </TippyHeadless>
-                        <img className={cx('message-top-img')} src={images.noImg} alt="" />
+                        <img
+                            className={cx('message-top-img')}
+                            src={user.avatarLink ? user.avatarLink : images.noImg}
+                            alt="avatar"
+                        />
                     </div>
-                    <span className={cx('message-bottom')}>1 giờ trước</span>
+                    <span className={cx('message-bottom')}>{format(message.createdAt)}</span>
                 </div>
             ) : (
                 <div className={cx('wrapper')}>
                     <div className={cx('message-top')}>
-                        <img className={cx('message-top-img')} src={images.noImg} alt="" />
+                        <img
+                            className={cx('message-top-img')}
+                            src={conversation.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
+                            alt="avatar"
+                        />
                         {/* Menu parent */}
                         <TippyHeadless
                             render={(attrs) => (
@@ -185,15 +201,15 @@ function Message({ own }) {
                                 </div>
                             )}
                             interactive
-                            placement="right-start"
-                            offset={[10, 4]}
-                            delay={[200, 0]}
+                            placement="bottom-end"
+                            offset={[74, -18]}
+                            delay={[200, 100]}
                         >
                             {/* render message (sender) */}
-                            <p className={cx('message-top-text')}>Hello my friend ...</p>
+                            <p className={cx('message-top-text')}>{message.content}</p>
                         </TippyHeadless>
                     </div>
-                    <span className={cx('message-bottom')}>1 giờ trước</span>
+                    <span className={cx('message-bottom')}>{format(message.createdAt)}</span>
                 </div>
             )}
         </>

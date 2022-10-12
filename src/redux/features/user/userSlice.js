@@ -11,8 +11,9 @@ export const fetchApiUser = createAsyncThunk('user/fetchApiUser', async (arg, { 
         // check token
         if (getToken !== null) {
             const decodedToken = jwt_decode(getToken._token);
-
+            console.log('decodedToken', decodedToken);
             const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${decodedToken._id}`);
+            console.log('RES - ', res.data.data);
             return res.data.data;
         }
     } catch (err) {

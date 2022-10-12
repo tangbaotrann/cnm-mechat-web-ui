@@ -2,28 +2,33 @@
 import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faAddressBook, faGear } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
 
 // me
 import styles from './Sidebar.module.scss';
 import Menu from '~/components/Popper/Menu';
 import { MenuSetting } from './Menu';
-import { userLogin } from '~/redux/selector';
+import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
-    const user = useSelector(userLogin);
+    const user = useSelector((state) => state.user.data);
+
     return (
         <div className={cx('wrapper')}>
             {/* top */}
             <div className={cx('sidebar-top')}>
                 <div className={cx('avatar')}>
-                    <Menu>
-                        <img className={cx('avatar-img')} src={user.avatarLink} alt="avatar" />
+                    <Menu user={user}>
+                        <img
+                            className={cx('avatar-img')}
+                            src={user?.avatarLink ? user?.avatarLink : images.noImg}
+                            alt="avatar"
+                        />
                     </Menu>
                 </div>
 
@@ -56,7 +61,7 @@ function Sidebar() {
 
             {/* bottom */}
             <div className={cx('sidebar-bottom')}>
-                <MenuSetting>
+                <MenuSetting user={user}>
                     <Tippy className={cx('tool-tip')} content="Cài đặt" delay={[200, 0]}>
                         {/* Add div fix warning of Tippy */}
                         <div>

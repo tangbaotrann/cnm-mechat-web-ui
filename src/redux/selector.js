@@ -36,8 +36,8 @@ export const listFriend = createSelector(userInfoSelector, userListSelector, (us
         const friends = users.filter((_user) => user.friends.includes(_user._id));
         return friends.map((user) => ({
             _id: user._id,
-            fullName: user.fullName,
-            avatar: user.avatarLink,
+            name: user.fullName,
+            imageLinkOfConver: user.avatarLink,
         }));
     }
     return null;

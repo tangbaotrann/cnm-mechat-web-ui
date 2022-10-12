@@ -8,17 +8,16 @@ import { userLogin } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
-function MenuItem() {
-    const user = useSelector(userLogin);
+function MenuItem({ user }) {
     return (
         <>
-            <h3 className={cx('fullName')}>{user.fullName}</h3>
+            <h3 className={cx('fullname')}>{user?.fullName}</h3>
 
             <div className={cx('separator')}></div>
 
             <div className={cx('body-inner')}>
                 {/* Model info account */}
-                <ModelInfoAccount yourProfile />
+                <ModelInfoAccount yourProfile user={user} />
 
                 <button className={cx('item-btn')}>Cài đặt</button>
             </div>

@@ -1,20 +1,22 @@
 // libs
 import classNames from 'classnames/bind';
-import images from '~/assets/images';
+import { useSelector } from 'react-redux';
 
 // me
 import styles from './Rightbar.module.scss';
-import { FetchUsers as user } from '~/FetchData';
+import images from '~/assets/images';
 import Messenger from './Messenger';
 import ConversationInfo from './ConversationInfo';
 
 const cx = classNames.bind(styles);
 
 function Rightbar() {
+    const conversation = useSelector((state) => state.conversations.conversationClick);
+
     return (
         <div className={cx('wrapper')}>
             {/* Để show ra Chat current -> get theo conversationId */}
-            {user ? (
+            {conversation ? (
                 <div className={cx('container')}>
                     <Messenger />
                     <ConversationInfo />

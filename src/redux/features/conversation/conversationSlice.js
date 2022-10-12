@@ -8,7 +8,7 @@ const conversationSlice = createSlice({
     },
     reducers: {
         clickConversation: (state, action) => {
-            console.log(action.payload);
+            console.log('[click conversation by id] - ', action.payload);
             state.conversationClick = action.payload;
         },
     },

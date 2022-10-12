@@ -1,6 +1,7 @@
 // libs
 import classNames from 'classnames/bind';
 import { useState } from 'react';
+// import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPenToSquare, faCamera } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,8 +12,9 @@ import ModelWrapper from '../ModelWrapper';
 
 const cx = classNames.bind(styles);
 
-function SubModelInfoAccount() {
+function SubModelInfoAccount({ user }) {
     const [openUpdateInfoAccount, setOpenUpdateInfoAccount] = useState(false);
+    const [fullName, setFullName] = useState('');
 
     // Handle open/ close model update info account
     const handleModelOpenUpdateInfoAccount = () => {
@@ -20,6 +22,11 @@ function SubModelInfoAccount() {
     };
     const handleModelCloseUpdateInfoAccount = () => {
         setOpenUpdateInfoAccount(false);
+    };
+
+    // Handle change input full name
+    const handleChangeFullName = (e) => {
+        setFullName(e.target.value);
     };
 
     return (
@@ -48,8 +55,16 @@ function SubModelInfoAccount() {
                         </div>
                         <div className={cx('info-acc')}>
                             <div className={cx('sub-info-image')}>
-                                <img className={cx('img-cover')} src={images.noImg} alt="" />
-                                <img className={cx('sub-img-avatar')} src={images.avt} alt="" />
+                                <img
+                                    className={cx('img-cover')}
+                                    src={user?.backgroundLink ? user?.backgroundLink : images.noImg}
+                                    alt=""
+                                />
+                                <img
+                                    className={cx('sub-img-avatar')}
+                                    src={user?.avatarLink ? user?.avatarLink : images.noImg}
+                                    alt=""
+                                />
 
                                 {/* Option change avatar update */}
                                 <label htmlFor="file" className={cx('option-avatar')}>
@@ -63,7 +78,12 @@ function SubModelInfoAccount() {
                     <div className={cx('model-sub-info-acc-body')}>
                         <div className={cx('model-sub-info-acc')}>
                             <span className={cx('sub-title-desc')}>Tên hiển thị: </span>
-                            <input className={cx('sub-input-info-acc')} type="text" value="Tăng Bảo Trấnn" />
+                            <input
+                                className={cx('sub-input-info-acc')}
+                                type="text"
+                                value={fullName}
+                                onChange={handleChangeFullName}
+                            />
                             <span className={cx('sub-desc')}>Sử dụng tên thật để bạn bè dễ dàng nhận diện hơn.</span>
                         </div>
 
@@ -76,11 +96,12 @@ function SubModelInfoAccount() {
                                 <span className={cx('sub-title-desc')}>Giới tính: </span>
                                 <div className={cx('gender-radio')}>
                                     <div className={cx('radio-option')}>
-                                        <input type="radio" name="male" checked />
+                                        <input type="radio" name="male" defaultChecked={true} />
                                         <div className={cx('gender')}>Nam</div>
                                     </div>
                                     <div className={cx('radio-option')}>
-                                        <input type="radio" name="female" /> <div className={cx('gender')}>Nữ</div>
+                                        <input type="radio" name="female" />
+                                        <div className={cx('gender')}>Nữ</div>
                                     </div>
                                 </div>
                             </div>

@@ -6,6 +6,17 @@
 
 .message-top {
     display: flex;
+    position: relative;
+}
+
+.message-image {
+    display: flex;
+    flex-direction: column;
+}
+
+.image {
+    width: 120px;
+    height: 120px;
 }
 
 .message-top-img {
@@ -23,6 +34,7 @@
     color: var(--text);
     font-size: 1.4rem;
     max-width: 300px;
+    // position: relative;
 }
 
 .message-bottom {
@@ -36,7 +48,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .own .message-top-text {
@@ -50,13 +62,12 @@
     align-items: center;
     padding: 0;
     background-color: var(--white);
-    position: relative;
 }
 
-.like-icon, .like-icon-receiver {
+.like-icon {
     position: absolute;
-    bottom: -26px;
-    right: -40px;
+    bottom: -18px;
+    right: -36px;
     font-size: 1.2rem;
     padding: 6px;
     border-radius: 50%;
@@ -65,8 +76,14 @@
 }
 
 .like-icon-receiver {
-    bottom: -26px;
-    left: -40px;
+    position: absolute;
+    bottom: -12px;
+    left: -36px;
+    font-size: 1.2rem;
+    padding: 6px;
+    border-radius: 50%;
+    background-color: var(--white);
+    cursor: pointer;
 }
 
 .options {
