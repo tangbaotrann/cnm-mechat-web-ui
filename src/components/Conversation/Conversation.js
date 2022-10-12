@@ -24,7 +24,7 @@ function Conversation({ conversation, isPhoneBook }) {
             />
 
             <div className={cx('content')}>
-                <h4 className={cx('username')}>{conversation.name}</h4>
+                <h4 className={cx('username')}>{conversation.name} </h4>
                 {isPhoneBook ? null : (
                     <p className={cx('message')}>
                         {message?.conversationID === conversation.id ? message.content : conversation.content}

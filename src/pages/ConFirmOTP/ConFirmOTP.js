@@ -3,13 +3,19 @@ import classNames from 'classnames/bind';
 import images from '~/assets/images';
 import { ArrowLeft } from '@material-ui/icons';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { authentication } from '~/util/firebase';
 import { RecaptchaVerifier } from 'firebase/auth';
+
 const cx = classNames.bind(styles);
 function ConFirmOTP() {
     const [OTP, setOTP] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+    const token = location.state;
+
+    console.log(token);
+
     const generateRecaptcha = () => {
         window.recaptchaVerifier = new RecaptchaVerifier(
             'tam',
@@ -20,17 +26,13 @@ function ConFirmOTP() {
             authentication,
         );
     };
-
-    const handleconfirm = async (e) => {
+    const handleConfirm = async (e) => {
         e.preventDefault();
         console.log('da click');
         console.log('ngoai if');
         if (OTP.length === 6) {
-            //  setchangeForm(true);
             console.log('trong if');
             generateRecaptcha();
-            //     const phoneNumbers = "+84" + phoneNumber.slice(1);
-            //console.log(phoneNumbers + "sao khi +84")
             if (OTP.length === 6) {
                 let confirmationResult = window.confirmationResult;
                 confirmationResult
@@ -39,6 +41,7 @@ function ConFirmOTP() {
                         // User signed in successfully.
                         // ...
                         console.log('hoan thanh');
+                        localStorage.setItem('user_login', JSON.stringify(token));
                         navigate('/me.chat');
                     })
                     .catch((error) => {
@@ -59,7 +62,7 @@ function ConFirmOTP() {
                 <h1>Xác nhận mã OTP</h1>
             </div>
             <div className={cx('otp-form')}>
-                <form onSubmit={handleconfirm}>
+                <form onSubmit={handleConfirm}>
                     <div className={cx('form-otp')}>
                         <input
                             type="tel"
@@ -69,7 +72,7 @@ function ConFirmOTP() {
                             name="otp"
                         />
                     </div>
-                    <div className={cx('form-buttonotp')}>
+                    <div className={cx('form-button-otp')}>
                         <h5 className={cx('form-resend-code')}>Gửi lại mã</h5>
                         <button type="submit" variant="contained" color="primary">
                             Xác nhận

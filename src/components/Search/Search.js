@@ -119,7 +119,11 @@ function Search() {
                         <div className={cx('items')}>
                             <Tippy className={cx('tool-tip')} content="Thêm bạn" delay={[200, 0]}>
                                 <button className={cx('btn-click-icon')}>
-                                    <FontAwesomeIcon className={cx('item')} icon={faUserPlus} onClick={handleModelOpenInfoAccount} />
+                                    <FontAwesomeIcon
+                                        className={cx('item')}
+                                        icon={faUserPlus}
+                                        onClick={handleModelOpenInfoAccount}
+                                    />
                                 </button>
                             </Tippy>
                             <Tippy className={cx('tool-tip')} content="Tạo nhóm chat" delay={[200, 0]}>
@@ -131,25 +135,25 @@ function Search() {
                     )}
                 </div>
             </TippyHeadless>
-            <ModelWrapper className={cx('model-add-friend')} open={openInfoAccount} onClose={handleModelCloseInfoAccount}>
-            <div className={cx('model-add-friend-bg')} >
+            <ModelWrapper
+                className={cx('model-add-friend')}
+                open={openInfoAccount}
+                onClose={handleModelCloseInfoAccount}
+            >
+                <div className={cx('model-add-friend-bg')}>
                     <div className={cx('add-friend-title')}>
-                            <span className={cx('friend-title')}>Thêm bạn</span>
-                            <button className={cx('close-btn')}>
-                                <FontAwesomeIcon
-                                    className={cx('friend-close-ic')}
-                                    icon={faXmark}
-                                    onClick={handleModelCloseInfoAccount}
-                                />
-                            </button>
-                        </div>
-               <AddFriend/>
-
-                        
-                       
-            </div>
-                            
-             </ModelWrapper>
+                        <span className={cx('friend-title')}>Thêm bạn</span>
+                        <button className={cx('close-btn')}>
+                            <FontAwesomeIcon
+                                className={cx('friend-close-ic')}
+                                icon={faXmark}
+                                onClick={handleModelCloseInfoAccount}
+                            />
+                        </button>
+                    </div>
+                    <AddFriend />
+                </div>
+            </ModelWrapper>
         </div>
     );
 }

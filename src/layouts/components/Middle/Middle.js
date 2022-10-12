@@ -20,7 +20,7 @@ function Middle() {
     const dispatch = useDispatch();
 
     // console.log('USER - MID - ', user._id); // --> get user
-    // console.log('[conversations] - ', conversations);
+    console.log('[conversations] - ', conversations);
     console.log('[user] - ', user);
 
     // Handle fetch conversation

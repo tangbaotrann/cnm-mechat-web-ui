@@ -1,33 +1,29 @@
-
-.add-phoneNumber{
+.add-phoneNumber {
     margin-top: 20px;
-//    border-bottom : solid 0.5px #D3D3D3;
-
+    //    border-bottom : solid 0.5px #D3D3D3;
 }
-.add-phoneNumber input{
-    display:inline-block;
-    width:80%;
-    height:25px;
+.add-phoneNumber input {
+    display: inline-block;
+    width: 80%;
+    height: 25px;
     border: 0;
     outline: 0;
     margin-left: 10%;
     font-size: 1.5rem;
     background: transparent;
     font-weight: bold;
-    font-family:var(--font-family);
+    font-family: var(--font-family);
     transition: border-color 0.2s;
-    border-bottom : solid 0.5px #D3D3D3;
+    border-bottom: solid 0.5px #d3d3d3;
     &:hover {
         opacity: 0.6;
         font-weight: bold;
         color: black;
-        font-family:var(--font-family);
-        border-bottom : solid 1px #0000FF;
-    
+        font-family: var(--font-family);
+        border-bottom: solid 1px #0000ff;
     }
 }
-.clear-btn1
-{
+.clear-btn1 {
     position: absolute;
     font-size: 1.2rem;
     right: 10%;
@@ -41,39 +37,85 @@
         color: var(--primary);
     }
 }
-.result-search
-{
-    margin-top: 20px;
-    height: 240px;
-    background-color: #E8E8E8;
+//add
+.list-conversation {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-top: 10px;
+    &:hover {
+        cursor: pointer;
+        background-color: var(--grey-400);
+        transition: background-color ease-in-out 200ms;
+    }
 }
-.add-friend-bottom
-{
+// Avatar
+.avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: 15px;
+}
+
+.username {
+    font-size: 1.6rem;
+    margin-top: -6px;
+}
+.message {
+    font-size: 1.4rem;
+    margin-top: 6px;
+}
+.result-add-friend button {
+    font-size: 18px;
+    height: 30px;
+    width: 80px;
+    border: 0;
+    border-radius: 5px;
+    background-color: #5757e8;
+    &:hover {
+        cursor: pointer;
+    }
+}
+.result-friend p {
+    font-size: 14px;
+    height: 30px;
+    width: 80px;
+    font-weight: bold;
+    margin-top: 10px;
+    font-family: var(--font-family);
+}
+.tam {
+    height: 80px;
+}
+.add-friend-bottom {
     height: 60px;
+    margin-top: 180px;
 }
-.bottom-button
-{
+.bottom-button {
     margin-left: 58%;
 }
-.add-friend-bottom button
-{
+.add-friend-bottom button {
     margin-top: 10px;
     border: 0;
     cursor: pointer;
 }
-.add-friend-bottom .cancel
-{
+.add-friend-bottom .cancel {
     height: 40px;
     width: 55px;
     margin-right: 10px;
     border-radius: 5px;
 }
-.add-friend-bottom .search
-{
+.add-friend-bottom .search {
     height: 40px;
     width: 70px;
     margin-right: 10px;
     border-radius: 5px;
-    background-color: #0000FF;
+    background-color: #5757e8;
     color: black;
 }

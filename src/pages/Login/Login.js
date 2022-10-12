@@ -26,7 +26,7 @@ function Login() {
         }
     });
     const sign = () => {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/users/login`, {
+        return fetch(`${process.env.REACT_APP_BASE_URL}users/login`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -39,15 +39,10 @@ function Login() {
         })
             .then((res) => res.json())
             .then((resData) => {
-                console.log('[DATA] - ', resData);
                 if (resData.status === 'success') {
                     console.log(resData);
-                    //  resolve(resData);
-                    localStorage.setItem('user_login', JSON.stringify(resData));
                     return resData;
-                    // navigate('/ConFirmOTP')
                 } else {
-                    // throw new Error("404 else");
                     return Promise.reject(new Error('404 else'));
                 }
             })
@@ -70,8 +65,8 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         sign()
-            .then((v) => {
-                console.log(v);
+            .then((token) => {
+                console.log(token);
                 console.log('da click');
                 console.log(phoneNumber + 'ngoai if');
                 if (phoneNumber.length >= 10) {
@@ -88,7 +83,7 @@ function Login() {
                             window.confirmationResult = confirmationResult;
                             console.log('ĐÃ gửi OTP');
                             // ...
-                            navigate('/ConFirmOTP');
+                            navigate('/ConFirmOTP', { state: token });
                         })
                         .catch((error) => {
                             // Error; SMS not sent

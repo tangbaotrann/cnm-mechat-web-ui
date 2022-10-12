@@ -4,18 +4,48 @@
 }
 .wrapper-center {
     flex: 2.7;
-    border-right: solid 0.5px #D3D3D3;
+    border-right: solid 0.5px #d3d3d3;
 }
-.wrapper-rightbar
-{
+.wrapper-rightBar {
     flex: 9;
     width: 100%;
-    background-color:#E8E8E8;
-
+    background-color: #e8e8e8;
 }
+//them ban
 .model-add-friend {
     width: 352px;
     height: 440px;
+}
+.model-add-friend-bg {
+    background-color: var(--white);
+    border-radius: 6px;
+    height: 420px;
+}
+.add-friend-title-model {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    height: 50px;
+    border-bottom: solid 0.5px #d3d3d3;
+}
+
+.friend-title {
+    color: var(--text);
+    font-size: 1.8rem;
+    font-weight: 500;
+    font-family: var(--font-family);
+}
+.close-btn {
+    background-color: transparent;
+    border: none;
+}
+.friend-close-ic {
+    font-size: 2rem;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.6;
+    }
 }
 // Search info
 .search-info {
@@ -40,8 +70,7 @@
         opacity: 0.6;
     }
 }
-.add-friend
-{
+.add-friend {
     display: flex;
     margin-top: 10px;
     line-height: 50%;
@@ -49,63 +78,52 @@
     cursor: pointer;
     &:hover {
         opacity: 0.6;
-        background-color:var(--bg-message);
+        background-color: var(--bg-message);
         color: black;
     }
-
 }
-.add-friend .item
-{
-
+.add-friend .item {
     align-items: center;
     font-size: 30px;
-    color: var( --primary);
-     margin-top: 8px;
+    color: var(--primary);
+    margin-top: 8px;
     margin-left: 10px;
     cursor: pointer;
 }
-.add-friend h2
-{
+.add-friend h2 {
     font-size: 16px;
     margin-top: 21px;
     margin-left: -5px;
-    
-    font-family: var( --font-family) ;
+
+    font-family: var(--font-family);
 }
-.list-addfriend
-{
+.list-add-friend {
     display: flex;
     height: 70px;
     cursor: pointer;
     &:hover {
         opacity: 0.6;
-        background-color:var(--bg-message);
+        background-color: var(--bg-message);
         color: black;
     }
-
 }
-.list-addfriend .list-addfriend-image
-{
+.list-add-friend .list-add-friend-image {
     height: 45px;
     width: 45px;
     margin-top: 11px;
     margin-left: 10px;
 }
-.list-addfriend .list-addfriend-title
-{
+.list-add-friend .list-add-friend-title {
     margin-top: 24px;
-    font-family: var( --font-family) ;
+    font-family: var(--font-family);
     font-size: 18px;
     margin-left: 10px;
-    
 }
-.list-friend
-{
-    border-top: solid 0.5px #D3D3D3;
+.list-friend {
+    border-top: solid 0.5px #d3d3d3;
 }
-.list-friend h1
-{
-    font-family: var( --font-family) ;
+.list-friend h1 {
+    font-family: var(--font-family);
     font-size: 14px;
     margin-left: 10px;
     margin-top: 10px;
@@ -120,28 +138,30 @@
 
 ///Rightbar--------------------------------------------
 
-.wrapper-rightbar .header
-{
+.wrapper-rightBar .header {
     height: 70px;
-    border-bottom: solid 0.5px #D3D3D3;
+    border-bottom: solid 0.5px #d3d3d3;
     background-color: white;
 }
-.list-addfriend .list-addfriend-title2
-{
+.list-add-friend .list-add-friend-title2 {
     margin-top: 20px;
-    font-family: var( --font-family) ;
+    font-family: var(--font-family);
     font-size: 24px;
     margin-left: 10px;
 }
 
-.list-BoxChat
-{
+.list-BoxChat {
     height: calc(100vh - 80px);
     overflow-y: scroll;
 }
-.list-BoxChat::-webkit-scrollbar-thumb
-{
-   
+.list-BoxChat::-webkit-scrollbar-thumb {
     background-color: rgb(150, 147, 147);
 }
-
+.list-BoxChat h1 {
+    color: var(--text);
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-left: 5%;
+    margin-bottom: -10px;
+}
