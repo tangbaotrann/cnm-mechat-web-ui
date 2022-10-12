@@ -25,7 +25,6 @@ function App() {
                 <Route exact path="/phonebook" element={<PhoneBook />} />
             </Routes>
         </Router>
-
     );
 }
 

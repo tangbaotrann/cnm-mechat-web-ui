@@ -5,23 +5,25 @@ import 'tippy.js/dist/tippy.css';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faAddressBook, faGear } from '@fortawesome/free-solid-svg-icons';
+import { useSelector } from 'react-redux';
 
 // me
 import styles from './Sidebar.module.scss';
-import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
 import { MenuSetting } from './Menu';
+import { userLogin } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
+    const user = useSelector(userLogin);
     return (
         <div className={cx('wrapper')}>
             {/* top */}
             <div className={cx('sidebar-top')}>
                 <div className={cx('avatar')}>
                     <Menu>
-                        <img className={cx('avatar-img')} src={images.avt} alt="avatar" />
+                        <img className={cx('avatar-img')} src={user.avatarLink} alt="avatar" />
                     </Menu>
                 </div>
 

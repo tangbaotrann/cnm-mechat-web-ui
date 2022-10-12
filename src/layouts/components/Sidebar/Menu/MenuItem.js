@@ -45,11 +45,11 @@ function MenuItem() {
             </>
         );
     };
-//logout
-const userlogout = ()=>{
-    localStorage.removeItem("user_login")
-    navigate("/login");
-}
+    //logout
+    const userLogout = () => {
+        localStorage.removeItem('user_login');
+        navigate('/login');
+    };
     // Menu popper sub intro
     const renderMenuPopperSubIntroVersion = () => {
         return (
@@ -196,7 +196,9 @@ const userlogout = ()=>{
             <div className={cx('footer')}>
                 <div className={cx('setting-option')}>
                     <FontAwesomeIcon className={cx('setting-icon')} icon={faRightFromBracket} />
-                    <button className={cx('setting-item-btn')} onClick={userlogout}>Đăng xuất</button>
+                    <button className={cx('setting-item-btn')} onClick={userLogout}>
+                        Đăng xuất
+                    </button>
                 </div>
             </div>
         </>
