@@ -9,9 +9,9 @@ import { faComment, faAddressBook, faGear } from '@fortawesome/free-solid-svg-ic
 
 // me
 import styles from './Sidebar.module.scss';
+import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
 import { MenuSetting } from './Menu';
-import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 

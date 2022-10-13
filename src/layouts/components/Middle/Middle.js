@@ -14,7 +14,6 @@ const cx = classNames.bind(styles);
 
 function Middle() {
     const [conversations, setConversation] = useState([]);
-
     const user = useSelector((state) => state.user.data);
 
     const dispatch = useDispatch();
@@ -25,9 +24,10 @@ function Middle() {
 
     // Handle fetch conversation
     useEffect(() => {
+        // dispatch(setConversation(fetchApiConversation()));
         const fetchApi = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user._id}`);
+                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);
                 // console.log('conversation by id - ', res.data.data);
                 setConversation(res.data.data);
             } catch (err) {
@@ -36,7 +36,7 @@ function Middle() {
         };
 
         fetchApi();
-    }, [user._id]);
+    }, [user?._id]);
 
     return (
         <div className={cx('wrapper')}>

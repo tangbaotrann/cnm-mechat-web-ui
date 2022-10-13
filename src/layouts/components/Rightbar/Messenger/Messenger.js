@@ -52,11 +52,17 @@ function Messenger() {
 
     // fetch server socket
     useEffect(() => {
-        // socket.current = io(process.env.REACT_APP_SOCKET, { transports: ['websocket', 'polling', 'flashsocket'] });
+        // socket.current = io(process.env.REACT_APP_SOCKET, {
+        //     transports: ['websocket', 'polling'],
+        //     allowedHeaders: ['abc', 'Authorization'],
+        //     withCredentials: true,
+        // });
         socket.current = io('ws://localhost:8900');
+        // socket.current = io('https://6f70-2402-800-63a9-e221-5d8f-3a7d-5ad4-da76.ap.ngrok.io');
 
         // get message
         socket.current.on('getMessage', (data) => {
+            // console.log('LOGG - ', data);
             setArrivalMessage({
                 senderID: data.senderID,
                 content: data.content,
@@ -115,6 +121,8 @@ function Messenger() {
         };
 
         const receiverID = conversation?.members.find((member) => member !== user._id);
+
+        console.log('receiverID', receiverID);
 
         // send message with socket
         socket.current.emit('sendMessage', {

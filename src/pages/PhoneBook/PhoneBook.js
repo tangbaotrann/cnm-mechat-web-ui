@@ -4,6 +4,9 @@ import { NavLink } from 'react-router-dom';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+
 // me
 import styles from './PhoneBook.module.scss';
 import images from '~/assets/images';
@@ -11,12 +14,10 @@ import Search from '~/components/Search';
 import Conversation from '~/components/Conversation';
 import Sidebar from '~/layouts/components/Sidebar';
 import BoxChat from '~/components/BoxChat';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { listFriend, listFriendAccept } from '~/redux/selector';
 import ModelWrapper from '~/components/ModelWrapper';
 import AddFriend from '~/components/AddFriend';
 import FriendRequestList from './FriendRequest_list/FriendRequestList';
-import { listFriend, listFriendAccept } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -25,9 +26,13 @@ function PhoneBook() {
     const [changeLayout, setChangeLayout] = useState(false);
 
     const listFriends = useSelector(listFriend);
-    //  console.log(listFriends, 'taooooooooooooooooooooo');
+
+    // const conversation = useSelector((state) => state.conversations.conversationClick);
     // const message = useSelector((state) => state.messages.clickSendMessage);
-    // console.log(message, 'taooooooooooooooooooooo');
+
+    // console.log('[conversation] - ', conversation);
+    // console.log('[LIST FRIEND - ] - ', listFriends);
+
     const listAccept = useSelector(listFriendAccept);
 
     //
@@ -43,6 +48,7 @@ function PhoneBook() {
     const handleGroupChat = () => {
         setChangeLayout(true);
     };
+
     return (
         <div className={cx('wrapper')}>
             <Sidebar />
@@ -70,7 +76,7 @@ function PhoneBook() {
                     {/* Conversation or MiddleDirectory */}
                     <div className={cx('conversations')}>
                         {listFriends.map((user) => {
-                            return <Conversation key={user._id} user={user} isPhoneBook />;
+                            return <Conversation key={user._id} conversation={user} isPhoneBook />;
                         })}
                     </div>
                 </div>
