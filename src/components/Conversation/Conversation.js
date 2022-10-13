@@ -13,7 +13,7 @@ function Conversation({ conversation, isPhoneBook }) {
     const message = useSelector((state) => state.messages.clickSendMessage);
 
     // console.log('MESSAGE - CONVERSATION - ', message);
-    console.log('CONVERSATION - CONVERSATION - ', conversation);
+    // console.log('CONVERSATION - CONVERSATION - ', conversation);
 
     return (
         <div className={cx('list-conversation')}>

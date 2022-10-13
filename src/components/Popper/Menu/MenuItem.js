@@ -1,10 +1,8 @@
 // libs
 import classNames from 'classnames/bind';
-import { useSelector } from 'react-redux';
 // me
 import styles from './Menu.module.scss';
 import ModelInfoAccount from '~/components/ModelWrapper/ModelInfoAccount';
-import { userLogin } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
