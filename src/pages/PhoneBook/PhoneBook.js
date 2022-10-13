@@ -26,8 +26,8 @@ function PhoneBook() {
 
     const listFriends = useSelector(listFriend);
     //  console.log(listFriends, 'taooooooooooooooooooooo');
-    const message = useSelector((state) => state.messages.clickSendMessage);
-    console.log(message, 'taooooooooooooooooooooo');
+    // const message = useSelector((state) => state.messages.clickSendMessage);
+    // console.log(message, 'taooooooooooooooooooooo');
     const listAccept = useSelector(listFriendAccept);
 
     //
