@@ -44,21 +44,20 @@ function Messenger() {
 
     // console.log('ONLINE USER - ', onlineUsers);
     // console.log('Messenger - Messenger', messages);
-    console.log('conversation - messenger ', conversation);
+    // console.log('conversation - messenger ', conversation);
 
     // console.log('USER - ', user);
-    // console.log('MESSAGES - ', messages);
-    console.log('USER - ', user);
+    console.log('MESSAGES - ', messages);
+    // console.log('USER - ', user);
 
     // fetch server socket
     useEffect(() => {
         // socket.current = io(process.env.REACT_APP_SOCKET, {
-        //     transports: ['websocket', 'polling'],
-        //     allowedHeaders: ['abc', 'Authorization'],
+        //     // transports: ['websocket', 'polling'],
         //     withCredentials: true,
         // });
-        socket.current = io('ws://localhost:8900');
-        // socket.current = io('https://6f70-2402-800-63a9-e221-5d8f-3a7d-5ad4-da76.ap.ngrok.io');
+        // socket.current = io('ws://localhost:8900');
+        socket.current = io('https://c498-113-22-34-182.ap.ngrok.io');
 
         // get message
         socket.current.on('getMessage', (data) => {
@@ -173,7 +172,7 @@ function Messenger() {
                 {/* Messages */}
                 {messages.map((message) => {
                     return (
-                        <div key={message.id} ref={scrollMessenger}>
+                        <div key={message._id} ref={scrollMessenger}>
                             <Message
                                 message={message}
                                 own={message.senderID === user._id}
