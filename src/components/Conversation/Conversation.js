@@ -12,8 +12,9 @@ const cx = classNames.bind(styles);
 function Conversation({ conversation, isPhoneBook }) {
     const message = useSelector((state) => state.messages.clickSendMessage);
 
-    // console.log('MESSAGE - CONVERSATION - ', message);
-    // console.log('CONVERSATION - CONVERSATION - ', conversation);
+    // console.log('arrivalMessage - ', arrivalMessage);
+    // console.log('MESSAGE - ', message);
+    // console.log('CONVERSATION - ', conversation);
 
     return (
         <div className={cx('list-conversation')}>
