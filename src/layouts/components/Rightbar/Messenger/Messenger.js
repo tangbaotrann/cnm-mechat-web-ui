@@ -50,7 +50,7 @@ function Messenger() {
 
     // user join room
     useEffect(() => {
-        socket.emit('join_room', user._id, conversation.id);
+        socket.emit('join_room', conversation.id);
 
         socket.on('get_users', (users) => {
             console.log('USER - ONLINE -', users);
