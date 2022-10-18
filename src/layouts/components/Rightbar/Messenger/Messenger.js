@@ -1,12 +1,10 @@
-// libs
+// lib
 import classNames from 'classnames/bind';
-import axios from 'axios';
 import TippyHeadless from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogleDrive } from '@fortawesome/free-brands-svg-icons';
 import {
@@ -24,133 +22,95 @@ import styles from './Messenger.module.scss';
 import Message from '~/components/Message';
 import Popper from '~/components/Popper';
 import OnlineStatus from '~/components/OnlineStatus';
-import messagesSlice from '~/redux/features/messages/messagesSlice';
+import socket from '~/util/socket';
+import messagesSlice, {
+    fetchApiSendMessage,
+    fetchApiMessagesByConversationId,
+} from '~/redux/features/messages/messagesSlice';
 
 const cx = classNames.bind(styles);
 
 function Messenger() {
-    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const [arrivalMessage, setArrivalMessage] = useState(null);
+    const [newImageMessage, setNewImageMessage] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
-
-    const conversation = useSelector((state) => state.conversations.conversationClick);
-    const user = useSelector((state) => state.user.data);
-
-    const scrollMessenger = useRef();
-    const socket = useRef();
 
     const dispatch = useDispatch();
 
-    // console.log('ONLINE USER - ', onlineUsers);
-    // console.log('Messenger - Messenger', messages);
-    console.log('conversation - messenger ', conversation);
+    const user = useSelector((state) => state.user.data);
+    const conversation = useSelector((state) => state.conversations.conversationClick);
+    const listMessage = useSelector((state) => state.messages.data);
 
-    // console.log('USER - ', user);
-    // console.log('MESSAGES - ', messages);
-    console.log('USER - ', user);
-
-    // fetch server socket
-    useEffect(() => {
-        // socket.current = io(process.env.REACT_APP_SOCKET, {
-        //     transports: ['websocket', 'polling'],
-        //     allowedHeaders: ['abc', 'Authorization'],
-        //     withCredentials: true,
-        // });
-        // socket.current = io('ws://localhost:8900');
-        socket.current = io(process.env.REACT_APP_SOCKET, {
-            transports: ['websocket'],
-            reconnection: true,
-        });
-
-        // get message
-        socket.current.on('getMessage', (data) => {
-            // console.log('LOGG - ', data);
-            setArrivalMessage({
-                senderID: data.senderID,
-                content: data.content,
-                createdAt: Date.now(),
-            });
-        });
-    }, []);
-
-    // handle socket io
-    useEffect(() => {
-        socket.current.emit('addUser', user._id);
-
-        socket.current.on('getUsers', (users) => {
-            console.log('USER - ONLINE -', users);
-            setOnlineUsers(conversation?.members.filter((member) => users.some((us) => us.userId === member)));
-        });
-    }, [user, conversation]);
-
-    // handle get message (senderId, content)
-    useEffect(() => {
-        arrivalMessage &&
-            conversation?.members.includes(arrivalMessage.senderID) &&
-            setMessages((prev) => [...prev, arrivalMessage]);
-    }, [arrivalMessage, conversation]);
+    const scrollMessenger = useRef();
 
     // fetch message from conversationId
     useEffect(() => {
-        const fetchApi = async () => {
-            try {
-                if (conversation !== null) {
-                    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}messages/${conversation.id}`);
-                    // console.log('RES - ', res.data);
-                    setMessages(res.data);
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        };
+        dispatch(fetchApiMessagesByConversationId(conversation.id));
+    }, [conversation.id, dispatch]);
 
-        fetchApi();
-    }, [conversation]);
+    // user join room
+    useEffect(() => {
+        socket.emit('join_room', user._id, conversation.id);
 
-    // Handle change message
+        socket.on('get_users', (users) => {
+            console.log('USER - ONLINE -', users);
+            setOnlineUsers(conversation?.members.filter((member) => users.some((us) => us.userId === member)));
+        });
+    }, [user._id, conversation]);
+
+    // realtime message of receiver
+    useEffect(() => {
+        socket.on('receiver_message', (message) => {
+            dispatch(messagesSlice.actions.arrivalMessageFromSocket(message));
+        });
+    }, [dispatch]);
+
+    // handle change message
     const handleChangeMessage = (e) => {
-        setNewMessage(e.target.value);
+        const mess = e.target.value;
+
+        if (!mess.startsWith(' ')) {
+            setNewMessage(mess);
+        }
     };
 
-    // Handle button send message
+    // handle change image and preview image
+    const handleChangeImageMessage = (e) => {
+        const file = e.target.files[0];
+
+        file.preview = URL.createObjectURL(file);
+
+        setNewImageMessage(file);
+    };
+
+    // cleanup func
+    useEffect(() => {
+        return () => {
+            newImageMessage && URL.revokeObjectURL(newImageMessage.preview);
+        };
+    }, [newImageMessage]);
+
+    // handle button send message
     const handleSendMessage = async (e) => {
         e.preventDefault();
 
-        const message = {
-            conversationID: conversation.id,
-            senderID: user._id,
-            content: newMessage,
-        };
+        dispatch(
+            fetchApiSendMessage({
+                conversationID: conversation.id,
+                senderID: user._id,
+                content: newMessage,
+                imageLink: newImageMessage,
+            }),
+        );
 
-        const receiverID = conversation?.members.find((member) => member !== user._id);
-
-        console.log('receiverID', receiverID);
-
-        // send message with socket
-        socket.current.emit('sendMessage', {
-            senderID: user._id,
-            receiverID: receiverID,
-            content: newMessage,
-        });
-
-        try {
-            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}messages`, message);
-            // console.log('RES - ', res.data);
-            setMessages([...messages, res.data]);
-
-            dispatch(messagesSlice.actions.addMessages(res.data));
-
-            setNewMessage('');
-        } catch (err) {
-            console.log(err);
-        }
+        setNewMessage('');
+        setNewImageMessage(null);
     };
 
     // scroll messenger
     useEffect(() => {
         conversation && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [conversation, messages]);
+    }, [conversation]);
 
     return (
         <div className={cx('messenger')}>
@@ -174,15 +134,14 @@ function Messenger() {
 
             <div className={cx('messenger-body')}>
                 {/* Messages */}
-                {messages.map((message) => {
+                {listMessage.map((message) => {
                     return (
-                        <div key={message.id} ref={scrollMessenger}>
+                        <div key={message._id} ref={scrollMessenger}>
                             <Message
                                 message={message}
                                 own={message.senderID === user._id}
                                 conversation={conversation}
                                 user={user}
-                                socket={socket}
                             />
                         </div>
                     );
@@ -194,11 +153,20 @@ function Messenger() {
                     {/* option image */}
                     <label htmlFor="file">
                         <div className={cx('option-image-icon')}>
-                            <Tippy className={cx('tool-tip')} content="Gửi hình ảnh" delay={[200, 0]}>
+                            <Tippy className={cx('tool-tip')} content="Gửi hình ảnh hoặc video" delay={[200, 0]}>
                                 <FontAwesomeIcon className={cx('option-icon')} icon={faImage} />
                             </Tippy>
-                            <input className={cx('hide')} type="file" id="file" accept=".png, .jpg, .jpeg" />
+                            <input
+                                className={cx('hide')}
+                                type="file"
+                                id="file"
+                                accept=".png, .jpg, .jpeg, .mov, .mp4"
+                                onChange={handleChangeImageMessage}
+                            />
                         </div>
+                        {newImageMessage?.preview && (
+                            <img className={cx('image-upload')} src={newImageMessage.preview} alt="img" />
+                        )}
                     </label>
                     {/* option file */}
                     <TippyHeadless
@@ -257,7 +225,7 @@ function Messenger() {
                         <FontAwesomeIcon className={cx('icon-right')} icon={faFaceSmile} />
                     </Tippy>
                     {/* Button send message */}
-                    {newMessage ? (
+                    {newMessage || newImageMessage ? (
                         <button className={cx('send-message-btn')} onClick={handleSendMessage}>
                             GỬI
                         </button>

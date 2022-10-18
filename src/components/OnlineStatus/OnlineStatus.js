@@ -15,12 +15,6 @@ function OnlineStatus({ onlineUsers, conversation }) {
 
     const listFriends = useSelector(listFriend);
 
-    // console.log('[LIST FRIEND - ] - ', listFriends);
-    // console.log('FRIEND - ', friends);
-    // console.log('[onlineFriends] - ', onlineFriends);
-    // console.log('[conversation] - ', conversation);
-    // console.log('[onlineUsers] - ', onlineUsers);
-
     // fetch api friends
     useEffect(() => {
         setFriends(listFriends);
