@@ -14,9 +14,10 @@ const cx = classNames.bind(styles);
 
 function Middle() {
     const [conversations, setConversation] = useState([]);
-    const user = useSelector((state) => state.user.data);
 
     const dispatch = useDispatch();
+
+    const user = useSelector((state) => state.user.data);
 
     // console.log('USER - MID - ', user._id); // --> get user
     // console.log('[conversations] - ', conversations);

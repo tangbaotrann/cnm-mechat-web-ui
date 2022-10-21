@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import TippyHeadless from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { format } from 'timeago.js';
+import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { faCopy, faEllipsis, faQuoteRight, faRepeat, faShare, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +18,7 @@ const cx = classNames.bind(styles);
 function Message({ message, own, conversation, user }) {
     // const conversation = useSelector((state) => state.conversations.conversationClick);
 
-    // console.log('MESSAGE - Message', message);
+    // console.log('MESSAGE - Message', message.imageLink);
     // console.log('[conversation] - ', conversation);
     // console.log('[user] - ', user);
     // console.log('OWN - ', own);
@@ -108,7 +108,28 @@ function Message({ message, own, conversation, user }) {
                             delay={[200, 100]}
                         >
                             {/* render message (sender) */}
-                            <p className={cx('message-top-text')}>{message.content}</p>
+                            <div>
+                                {message.imageLink && message.content && (
+                                    <>
+                                        <p className={cx('message-top-text')}>{message.content}</p>
+                                        <img className={cx('image-send-user')} src={message.imageLink} alt="img" />
+                                        {/* {message.imageLink.split('.mp4') && (
+                                            <video
+                                                controls
+                                                className={cx('image-send-user')}
+                                                src={message.imageLink}
+                                                alt="img"
+                                            />
+                                        )} */}
+                                    </>
+                                )}
+                                {message.imageLink && !message.content && (
+                                    <img className={cx('image-send-user')} src={message.imageLink} alt="img" />
+                                )}
+                                {message.imageLink === null && (
+                                    <p className={cx('message-top-text')}>{message.content}</p>
+                                )}
+                            </div>
                         </TippyHeadless>
                         <img
                             className={cx('message-top-img')}
@@ -116,7 +137,7 @@ function Message({ message, own, conversation, user }) {
                             alt="avatar"
                         />
                     </div>
-                    <span className={cx('message-bottom')}>{format(message.createdAt)}</span>
+                    <span className={cx('message-bottom')}>{moment(message.createdAt).format('h:mm a')}</span>
                 </div>
             ) : (
                 <div className={cx('wrapper')}>
@@ -206,10 +227,29 @@ function Message({ message, own, conversation, user }) {
                             delay={[200, 100]}
                         >
                             {/* render message (sender) */}
-                            <p className={cx('message-top-text')}>{message.content}</p>
+                            <div>
+                                {message.imageLink && message.content && (
+                                    <>
+                                        <p className={cx('message-top-text')}>{message.content}</p>
+                                        <img className={cx('image-send-user-left')} src={message.imageLink} alt="img" />
+                                        {/* <video
+                                            controls
+                                            className={cx('image-send-user')}
+                                            src={message.imageLink}
+                                            alt="img"
+                                        /> */}
+                                    </>
+                                )}
+                                {message.imageLink && !message.content && (
+                                    <img className={cx('image-send-user-left')} src={message.imageLink} alt="img" />
+                                )}
+                                {message.imageLink === null && (
+                                    <p className={cx('message-top-text')}>{message.content}</p>
+                                )}
+                            </div>
                         </TippyHeadless>
                     </div>
-                    <span className={cx('message-bottom')}>{format(message.createdAt)}</span>
+                    <span className={cx('message-bottom-left')}>{moment(message.createdAt).format('h:mm a')}</span>
                 </div>
             )}
         </>
