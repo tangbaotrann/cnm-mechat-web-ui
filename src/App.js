@@ -1,6 +1,4 @@
 // libs
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // me
@@ -9,17 +7,21 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import PhoneBook from './pages/PhoneBook/PhoneBook';
 import ConFirmOTP from './pages/ConFirmOTP';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchUsers } from './redux/features/user/usersSlice';
 import { fetchApiUser } from './redux/features/user/userSlice';
+import { friendAccept } from './redux/features/friend/friendAccept';
+import { meRequestFriend } from './redux/features/friend/meFriendRequest';
 
 function App() {
     const dispatch = useDispatch();
-
-    // get user current
     useEffect(() => {
+        dispatch(fetchUsers());
         dispatch(fetchApiUser());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
+        dispatch(friendAccept());
+        dispatch(meRequestFriend());
+    });
     return (
         <Router>
             <Routes>

@@ -28,18 +28,6 @@ const conversationSlice = createSlice({
             state.conversationClick = action.payload;
         },
     },
-    // extraReducers: {
-    //     [fetchApiConversation.pending]: (state, payload) => {
-    //         state.isSuccess = true;
-    //     },
-    //     [fetchApiConversation.fulfilled]: (state, payload) => {
-    //         state.data = payload;
-    //         state.isSuccess = false;
-    //     },
-    //     [fetchApiConversation.rejected]: (state, payload) => {
-    //         state.isSuccess = false;
-    //     },
-    // },
 });
 
 export default conversationSlice;

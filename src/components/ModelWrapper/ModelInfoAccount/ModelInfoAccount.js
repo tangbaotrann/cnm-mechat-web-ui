@@ -67,6 +67,9 @@ function ModelInfoAccount({ yourProfile, user }) {
                             <div className={cx('info-name')}>
                                 <div className={cx('name')}>{user?.fullName}</div>
                             </div>
+                            <div className={cx('info-bio')}>
+                                <div className={cx('bio')}>{user?.bio}</div>
+                            </div>
                         </div>
                     </div>
                     {/* render (map) after */}

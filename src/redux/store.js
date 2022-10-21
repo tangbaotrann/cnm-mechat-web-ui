@@ -9,6 +9,7 @@ import userListSlice from './features/user/usersSlice';
 import messagesSlice from './features/messages/messagesSlice';
 import filterSlice from './features/filter/filterSlice';
 import listFriendAccept from './features/friend/friendAccept';
+import listMeRequestFriend from './features/friend/meFriendRequest';
 
 const store = configureStore({
     reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
         users: userListSlice.reducer,
         listAccept: listFriendAccept.reducer,
         messages: messagesSlice.reducer,
+        listMeRequest: listMeRequestFriend.reducer,
     },
 });
 
