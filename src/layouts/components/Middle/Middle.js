@@ -25,7 +25,6 @@ function Middle() {
 
     // Handle fetch conversation
     useEffect(() => {
-        // dispatch(setConversation(fetchApiConversation()));
         const fetchApi = async () => {
             try {
                 const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);

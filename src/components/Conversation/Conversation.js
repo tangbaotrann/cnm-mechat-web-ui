@@ -12,23 +12,25 @@ const cx = classNames.bind(styles);
 function Conversation({ conversation, isPhoneBook }) {
     const message = useSelector((state) => state.messages.clickSendMessage);
 
-    // console.log('arrivalMessage - ', arrivalMessage);
+    // const messageCurrent = useSelector((state) => state.messages.data);
+
+    // console.log('[messageCurrent] - ', messageCurrent);
     // console.log('MESSAGE - ', message);
-    // console.log('CONVERSATION - ', conversation);
+    // console.log('[CONVERSATION] - ', conversation);
 
     return (
         <div className={cx('list-conversation')}>
             <img
                 className={cx('avatar-img')}
-                src={conversation.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
+                src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
                 alt="avatar"
             />
 
             <div className={cx('content')}>
-                <h4 className={cx('username')}>{conversation.name} </h4>
+                <h4 className={cx('username')}>{conversation?.name} </h4>
                 {isPhoneBook ? null : (
                     <p className={cx('message')}>
-                        {message?.conversationID === conversation.id ? message.content : conversation.content}
+                        {message?.conversationID === conversation?.id ? message.content : conversation.content}
                     </p>
                 )}
             </div>
