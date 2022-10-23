@@ -12,8 +12,6 @@ const cx = classNames.bind(styles);
 function Conversation({ conversation, isPhoneBook }) {
     const message = useSelector((state) => state.messages.clickSendMessage);
 
-    // const messageCurrent = useSelector((state) => state.messages.data);
-
     // console.log('[messageCurrent] - ', messageCurrent);
     // console.log('MESSAGE - ', message);
     // console.log('[CONVERSATION] - ', conversation);

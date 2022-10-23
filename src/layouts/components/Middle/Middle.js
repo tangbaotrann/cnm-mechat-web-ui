@@ -19,7 +19,6 @@ function Middle() {
 
     const user = useSelector((state) => state.user.data);
 
-    // console.log('USER - MID - ', user._id); // --> get user
     // console.log('[conversations] - ', conversations);
     // console.log('[user] - ', user);
 
