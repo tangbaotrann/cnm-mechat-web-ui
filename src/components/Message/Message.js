@@ -16,13 +16,6 @@ import Popper from '../Popper';
 const cx = classNames.bind(styles);
 
 function Message({ message, own, conversation, user }) {
-    // const conversation = useSelector((state) => state.conversations.conversationClick);
-
-    // console.log('MESSAGE - Message', message.imageLink);
-    // console.log('[conversation] - ', conversation);
-    // console.log('[user] - ', user);
-    // console.log('OWN - ', own);
-
     return (
         <>
             {own ? (
@@ -106,25 +99,57 @@ function Message({ message, own, conversation, user }) {
                             placement="bottom-start"
                             offset={[-74, -18]} // 10 4
                             delay={[200, 100]}
+                            appendTo={() => document.body}
                         >
                             {/* render message (sender) */}
                             <div>
                                 {message.imageLink && message.content && (
                                     <>
-                                        <p className={cx('message-top-text')}>{message.content}</p>
-                                        <img className={cx('image-send-user')} src={message.imageLink} alt="img" />
-                                        {/* {message.imageLink.split('.mp4') && (
-                                            <video
-                                                controls
-                                                className={cx('image-send-user')}
-                                                src={message.imageLink}
-                                                alt="img"
-                                            />
-                                        )} */}
+                                        {message.imageLink.split('.')[message.imageLink.split('.').length - 1] ===
+                                        'mp4' ? (
+                                            <>
+                                                <p className={cx('message-top-text')}>{message.content}</p>
+                                                <video
+                                                    controls
+                                                    className={cx('image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className={cx('message-top-text')}>{message.content}</p>
+                                                <img
+                                                    className={cx('image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </>
+                                        )}
                                     </>
                                 )}
                                 {message.imageLink && !message.content && (
-                                    <img className={cx('image-send-user')} src={message.imageLink} alt="img" />
+                                    <>
+                                        {message.imageLink.split('.')[message.imageLink.split('.').length - 1] ===
+                                        'mp4' ? (
+                                            <>
+                                                <video
+                                                    controls
+                                                    className={cx('image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <img
+                                                    className={cx('image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </>
+                                        )}
+                                    </>
                                 )}
                                 {message.imageLink === null && (
                                     <p className={cx('message-top-text')}>{message.content}</p>
@@ -225,23 +250,57 @@ function Message({ message, own, conversation, user }) {
                             placement="bottom-end"
                             offset={[74, -18]}
                             delay={[200, 100]}
+                            appendTo={() => document.body}
                         >
                             {/* render message (sender) */}
                             <div>
                                 {message.imageLink && message.content && (
                                     <>
-                                        <p className={cx('message-top-text')}>{message.content}</p>
-                                        <img className={cx('image-send-user-left')} src={message.imageLink} alt="img" />
-                                        {/* <video
-                                            controls
-                                            className={cx('image-send-user')}
-                                            src={message.imageLink}
-                                            alt="img"
-                                        /> */}
+                                        {message.imageLink.split('.')[message.imageLink.split('.').length - 1] ===
+                                        'mp4' ? (
+                                            <>
+                                                <p className={cx('message-top-text')}>{message.content}</p>
+                                                <video
+                                                    controls
+                                                    className={cx('image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className={cx('message-top-text')}>{message.content}</p>
+                                                <img
+                                                    className={cx('image-send-user-left')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </>
+                                        )}
                                     </>
                                 )}
                                 {message.imageLink && !message.content && (
-                                    <img className={cx('image-send-user-left')} src={message.imageLink} alt="img" />
+                                    <>
+                                        {message.imageLink.split('.')[message.imageLink.split('.').length - 1] ===
+                                        'mp4' ? (
+                                            <>
+                                                <video
+                                                    controls
+                                                    className={cx('image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <img
+                                                    className={cx('image-send-user-left')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </>
+                                        )}
+                                    </>
                                 )}
                                 {message.imageLink === null && (
                                     <p className={cx('message-top-text')}>{message.content}</p>

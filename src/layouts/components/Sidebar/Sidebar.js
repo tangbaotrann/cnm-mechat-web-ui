@@ -42,7 +42,7 @@ function Sidebar() {
                     >
                         <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="/me.chat">
                             <FontAwesomeIcon icon={faComment} />
-                            <span className={cx('badge')}>5+</span>
+                            {/* <span className={cx('badge')}>5+</span> */}
                         </NavLink>
                     </Tippy>
                     <Tippy

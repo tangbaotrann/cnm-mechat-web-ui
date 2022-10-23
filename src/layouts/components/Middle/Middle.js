@@ -19,13 +19,11 @@ function Middle() {
 
     const user = useSelector((state) => state.user.data);
 
-    // console.log('USER - MID - ', user._id); // --> get user
     // console.log('[conversations] - ', conversations);
     // console.log('[user] - ', user);
 
     // Handle fetch conversation
     useEffect(() => {
-        // dispatch(setConversation(fetchApiConversation()));
         const fetchApi = async () => {
             try {
                 const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);

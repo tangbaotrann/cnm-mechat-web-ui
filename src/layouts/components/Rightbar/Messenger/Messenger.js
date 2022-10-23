@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogleDrive } from '@fortawesome/free-brands-svg-icons';
 import {
+    faClose,
     faFaceSmile,
     faFile,
     faImage,
@@ -16,6 +17,7 @@ import {
     faUserGroup,
     faVideo,
 } from '@fortawesome/free-solid-svg-icons';
+import { CircularProgress } from '@material-ui/core';
 
 // me
 import styles from './Messenger.module.scss';
@@ -34,12 +36,14 @@ function Messenger() {
     const [newMessage, setNewMessage] = useState('');
     const [newImageMessage, setNewImageMessage] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const [btnClosePreview, setBtnClosePreview] = useState(false);
 
     const dispatch = useDispatch();
 
     const user = useSelector((state) => state.user.data);
     const conversation = useSelector((state) => state.conversations.conversationClick);
     const listMessage = useSelector((state) => state.messages.data);
+    const isLoading = useSelector((state) => state.messages.isLoading);
 
     const scrollMessenger = useRef();
 
@@ -50,7 +54,8 @@ function Messenger() {
 
     // user join room
     useEffect(() => {
-        socket.emit('join_room', user._id, conversation.id);
+        socket.emit('join_room', conversation.id);
+        socket.emit('status_user', user._id);
 
         socket.on('get_users', (users) => {
             console.log('USER - ONLINE -', users);
@@ -81,6 +86,7 @@ function Messenger() {
         file.preview = URL.createObjectURL(file);
 
         setNewImageMessage(file);
+        setBtnClosePreview(!btnClosePreview);
     };
 
     // cleanup func
@@ -105,12 +111,19 @@ function Messenger() {
 
         setNewMessage('');
         setNewImageMessage(null);
+        setBtnClosePreview(false);
+    };
+
+    // handle close preview
+    const handleClosePreview = () => {
+        setNewImageMessage(null);
+        setBtnClosePreview(false);
     };
 
     // scroll messenger
     useEffect(() => {
-        conversation && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [conversation]);
+        conversation && listMessage && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [conversation, listMessage]);
 
     return (
         <div className={cx('messenger')}>
@@ -134,18 +147,24 @@ function Messenger() {
 
             <div className={cx('messenger-body')}>
                 {/* Messages */}
-                {listMessage.map((message) => {
-                    return (
-                        <div key={message._id} ref={scrollMessenger}>
-                            <Message
-                                message={message}
-                                own={message.senderID === user._id}
-                                conversation={conversation}
-                                user={user}
-                            />
-                        </div>
-                    );
-                })}
+                {isLoading ? (
+                    <CircularProgress className={cx('loading-messages')} />
+                ) : (
+                    <>
+                        {listMessage.map((message) => {
+                            return (
+                                <div key={message._id} ref={scrollMessenger}>
+                                    <Message
+                                        message={message}
+                                        own={message.senderID === user._id}
+                                        conversation={conversation}
+                                        user={user}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </>
+                )}
             </div>
 
             <div className={cx('messenger-footer')}>
@@ -164,9 +183,6 @@ function Messenger() {
                                 onChange={handleChangeImageMessage}
                             />
                         </div>
-                        {newImageMessage?.preview && (
-                            <img className={cx('image-upload')} src={newImageMessage.preview} alt="img" />
-                        )}
                     </label>
                     {/* option file */}
                     <TippyHeadless
@@ -235,6 +251,21 @@ function Messenger() {
                                 <FontAwesomeIcon icon={faThumbsUp} />
                             </button>
                         </Tippy>
+                    )}
+                </div>
+                {/* Preview upload Image and Video */}
+                <div className={cx('preview-upload')}>
+                    {btnClosePreview && (
+                        <button className={cx('close-btn')} onClick={handleClosePreview}>
+                            <FontAwesomeIcon icon={faClose} className={cx('close-icon')} />
+                        </button>
+                    )}
+                    {newImageMessage?.preview &&
+                        newImageMessage?.name.split('.')[newImageMessage?.name.split('.').length - 1] !== 'mp4' && (
+                            <img className={cx('image-upload')} src={newImageMessage.preview} alt="img" />
+                        )}
+                    {newImageMessage?.name.split('.')[newImageMessage?.name.split('.').length - 1] === 'mp4' && (
+                        <video className={cx('image-upload')} src={newImageMessage.preview} alt="video" controls />
                     )}
                 </div>
             </div>

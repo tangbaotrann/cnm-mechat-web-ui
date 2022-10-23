@@ -9,6 +9,7 @@ const messagesSlice = createSlice({
     name: 'messages',
     initialState: {
         data: [],
+        isLoading: false,
         clickSendMessage: null,
     },
     reducers: {
@@ -24,13 +25,18 @@ const messagesSlice = createSlice({
                 state.data.push(action.payload);
             } else {
                 console.log('Existing message id!!!');
+                return;
             }
         },
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchApiMessagesByConversationId.pending, (state, action) => {
+                state.isLoading = true;
+            })
             .addCase(fetchApiMessagesByConversationId.fulfilled, (state, action) => {
                 state.data = action.payload;
+                state.isLoading = false;
             })
             .addCase(fetchApiMessagesByConversationId.rejected, (state, action) => {
                 console.log('Error');
