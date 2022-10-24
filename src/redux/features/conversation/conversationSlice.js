@@ -5,7 +5,6 @@ const conversationSlice = createSlice({
     name: 'conversations',
     initialState: {
         data: [],
-        isSuccess: false,
         conversationClick: null,
     },
     reducers: {
