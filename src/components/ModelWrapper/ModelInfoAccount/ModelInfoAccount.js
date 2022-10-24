@@ -4,7 +4,6 @@ import { useState } from 'react';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
 // me
 import styles from './ModelInfoAccount.module.scss';
 import ModelWrapper from '~/components/ModelWrapper';
