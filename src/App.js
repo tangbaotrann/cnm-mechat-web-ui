@@ -1,5 +1,6 @@
 // libs
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // me
 import Home from './pages/Home';
@@ -16,25 +17,31 @@ import { meRequestFriend } from './redux/features/friend/meFriendRequestSlice';
 
 function App() {
     const dispatch = useDispatch();
+
     useEffect(() => {
         dispatch(fetchUsers());
         dispatch(fetchApiUser());
         dispatch(friendAccept());
         dispatch(meRequestFriend());
-    });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <Router>
             <Routes>
-                {/* Home page */}
-                <Route exact path="/me.chat" element={<Home />} />
-
-                {/* Login */}
-                <Route path="/login" element={<Login />} />
-
                 {/* Register */}
                 <Route path="/register" element={<Register />} />
 
+                {/* Login */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Navigate replace to="/login" />} />
+
+                {/* Home page */}
+                <Route exact path="/me.chat" element={<Home />} />
+
+                {/* Confirm otp */}
                 <Route path="/confirmotp" element={<ConFirmOTP />} />
+
                 {/* PhoneBook */}
                 <Route path="/phonebook" element={<PhoneBook />} />
             </Routes>
