@@ -1,15 +1,16 @@
 // Menu
 .menu-avatar .menu-popper {
     width: 280px;
+
+    // Menu item
+    .fullname {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-left: 10px;
+        margin-bottom: 8px;
+    }
 }
 
-// Menu item
-.fullName {
-    font-size: 1.6rem;
-    font-weight: 600;
-    margin-left: 10px;
-    margin-bottom: 8px;
-}
 
 // body
 .body-inner {

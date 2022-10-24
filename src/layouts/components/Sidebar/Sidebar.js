@@ -9,9 +9,9 @@ import { faComment, faAddressBook, faGear } from '@fortawesome/free-solid-svg-ic
 
 // me
 import styles from './Sidebar.module.scss';
+import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
 import { MenuSetting } from './Menu';
-import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
@@ -42,7 +42,7 @@ function Sidebar() {
                     >
                         <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="/me.chat">
                             <FontAwesomeIcon icon={faComment} />
-                            <span className={cx('badge')}>5+</span>
+                            {/* <span className={cx('badge')}>5+</span> */}
                         </NavLink>
                     </Tippy>
                     <Tippy

@@ -55,3 +55,25 @@
     color: var(--white);
     background-color: var(--red);
 }
+.item {
+    font-size: 20px;
+}
+//@at-root phone book
+.own-menu-list-children {
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    width: 160px;
+    flex: 1;
+}
+.deleteFriend {
+    color: black;
+    font-size: 1.4rem;
+    font-family: var(--font-family);
+    margin-left: 10px;
+    &:hover {
+        cursor: pointer;
+        background-color: var(--grey-400);
+        transition: background-color ease-in-out 200ms;
+    }
+}

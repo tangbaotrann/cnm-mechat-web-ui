@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './AddFriend.module.scss';
-import { userLogin } from '~/redux/selector';
+import { searchFilterFriend, userLogin } from '~/redux/selector';
 import filterSlice from '~/redux/features/filter/filterSlice';
 import useDebounce from '../hooks/useDebounce';
 import { usersRemainingSelector } from '~/redux/selector';
-import { friendRequests } from '~/redux/features/friend/friendRequest';
+import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
+
 const cx = classNames.bind(styles);
 function AddFriend() {
     const [searchPhone, setSearchPhone] = useState('');
@@ -17,16 +18,15 @@ function AddFriend() {
     const debouncedValue = useDebounce(searchPhone, 500);
     const userSearching = useSelector(usersRemainingSelector);
     const infoUser = useSelector(userLogin);
+    const searchFilterFriends = useSelector(searchFilterFriend);
 
     // Handle open/ close model info account
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchPhone));
     }, [debouncedValue]);
     const handleSearch = (e) => {
         e.preventDefault();
-        console.log(searchPhone);
         if (searchPhone === infoUser.phoneNumber) {
             alert('Tài Khoản của bạn');
         } else {
@@ -37,6 +37,7 @@ function AddFriend() {
                 alert('Tài khoản không tồn tại');
             }
         }
+        console.log(phoneNumber);
     };
     const handleBtnClearText = (e) => {
         setSearchPhone('');
@@ -45,9 +46,7 @@ function AddFriend() {
         dispatch(filterSlice.actions.searchFilterChange(null));
     };
     const handleRequest = () => {
-        console.log(phoneNumber._id);
-        console.log(infoUser._id);
-        const data = { senderID: infoUser._id, reciverID: phoneNumber._id };
+        const data = { senderID: infoUser._id, receiverID: phoneNumber._id };
         let tam = dispatch(friendRequests(data));
         if (tam) {
             alert('Gửi lời mời kết bạn thành công');
@@ -81,7 +80,7 @@ function AddFriend() {
                         <h4 className={cx('username')}>{phoneNumber.fullName}</h4>
                         <p className={cx('message')}>{phoneNumber.phoneNumber}</p>
                     </div>
-                    {!phoneNumber.isFriend ? (
+                    {searchFilterFriends === true ? (
                         <div className={cx('result-add-friend')}>
                             <button onClick={handleRequest}>Kết bạn</button>
                         </div>

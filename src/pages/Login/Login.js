@@ -66,12 +66,8 @@ function Login() {
         e.preventDefault();
         sign()
             .then((token) => {
-                console.log(token);
-                console.log('da click');
-                console.log(phoneNumber + 'ngoai if');
+                console.log(phoneNumber);
                 if (phoneNumber.length >= 10) {
-                    //  setchangeForm(true);
-                    console.log(phoneNumber + 'trong if');
                     generateRecaptcha();
                     const phoneNumbers = '+84' + phoneNumber.slice(1);
                     console.log(phoneNumbers + 'sao khi +84');
@@ -80,10 +76,11 @@ function Login() {
                         .then((confirmationResult) => {
                             // SMS sent. Prompt user to type the code from the message, then sign the
                             // user in with confirmationResult.confirm(code).
+
                             window.confirmationResult = confirmationResult;
                             console.log('ĐÃ gửi OTP');
                             // ...
-                            navigate('/ConFirmOTP', { state: token });
+                            navigate('/ConFirmOTP', { state: { token, phoneNumber } });
                         })
                         .catch((error) => {
                             // Error; SMS not sent
@@ -94,7 +91,7 @@ function Login() {
                 }
             })
             .catch((err) => {
-                console.log(err + 'handleSubmit');
+                // console.log(err + 'handleSubmit');
                 alert('tài khoản không tồn tại');
             });
     };

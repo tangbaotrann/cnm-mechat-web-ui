@@ -6,6 +6,12 @@ import classNames from 'classnames/bind';
 //me
 import styles from './Register.module.scss';
 import images from '~/assets/images';
+import { authentication } from '~/util/firebase';
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import useDebounce from '~/components/hooks/useDebounce';
+import filterSlice from '~/redux/features/filter/filterSlice';
+import { accountExists } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -13,48 +19,67 @@ function Register() {
     useEffect(() => {
         document.title = 'Trang đăng ký';
     });
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [userName, setUserName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const debouncedValue = useDebounce(phoneNumber, 500);
+    const searchAccountExists = useSelector(accountExists);
 
+    useEffect(() => {
+        dispatch(filterSlice.actions.searchFilterChange(phoneNumber));
+    }, [debouncedValue]);
+
+    const generateRecaptcha = () => {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+            'tam',
+            {
+                size: 'invisible',
+                callback: (response) => {},
+            },
+            authentication,
+        );
+    };
     const handleSubmitForm = (e) => {
         e.preventDefault();
+        // var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+        var tam = /^(09|03|07|08|05)\d{4}\d{4}$/;
         console.log(userName + phoneNumber + password + confirmPassword);
-        if (password < 6) {
-            alert('Mật khẩu phải lớn 6 chữ số');
-        }
-        if (password !== confirmPassword) {
+        if (userName === '' || phoneNumber === '' || password === '' || confirmPassword === '') {
+            alert('Vui lòng nhập đầy đủ thông tin');
+        } else if (phoneNumber.length !== 10) {
+            alert('Số điện thoại phải đủ 10 Số');
+        } else if (!tam.test(phoneNumber)) {
+            alert('Số điện thoại Chưa không đúng');
+        } else if (searchAccountExists !== 1) {
+            alert('Số điện thoại đã được đăng ký');
+        } else if (password < 6) {
+            alert('Mật khẩu phải lớn 6 kí tự');
+        } else if (password !== confirmPassword) {
             alert('Mật khẩu chưa trùng khớp');
         } else {
-            const data = {
-                fullName: userName,
-                phoneNumber: phoneNumber,
-                passWord: password,
-                confirmPassWord: confirmPassword,
-            };
-            fetch(`${process.env.REACT_APP_BASE_URL}/users/signup`, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data?._token) {
-                        alert('Đăng ký thành công');
-                        navigate('/Login');
-                        console.log('Success:', data);
-                    } else {
-                        if (data.error.statusCode === 403) {
-                            throw new Error('Số điện thoại đã tồn tại!');
-                        }
-                    }
+            console.log('72 - ok');
+            generateRecaptcha();
+            const phoneNumbers = '+84' + phoneNumber.slice(1);
+            console.log(phoneNumbers + 'sao khi +84');
+            const appVerifier = window.recaptchaVerifier;
+            signInWithPhoneNumber(authentication, phoneNumbers, appVerifier)
+                .then((confirmationResult) => {
+                    // SMS sent. Prompt user to type the code from the message, then sign the
+                    // user in with confirmationResult.confirm(code).
+
+                    window.confirmationResult = confirmationResult;
+                    console.log('ĐÃ gửi OTP');
+                    // ...
+                    navigate('/ConFirmOTP', { state: { userName, phoneNumber, password } });
                 })
                 .catch((error) => {
-                    alert(error);
+                    // Error; SMS not sent
+                    // ...
+                    alert('Tài khoản đã yêu cầu quá nhiều lần!!!');
+                    console.log('Chưa gửi về OTP' + error);
                 });
         }
     };
@@ -72,7 +97,7 @@ function Register() {
                     <div className={cx('form-phoneNumber')}>
                         <PhoneIphone className={cx('item')} />
                         <input
-                            type="tel"
+                            type="text"
                             placeholder="Số điện thoại"
                             name="phoneNumber"
                             value={phoneNumber}

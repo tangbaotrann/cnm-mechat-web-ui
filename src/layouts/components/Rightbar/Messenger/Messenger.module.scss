@@ -44,6 +44,17 @@
     padding: 10px;
     border-radius: 6px;
     background-color: var(--grey-400);
+    position: relative;
+}
+
+.loading-messages {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: var(--primary);
 }
 
 // Messenger footer
@@ -126,6 +137,11 @@
     position: relative;
 }
 
+.image-upload {
+    width: 120px;
+    height: 120px;
+}
+
 .message-input {
     text-align: justify;
     padding-top: 14px;
@@ -166,4 +182,30 @@
     top: 12px;
     right: 60px;
     color: var(--text-opacity);
+}
+
+// Preview upload Image and Video
+.preview-upload {
+    position: relative;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.close-btn {
+    position: absolute;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    top: 0;
+    left: 110px;
+    font-size: 1.4rem;
+    z-index: 9999;
+
+    .close-icon {
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.6;
+        }
+    }
 }
