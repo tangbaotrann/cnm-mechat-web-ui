@@ -41,6 +41,7 @@ const messagesSlice = createSlice({
             .addCase(fetchApiMessagesByConversationId.rejected, (state, action) => {
                 console.log('Error');
             })
+            // send message
             .addCase(fetchApiSendMessage.fulfilled, (state, action) => {
                 state.data.push(action.payload);
 
@@ -50,6 +51,21 @@ const messagesSlice = createSlice({
                 });
             })
             .addCase(fetchApiSendMessage.rejected, (state, action) => {
+                console.log('Error');
+            })
+            // delete message
+            .addCase(fetchApiDeleteMessage.fulfilled, (state, action) => {
+                const { id } = action.payload;
+
+                const message = state.data.findIndex((mess) => mess._id === id);
+
+                if (message) {
+                    state.data.splice(message, 1);
+                } else {
+                    console.log('Error!');
+                }
+            })
+            .addCase(fetchApiDeleteMessage.rejected, (state, action) => {
                 console.log('Error');
             });
     },
@@ -61,7 +77,7 @@ export const fetchApiMessagesByConversationId = createAsyncThunk(
     async (conversationID) => {
         try {
             const res = await axios.get(`${process.env.REACT_APP_BASE_URL}messages/${conversationID}`);
-            // console.log('RES - ', res.data);
+
             return res.data;
         } catch (err) {
             console.log(err);
@@ -96,5 +112,22 @@ export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessag
         return resFormData.data;
     }
 });
+
+// delete message
+export const fetchApiDeleteMessage = createAsyncThunk(
+    'messages/fetchApiDeleteMessage',
+    async ({ messageId, conversationID }) => {
+        try {
+            const res = await axios.delete(`${process.env.REACT_APP_BASE_URL}messages/${messageId}`, {
+                data: { conversationID },
+                headers: { Authorization: '***' },
+            });
+
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
 
 export default messagesSlice;
