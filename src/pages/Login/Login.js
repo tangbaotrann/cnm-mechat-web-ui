@@ -66,7 +66,7 @@ function Login() {
         e.preventDefault();
         sign()
             .then((token) => {
-                console.log(token);
+                console.log(phoneNumber);
                 if (phoneNumber.length >= 10) {
                     generateRecaptcha();
                     const phoneNumbers = '+84' + phoneNumber.slice(1);
@@ -76,16 +76,17 @@ function Login() {
                         .then((confirmationResult) => {
                             // SMS sent. Prompt user to type the code from the message, then sign the
                             // user in with confirmationResult.confirm(code).
+
                             window.confirmationResult = confirmationResult;
-                            // console.log('ĐÃ gửi OTP');
+                            console.log('ĐÃ gửi OTP');
                             // ...
-                            navigate('/ConFirmOTP', { state: token });
+                            navigate('/ConFirmOTP', { state: { token, phoneNumber } });
                         })
                         .catch((error) => {
                             // Error; SMS not sent
                             // ...
                             alert('Số điện thoại chưa đăng ký tài khoảng');
-                            // console.log('Chưa gửi về OTP' + error);
+                            console.log('Chưa gửi về OTP' + error);
                         });
                 }
             })

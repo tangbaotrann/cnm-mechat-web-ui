@@ -40,7 +40,8 @@
     position: relative;
 }
 
-.info-image, .sub-info-image {
+.info-image,
+.sub-info-image {
     position: relative;
     height: 200px;
 }
@@ -51,7 +52,8 @@
     object-fit: cover;
 }
 
-.img-avatar, .sub-img-avatar {
+.img-avatar,
+.sub-img-avatar {
     position: absolute;
     left: 0;
     right: 0;
@@ -271,7 +273,7 @@
     margin-top: 4px;
 }
 
-.radio-option{
+.radio-option {
     display: flex;
     align-items: center;
     margin-right: 10px;
@@ -288,7 +290,8 @@
 }
 
 // footer model sub info account
-.footer-sub-update-btn, .footer-sub-close-btn {
+.footer-sub-update-btn,
+.footer-sub-close-btn {
     font-weight: 600;
     padding: 10px;
     border-radius: 4px;

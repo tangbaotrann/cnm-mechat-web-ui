@@ -8,8 +8,9 @@ import userListSlice from './features/user/usersSlice';
 
 import messagesSlice from './features/messages/messagesSlice';
 import filterSlice from './features/filter/filterSlice';
-import listFriendAccept from './features/friend/friendAccept';
-import listMeRequestFriend from './features/friend/meFriendRequest';
+import listFriendAccept from './features/friend/friendAcceptSlice';
+import listMeRequestFriend from './features/friend/meFriendRequestSlice';
+import updateUserSlice from './features/user/updateUserSlice';
 
 const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
         listAccept: listFriendAccept.reducer,
         messages: messagesSlice.reducer,
         listMeRequest: listMeRequestFriend.reducer,
+        updateUser: updateUserSlice.reducer,
     },
 });
 

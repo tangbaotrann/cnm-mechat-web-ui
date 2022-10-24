@@ -35,6 +35,23 @@ export const usersRemainingSelector = createSelector(
         return false;
     },
 );
+//
+export const accountExists = createSelector(userListSelector, searchTextSelector, (users, search) => {
+    console.log(users);
+    if (search) {
+        if (search.startsWith('0')) {
+            const usersFilter = users.filter((_user) => _user.phoneNumber === search);
+            //don't find
+            if (!usersFilter.length) {
+                return 1;
+            }
+            return true;
+        } else {
+            return 1;
+        }
+    }
+    return false;
+});
 //user login
 export const userLogin = createSelector(userInfoSelector, (user) => {
     return user;

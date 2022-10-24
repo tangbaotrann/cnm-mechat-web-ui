@@ -11,7 +11,7 @@ import images from '~/assets/images';
 import { MoreHoriz } from '@material-ui/icons';
 import { userLogin } from '~/redux/selector';
 import Popper from '../Popper';
-import { friendDelete } from '~/redux/features/friend/friendAccept';
+import { friendDelete } from '~/redux/features/friend/friendAcceptSlice';
 
 const cx = classNames.bind(styles);
 

@@ -8,7 +8,8 @@ import { searchFilterFriend, userLogin } from '~/redux/selector';
 import filterSlice from '~/redux/features/filter/filterSlice';
 import useDebounce from '../hooks/useDebounce';
 import { usersRemainingSelector } from '~/redux/selector';
-import { friendRequests } from '~/redux/features/friend/friendRequest';
+import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
+
 const cx = classNames.bind(styles);
 function AddFriend() {
     const [searchPhone, setSearchPhone] = useState('');

@@ -36,6 +36,7 @@
     font-family: var(--font-family);
 }
 .form-otp {
+    display: flex;
     padding-top: 35px;
     margin-left: 10%;
     width: 80%;
@@ -43,13 +44,18 @@
 }
 .otp-form input {
     display: inline-block;
-    width: 95%;
+    width: 92%;
     height: 25px;
     border: 0;
     outline: 0;
     font-size: 1.5rem;
     background: transparent;
     transition: border-color 0.2s;
+}
+.form-otp p {
+    font-size: 1.5rem;
+    font-family: var(--font-family);
+    font-weight: bold;
 }
 .form-button-otp {
     display: flex;
@@ -63,16 +69,19 @@
 }
 .form-button-otp button {
     margin-top: 30px;
-    margin-left: 20%;
-    margin-left: 50px;
+    margin-left: 25%;
     width: 80px;
     height: 30px;
-    background-color: #87cefa;
     border-radius: 10px;
     cursor: pointer;
     font-family: var(--font-family);
     border: 0;
     font-size: 1.5rem;
+    color: var(--white);
+    background-color: var(--primary);
+    &:hover {
+        opacity: 0.8;
+    }
 }
 .form-back {
     display: flex;

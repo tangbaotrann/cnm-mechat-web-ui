@@ -3,9 +3,9 @@ import classNames from 'classnames/bind';
 import images from '~/assets/images';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { accept } from '~/redux/features/friend/friendAccept';
+import { accept } from '~/redux/features/friend/friendAcceptSlice';
 import { userLogin } from '~/redux/selector';
-import { callBack } from '~/redux/features/friend/meFriendRequest';
+import { callBack } from '~/redux/features/friend/meFriendRequestSlice';
 const cx = classNames.bind(styles);
 
 function FriendRequestList({ user, isPhoneBook }) {

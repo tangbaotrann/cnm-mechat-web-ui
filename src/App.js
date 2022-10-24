@@ -11,8 +11,8 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchUsers } from './redux/features/user/usersSlice';
 import { fetchApiUser } from './redux/features/user/userSlice';
-import { friendAccept } from './redux/features/friend/friendAccept';
-import { meRequestFriend } from './redux/features/friend/meFriendRequest';
+import { friendAccept } from './redux/features/friend/friendAcceptSlice';
+import { meRequestFriend } from './redux/features/friend/meFriendRequestSlice';
 
 function App() {
     const dispatch = useDispatch();

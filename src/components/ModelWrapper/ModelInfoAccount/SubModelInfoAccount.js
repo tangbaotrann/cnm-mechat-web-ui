@@ -1,6 +1,6 @@
 // libs
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPenToSquare, faCamera } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +11,9 @@ import images from '~/assets/images';
 import ModelWrapper from '../ModelWrapper';
 import moment from 'moment';
 import { Radio } from '@mui/material';
+import { userLogin } from '~/redux/selector';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +21,18 @@ function SubModelInfoAccount({ user }) {
     const [openUpdateInfoAccount, setOpenUpdateInfoAccount] = useState(false);
     const [optionSex, setOptionSex] = useState(user.gender);
     const [birthday, setBirthday] = useState(moment(user.birthday).format('YYYY-MM-DD'));
-    const [fullname, setFullName] = useState(user.fullName);
+    const [fullName, setFullName] = useState(user.fullName);
+    const infoUser = useSelector(userLogin);
+    const [avatar, setAvatar] = useState(user?.avatarLink); //
+
+    console.log('28 - ', avatar);
+
+    useEffect(() => {
+        return () => {
+            avatar && URL.revokeObjectURL(avatar.preview);
+        };
+    }, [avatar]);
+    const dispatch = useDispatch();
     // Handle open/ close model update info account
     const handleModelOpenUpdateInfoAccount = () => {
         setOpenUpdateInfoAccount(true);
@@ -31,10 +45,24 @@ function SubModelInfoAccount({ user }) {
     const handleChangeFullName = (e) => {
         setFullName(e.target.value);
     };
-    const handleSubmit = (e) => {
-        console.log(optionSex);
-        console.log(fullname);
-        console.log(birthday);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            fullName: fullName,
+            gender: optionSex,
+            birthday: birthday,
+            idUser: infoUser._id,
+        };
+        dispatch(userUpdate(data));
+        dispatch(
+            updateAvatar({
+                _id: infoUser._id,
+                avatarLink: avatar,
+            }),
+        );
+        if (userUpdate() || updateAvatar()) {
+            alert('Cập nhật thông tin thành công');
+        }
     };
     const handleChange1 = (e) => {
         setBirthday(e.target.value);
@@ -43,11 +71,17 @@ function SubModelInfoAccount({ user }) {
         const sex = e.target.value;
         if (sex === 'male') {
             setOptionSex(0);
-            console.log(optionSex);
         } else {
             setOptionSex(1);
-            console.log(optionSex);
         }
+    };
+
+    //doi avatar
+    const handleChangeAvatar = (e) => {
+        const file = e.target.files[0];
+        file.preview = URL.createObjectURL(file);
+        setAvatar(file);
+        console.log(file);
     };
     return (
         <>
@@ -82,14 +116,20 @@ function SubModelInfoAccount({ user }) {
                                 />
                                 <img
                                     className={cx('sub-img-avatar')}
-                                    src={user?.avatarLink ? user?.avatarLink : images.noImg}
+                                    src={avatar?.preview ? avatar?.preview : avatar}
                                     alt=""
                                 />
 
                                 {/* Option change avatar update */}
                                 <label htmlFor="file" className={cx('option-avatar')}>
                                     <FontAwesomeIcon className={cx('icon-camera')} icon={faCamera} />
-                                    <input className={cx('hide')} type="file" id="file" accept=".png, .jpg, .jpeg" />
+                                    <input
+                                        className={cx('hide')}
+                                        type="file"
+                                        id="file"
+                                        accept=".png, .jpg, .jpeg"
+                                        onChange={handleChangeAvatar}
+                                    />
                                 </label>
                             </div>
                         </div>
@@ -101,7 +141,7 @@ function SubModelInfoAccount({ user }) {
                             <input
                                 className={cx('sub-input-info-acc')}
                                 type="text"
-                                value={fullname}
+                                value={fullName}
                                 onChange={handleChangeFullName}
                             />
                             <span className={cx('sub-desc')}>Sử dụng tên thật để bạn bè dễ dàng nhận diện hơn.</span>
