@@ -2,19 +2,56 @@ import styles from './ConFirmOTP.module.scss';
 import classNames from 'classnames/bind';
 import images from '~/assets/images';
 import { ArrowLeft } from '@material-ui/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { authentication } from '~/util/firebase';
-import { RecaptchaVerifier } from 'firebase/auth';
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 const cx = classNames.bind(styles);
 function ConFirmOTP() {
     const [OTP, setOTP] = useState('');
     const navigate = useNavigate();
+    const [counter, setCounter] = useState(60);
     const location = useLocation();
-    const token = location.state;
+    //dữ liệu truyền
+    const tokenS = location.state.token;
+    const phoneNumber = location.state.phoneNumber;
+    // const userName = location.state.userName;
+    // const password = location.state.password;
 
-    console.log(token);
+    //register
+    const register = () => {
+        return fetch(`${process.env.REACT_APP_BASE_URL}/users/signup`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                fullName: userName,
+                phoneNumber: phoneNumber,
+                passWord: password,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === 'success') {
+                    return data;
+                }
+                if (data?.error.statusCode === 403) {
+                    throw new Error('Số điện thoại đã tồn tại');
+                }
+                if (data?.error.statusCode === 404) {
+                    throw new Error('Số điện thoại không đúng');
+                }
+            });
+    };
+    useEffect(() => {
+        const timer = counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+        return () => {
+            clearInterval(timer);
+        };
+    }, [counter]);
 
     const generateRecaptcha = () => {
         window.recaptchaVerifier = new RecaptchaVerifier(
@@ -30,27 +67,71 @@ function ConFirmOTP() {
         e.preventDefault();
         console.log('da click');
         console.log('ngoai if');
-        if (OTP.length === 6) {
-            console.log('trong if');
-            generateRecaptcha();
+        console.log(tokenS + '\n' + userName + '\n' + phoneNumber + '\n' + password);
+        if (counter !== 0) {
             if (OTP.length === 6) {
-                let confirmationResult = window.confirmationResult;
-                confirmationResult
-                    .confirm(OTP)
-                    .then((result) => {
-                        // User signed in successfully.
-                        // ...
-                        console.log('hoan thanh');
-                        localStorage.setItem('user_login', JSON.stringify(token));
-                        navigate('/me.chat');
-                    })
-                    .catch((error) => {
-                        // User couldn't sign in (bad verification code?)
-                        // ...
-                        console.log(error);
-                        alert('Số điện thoại chưa đăng ký tài khoảng');
-                    });
+                console.log('trong if');
+                generateRecaptcha();
+                if (OTP.length === 6) {
+                    let confirmationResult = window.confirmationResult;
+                    confirmationResult
+                        .confirm(OTP)
+                        .then((result) => {
+                            // User signed in successfully.
+                            // ...
+
+                            // register().then((token) => {
+                            //     console.log(token);
+                            //     if (token !== null) {
+                            //         alert('Đăng ký thành công');
+                            //         console.log('hoan thanh');
+                            //         localStorage.setItem('user_login', JSON.stringify(token));
+                            //         // navigate('/me.chat');
+                            //     }
+                            // });
+
+                            //  else {
+                            console.log('hoan thanh');
+                            localStorage.setItem('user_login', JSON.stringify(tokenS));
+                            navigate('/me.chat');
+                            // }
+                        })
+                        .catch((error) => {
+                            // User couldn't sign in (bad verification code?)
+                            // ...
+                            console.log(error);
+                            alert('Mã OTP sai');
+                        });
+                }
             }
+        } else {
+            alert('Hết thời gian xác thực');
+        }
+    };
+    //lấy capcha
+    const handleCallBackCode = () => {
+        setCounter(30);
+        console.log(phoneNumber);
+        if (phoneNumber.length > 0) {
+            generateRecaptcha();
+            const phoneNumbers = '+84' + phoneNumber.slice(1);
+            console.log(phoneNumber + 'sao khi +84');
+            const appVerifier = window.recaptchaVerifier;
+            signInWithPhoneNumber(authentication, phoneNumbers, appVerifier)
+                .then((confirmationResult) => {
+                    // SMS sent. Prompt user to type the code from the message, then sign the
+                    // user in with confirmationResult.confirm(code).
+                    window.confirmationResult = confirmationResult;
+                    console.log('ĐÃ gửi OTP');
+                    // ...
+                })
+                .catch((error) => {
+                    // Error; SMS not sent
+                    // ...
+                    console.log(error);
+                    alert('Chưa gửi về OTP');
+                    // console.log('Chưa gửi về OTP' + error);
+                });
         }
     };
     return (
@@ -71,9 +152,12 @@ function ConFirmOTP() {
                             onChange={(e) => setOTP(e.target.value)}
                             name="otp"
                         />
+                        <p>{counter}</p>
                     </div>
                     <div className={cx('form-button-otp')}>
-                        <h5 className={cx('form-resend-code')}>Gửi lại mã</h5>
+                        <h5 className={cx('form-resend-code')} onClick={handleCallBackCode}>
+                            Gửi lại mã
+                        </h5>
                         <button type="submit" variant="contained" color="primary">
                             Xác nhận
                         </button>
