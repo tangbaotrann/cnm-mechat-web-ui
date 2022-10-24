@@ -27,7 +27,7 @@ function Middle() {
         const fetchApi = async () => {
             try {
                 const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);
-                console.log('conversation by id - ', res.data.data);
+                // console.log('conversation by id - ', res.data.data);
                 setConversation(res.data.data);
             } catch (err) {
                 console.log(err);

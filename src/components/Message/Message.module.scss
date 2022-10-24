@@ -45,6 +45,29 @@
     height: 200px;
 }
 
+.preview-image {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.model-preview {
+    position: relative;
+}
+
+// preview image and video
+.preview-image-send-user, .preview-image-send-user {
+    width: 420px;
+    height: 420px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
 .image-send-user-left {
     margin-top: 4px;
     margin-left: 12px;

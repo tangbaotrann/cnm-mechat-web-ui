@@ -4,6 +4,7 @@ import TippyHeadless from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import moment from 'moment';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { faCopy, faEllipsis, faQuoteRight, faRepeat, faShare, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -12,10 +13,23 @@ import { faCopy, faEllipsis, faQuoteRight, faRepeat, faShare, faTrash } from '@f
 import styles from './Message.module.scss';
 import images from '~/assets/images';
 import Popper from '../Popper';
+import ModelWrapper from '../ModelWrapper';
 
 const cx = classNames.bind(styles);
 
 function Message({ message, own, conversation, user }) {
+    const [showPreview, setShowPreview] = useState(false);
+
+    // show preview
+    const handleShowPreviewImageAndVideo = () => {
+        setShowPreview(!showPreview);
+    };
+
+    // hide preview
+    const handleHidePreviewImageAndVideo = () => {
+        setShowPreview(false);
+    };
+
     return (
         <>
             {own ? (
@@ -109,21 +123,54 @@ function Message({ message, own, conversation, user }) {
                                         'mp4' ? (
                                             <>
                                                 <p className={cx('message-top-text')}>{message.content}</p>
-                                                <video
-                                                    controls
-                                                    className={cx('image-send-user')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                                <ModelWrapper
+                                                    className={cx('model-preview')}
+                                                    open={showPreview}
+                                                    onClose={handleHidePreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('preview-image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </ModelWrapper>
                                             </>
                                         ) : (
                                             <>
                                                 <p className={cx('message-top-text')}>{message.content}</p>
-                                                <img
-                                                    className={cx('image-send-user')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                                <ModelWrapper
+                                                    className={cx('model-preview')}
+                                                    open={showPreview}
+                                                    onClose={handleHidePreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('preview-image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </ModelWrapper>
                                             </>
                                         )}
                                     </>
@@ -133,20 +180,53 @@ function Message({ message, own, conversation, user }) {
                                         {message.imageLink.split('.')[message.imageLink.split('.').length - 1] ===
                                         'mp4' ? (
                                             <>
-                                                <video
-                                                    controls
-                                                    className={cx('image-send-user')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                                <ModelWrapper
+                                                    className={cx('model-preview')}
+                                                    open={showPreview}
+                                                    onClose={handleHidePreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('preview-image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </ModelWrapper>
                                             </>
                                         ) : (
                                             <>
-                                                <img
-                                                    className={cx('image-send-user')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                                <ModelWrapper
+                                                    className={cx('model-preview')}
+                                                    open={showPreview}
+                                                    onClose={handleHidePreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('preview-image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </ModelWrapper>
                                             </>
                                         )}
                                     </>
@@ -260,21 +340,54 @@ function Message({ message, own, conversation, user }) {
                                         'mp4' ? (
                                             <>
                                                 <p className={cx('message-top-text')}>{message.content}</p>
-                                                <video
-                                                    controls
-                                                    className={cx('image-send-user')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                                <ModelWrapper
+                                                    className={cx('model-preview')}
+                                                    open={showPreview}
+                                                    onClose={handleHidePreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('preview-image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </ModelWrapper>
                                             </>
                                         ) : (
                                             <>
                                                 <p className={cx('message-top-text')}>{message.content}</p>
-                                                <img
-                                                    className={cx('image-send-user-left')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('image-send-user-left')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                                <ModelWrapper
+                                                    className={cx('model-preview')}
+                                                    open={showPreview}
+                                                    onClose={handleHidePreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('preview-image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </ModelWrapper>
                                             </>
                                         )}
                                     </>
@@ -284,20 +397,53 @@ function Message({ message, own, conversation, user }) {
                                         {message.imageLink.split('.')[message.imageLink.split('.').length - 1] ===
                                         'mp4' ? (
                                             <>
-                                                <video
-                                                    controls
-                                                    className={cx('image-send-user')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                                <ModelWrapper
+                                                    className={cx('model-preview')}
+                                                    open={showPreview}
+                                                    onClose={handleHidePreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('preview-image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </ModelWrapper>
                                             </>
                                         ) : (
                                             <>
-                                                <img
-                                                    className={cx('image-send-user-left')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('image-send-user-left')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                                <ModelWrapper
+                                                    className={cx('model-preview')}
+                                                    open={showPreview}
+                                                    onClose={handleHidePreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('preview-image-send-user-left')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </ModelWrapper>
                                             </>
                                         )}
                                     </>
