@@ -19,33 +19,6 @@ function ConFirmOTP() {
     // const userName = location.state.userName;
     // const password = location.state.password;
 
-    //register
-    const register = () => {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/users/signup`, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                fullName: userName,
-                phoneNumber: phoneNumber,
-                passWord: password,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === 'success') {
-                    return data;
-                }
-                if (data?.error.statusCode === 403) {
-                    throw new Error('Số điện thoại đã tồn tại');
-                }
-                if (data?.error.statusCode === 404) {
-                    throw new Error('Số điện thoại không đúng');
-                }
-            });
-    };
     useEffect(() => {
         const timer = counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
         return () => {
@@ -65,9 +38,8 @@ function ConFirmOTP() {
     };
     const handleConfirm = async (e) => {
         e.preventDefault();
-        console.log('da click');
-        console.log('ngoai if');
-        console.log(tokenS + '\n' + userName + '\n' + phoneNumber + '\n' + password);
+        // console.log('da click');
+        // console.log('ngoai if');
         if (counter !== 0) {
             if (OTP.length === 6) {
                 console.log('trong if');
