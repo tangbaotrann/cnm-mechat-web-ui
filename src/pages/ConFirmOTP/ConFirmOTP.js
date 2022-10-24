@@ -16,8 +16,8 @@ function ConFirmOTP() {
     //dữ liệu truyền
     const tokenS = location.state.token;
     const phoneNumber = location.state.phoneNumber;
-    // const userName = location.state.userName;
-    // const password = location.state.password;
+    const userName = location.state.userName;
+    const password = location.state.password;
 
     //register
     const register = () => {
@@ -36,6 +36,7 @@ function ConFirmOTP() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.status === 'success') {
+                    console.log(data);
                     return data;
                 }
                 if (data?.error.statusCode === 403) {
@@ -67,7 +68,6 @@ function ConFirmOTP() {
         e.preventDefault();
         console.log('da click');
         console.log('ngoai if');
-        console.log(tokenS + '\n' + userName + '\n' + phoneNumber + '\n' + password);
         if (counter !== 0) {
             if (OTP.length === 6) {
                 console.log('trong if');
@@ -79,22 +79,23 @@ function ConFirmOTP() {
                         .then((result) => {
                             // User signed in successfully.
                             // ...
-
-                            // register().then((token) => {
-                            //     console.log(token);
-                            //     if (token !== null) {
-                            //         alert('Đăng ký thành công');
-                            //         console.log('hoan thanh');
-                            //         localStorage.setItem('user_login', JSON.stringify(token));
-                            //         // navigate('/me.chat');
-                            //     }
-                            // });
-
-                            //  else {
-                            console.log('hoan thanh');
-                            localStorage.setItem('user_login', JSON.stringify(tokenS));
-                            navigate('/me.chat');
-                            // }
+                            if (typeof tokenS != 'undefined') {
+                                alert('Đăng nhập thành công');
+                                console.log('hoan thanh');
+                                localStorage.setItem('user_login', JSON.stringify(tokenS));
+                                navigate('/me.chat');
+                            } else {
+                                register().then((token) => {
+                                    console.log(token);
+                                    if (token !== null) {
+                                        alert('Đăng ký thành công');
+                                        console.log('hoan thanh');
+                                        console.log(token);
+                                        localStorage.setItem('user_login', JSON.stringify(token));
+                                        navigate('/me.chat');
+                                    }
+                                });
+                            }
                         })
                         .catch((error) => {
                             // User couldn't sign in (bad verification code?)

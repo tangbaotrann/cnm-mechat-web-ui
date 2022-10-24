@@ -59,7 +59,6 @@ export const friendDelete = createAsyncThunk(
             .then((res) => res.json())
             .then((resData) => {
                 if (resData.status === 'success') {
-                    console.log(resData);
                     return resData;
                 } else {
                     return Promise.reject(new Error('404 else'));
