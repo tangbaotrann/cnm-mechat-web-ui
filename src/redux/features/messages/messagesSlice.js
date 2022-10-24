@@ -39,7 +39,7 @@ const messagesSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(fetchApiMessagesByConversationId.rejected, (state, action) => {
-                console.log('Error');
+                console.log('Error!');
             })
             // send message
             .addCase(fetchApiSendMessage.fulfilled, (state, action) => {
@@ -51,12 +51,11 @@ const messagesSlice = createSlice({
                 });
             })
             .addCase(fetchApiSendMessage.rejected, (state, action) => {
-                console.log('Error');
+                console.log('Error!');
             })
             // delete message
             .addCase(fetchApiDeleteMessage.fulfilled, (state, action) => {
                 const { id } = action.payload;
-
                 const message = state.data.findIndex((mess) => mess._id === id);
 
                 if (message) {
@@ -66,7 +65,17 @@ const messagesSlice = createSlice({
                 }
             })
             .addCase(fetchApiDeleteMessage.rejected, (state, action) => {
-                console.log('Error');
+                console.log('Error!');
+            })
+            // re-call message
+            .addCase(fetchApiRecallMessage.fulfilled, (state, action) => {
+                const message = action.payload;
+                const listMessage = state.data.map((mess) => (mess._id === message._id ? message : mess));
+
+                state.data = listMessage;
+            })
+            .addCase(fetchApiRecallMessage.rejected, (state, action) => {
+                console.log('Error!');
             });
     },
 });
@@ -119,6 +128,23 @@ export const fetchApiDeleteMessage = createAsyncThunk(
     async ({ messageId, conversationID }) => {
         try {
             const res = await axios.delete(`${process.env.REACT_APP_BASE_URL}messages/${messageId}`, {
+                data: { conversationID },
+                headers: { Authorization: '***' },
+            });
+
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+// re-call message
+export const fetchApiRecallMessage = createAsyncThunk(
+    'messages/fetchApiRecallMessage',
+    async ({ messageId, conversationID }) => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_BASE_URL}messages/recall/${messageId}`, {
                 data: { conversationID },
                 headers: { Authorization: '***' },
             });

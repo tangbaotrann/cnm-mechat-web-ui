@@ -14,7 +14,7 @@ import styles from './Message.module.scss';
 import images from '~/assets/images';
 import Popper from '../Popper';
 import MessageItem from './MessageItem';
-import { fetchApiDeleteMessage } from '~/redux/features/messages/messagesSlice';
+import { fetchApiDeleteMessage, fetchApiRecallMessage } from '~/redux/features/messages/messagesSlice';
 
 const cx = classNames.bind(styles);
 
@@ -24,11 +24,19 @@ function Message({ message, own, conversation, user }) {
     // console.log('MESSAGE - ', message);
 
     // handle delete message
-    const handleDeleteMessage = async (e) => {
-        e.preventDefault();
-
+    const handleDeleteMessage = async () => {
         dispatch(
             fetchApiDeleteMessage({
+                messageId: message._id,
+                conversationID: conversation.id,
+            }),
+        );
+    };
+
+    // handle re-call message
+    const handleRecallMessage = async () => {
+        dispatch(
+            fetchApiRecallMessage({
                 messageId: message._id,
                 conversationID: conversation.id,
             }),
@@ -75,7 +83,10 @@ function Message({ message, own, conversation, user }) {
 
                                                             <div className={cx('separator')}></div>
 
-                                                            <button className={cx('options-children-btn')}>
+                                                            <button
+                                                                className={cx('options-children-btn')}
+                                                                onClick={handleRecallMessage}
+                                                            >
                                                                 <FontAwesomeIcon
                                                                     className={cx('recall-icon')}
                                                                     icon={faRepeat}
