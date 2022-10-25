@@ -18,6 +18,8 @@ import { meRequestFriend } from './redux/features/friend/meFriendRequestSlice';
 function App() {
     const dispatch = useDispatch();
 
+    console.log('[ENV] - ', process.env.REACT_APP_BASE_URL);
+
     useEffect(() => {
         dispatch(fetchUsers());
         dispatch(fetchApiUser());
