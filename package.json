@@ -16,9 +16,6 @@
     "@mui/material": "^5.10.5",
     "@mui/styles": "^5.10.3",
     "@reduxjs/toolkit": "^1.8.5",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^13.5.0",
     "@tippyjs/react": "^4.2.6",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
@@ -43,7 +40,10 @@
   "devDependencies": {
     "babel-plugin-module-resolver": "^4.1.0",
     "customize-cra": "^1.0.0",
-    "react-app-rewired": "^2.2.1"
+    "react-app-rewired": "^2.2.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0"
   },
   "scripts": {
     "start": "react-app-rewired start",
