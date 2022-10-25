@@ -19,6 +19,7 @@ function App() {
     const dispatch = useDispatch();
 
     console.log('[ENV] - ', process.env.REACT_APP_BASE_URL);
+    console.log('[ENV] - ', process.env.REACT_APP_SOCKET);
 
     useEffect(() => {
         dispatch(fetchUsers());
