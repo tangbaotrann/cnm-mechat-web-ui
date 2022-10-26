@@ -1,6 +1,6 @@
 // lib
 import classNames from 'classnames/bind';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // me
 import styles from './Message.module.scss';
