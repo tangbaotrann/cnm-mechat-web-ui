@@ -21,7 +21,7 @@ const cx = classNames.bind(styles);
 function Message({ message, own, conversation, user }) {
     const dispatch = useDispatch();
 
-    console.log('MESSAGE - ', message);
+    console.log('[USER - 25] - ', user);
 
     // handle delete message
     const handleDeleteMessage = async () => {
