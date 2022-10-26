@@ -95,7 +95,7 @@ export const fetchApiMessagesByConversationId = createAsyncThunk(
 );
 
 const createFormData = (imageMessage) => {
-    const { senderID, conversationID, content, imageLink } = imageMessage;
+    const { senderID, conversationID, content, imageLink, fileLink } = imageMessage;
 
     const dataForm = new FormData();
 
@@ -103,6 +103,7 @@ const createFormData = (imageMessage) => {
     dataForm.append('conversationID', conversationID);
     dataForm.append('content', content);
     dataForm.append('imageLink', imageLink);
+    dataForm.append('fileLink', fileLink);
 
     return dataForm;
 };
