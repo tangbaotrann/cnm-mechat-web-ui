@@ -49,7 +49,7 @@ function Messenger() {
 
     const scrollMessenger = useRef();
 
-    console.log('[FILE] - ', newFileMessage?.name);
+    // console.log('[FILE] - ', newFileMessage?.name);
 
     // fetch message from conversationId
     useEffect(() => {
@@ -108,6 +108,12 @@ function Messenger() {
             newImageMessage && URL.revokeObjectURL(newImageMessage.preview);
         };
     }, [newImageMessage]);
+
+    useEffect(() => {
+        return () => {
+            newFileMessage && URL.revokeObjectURL(newFileMessage.previewFile);
+        };
+    }, [newFileMessage]);
 
     // handle button send message
     const handleSendMessage = async (e) => {
