@@ -1,6 +1,6 @@
 // lib
 import classNames from 'classnames/bind';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // me
 import styles from './Message.module.scss';
@@ -10,6 +10,8 @@ const cx = classNames.bind(styles);
 
 function MessageItem({ message, own }) {
     const [showPreview, setShowPreview] = useState(false);
+
+    console.log('MESSAGE - ', message);
 
     // show preview
     const handleShowPreviewImageAndVideo = () => {
@@ -117,7 +119,11 @@ function MessageItem({ message, own }) {
                             )}
                         </>
                     )}
-                    {message.imageLink === null && <p className={cx('message-top-text')}>{message.content}</p>}
+                    {message.action ? (
+                        <p className={cx('message-top-text')}>{message.action}</p>
+                    ) : (
+                        message.imageLink === null && <p className={cx('message-top-text')}>{message.content}</p>
+                    )}
                 </>
             ) : (
                 <>
@@ -213,7 +219,11 @@ function MessageItem({ message, own }) {
                             )}
                         </>
                     )}
-                    {message.imageLink === null && <p className={cx('message-top-text')}>{message.content}</p>}
+                    {message.action ? (
+                        <p className={cx('message-top-text')}>{message.action}</p>
+                    ) : (
+                        message.imageLink === null && <p className={cx('message-top-text')}>{message.content}</p>
+                    )}
                 </>
             )}
         </>
