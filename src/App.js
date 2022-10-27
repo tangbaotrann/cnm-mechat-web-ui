@@ -1,5 +1,4 @@
 // libs
-import { useSelector } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // me
@@ -26,6 +25,12 @@ function App() {
         // dispatch(meRequestFriend());
     });
 
+    // useEffect(() => {
+    //     let tam = localStorage.getItem('user_login');
+    //     if (tam === null) {
+    //         return redirect('/');
+    //     }
+    // });
     return (
         <Router>
             <Routes>
