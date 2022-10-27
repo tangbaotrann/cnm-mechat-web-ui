@@ -46,7 +46,6 @@ const listMeRequestFriend = createSlice({
     initialState: { data: [] },
     extraReducers: (builder) => {
         builder.addCase(meRequestFriend.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.data = action.payload;
         });
     },

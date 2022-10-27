@@ -18,7 +18,6 @@ export const friendRequests = createAsyncThunk(
         console.log(data);
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        console.log(jsonData);
         return jsonData;
     },
 );

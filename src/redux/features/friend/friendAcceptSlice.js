@@ -27,7 +27,6 @@ export const accept = createAsyncThunk(
         // Gọi lên API backend
         const { idRequest } = data;
         const { status, senderID, receiverID } = data;
-        console.log(friendAccept);
         const response = await fetch(`${process.env.REACT_APP_BASE_URL}friendRequests/friend-request/${idRequest}`, {
             method: 'POST',
             headers: {

@@ -45,22 +45,22 @@ function Register() {
     const handleSubmitForm = (e) => {
         e.preventDefault();
         // var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-        var tam = /^(09|03|07|08|05)\d{4}\d{4}$/;
-        console.log(userName + phoneNumber + password + confirmPassword);
+        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        var number = /^[0-9]{10}$/;
+        var mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
         if (userName === '' || phoneNumber === '' || password === '' || confirmPassword === '') {
             alert('Vui lòng nhập đầy đủ thông tin');
-        } else if (phoneNumber.length !== 10) {
-            alert('Số điện thoại phải đủ 10 Số');
-        } else if (!tam.test(phoneNumber)) {
+        } else if (!number.test(phoneNumber)) {
+            alert('Số điện thoại phải là số và đủ 10 số');
+        } else if (!phoneNumberForm.test(phoneNumber)) {
             alert('Số điện thoại Chưa không đúng');
         } else if (searchAccountExists !== 1) {
             alert('Số điện thoại đã được đăng ký');
-        } else if (password < 6) {
-            alert('Mật khẩu phải lớn 6 kí tự');
+        } else if (!mk.test(password)) {
+            alert('Mật khẩu phải lớn 8 ký tự trong đó 1 ký tự viết hoa, 1 ký tự viết thường và số');
         } else if (password !== confirmPassword) {
-            alert('Mật khẩu chưa trùng khớp');
+            alert('Mật khẩu không trùng khớp');
         } else {
-            console.log('72 - ok');
             generateRecaptcha();
             const phoneNumbers = '+84' + phoneNumber.slice(1);
             console.log(phoneNumbers + 'sao khi +84');
@@ -143,7 +143,7 @@ function Register() {
                     </div>
                     <div className={cx('form-back')}>
                         <ArrowLeft className={cx('item-back')} />
-                        <Link to="/Login" className={cx('back')}>
+                        <Link to="/" className={cx('back')}>
                             Quay lại
                         </Link>
                     </div>

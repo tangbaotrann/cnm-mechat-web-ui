@@ -11,7 +11,6 @@ const cx = classNames.bind(styles);
 function FriendRequestList({ user, isPhoneBook }) {
     const dispatch = useDispatch();
     const infoUser = useSelector(userLogin);
-    console.log(infoUser);
     const handleAccept = () => {
         const data = {
             status: true,

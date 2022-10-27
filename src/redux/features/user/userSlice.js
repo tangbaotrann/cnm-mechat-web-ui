@@ -7,13 +7,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 export const fetchApiUser = createAsyncThunk('user/fetchApiUser', async (arg, { rejectWithValue }) => {
     try {
         const getToken = JSON.parse(localStorage.getItem('user_login'));
-
         // check token
         if (getToken !== null) {
             const decodedToken = jwt_decode(getToken._token);
-            // console.log('decodedToken', decodedToken);
+
             const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${decodedToken._id}`);
-            // console.log('RES - ', res.data.data);
+
             return res.data.data;
         }
     } catch (err) {
@@ -21,7 +20,28 @@ export const fetchApiUser = createAsyncThunk('user/fetchApiUser', async (arg, { 
         rejectWithValue(err);
     }
 });
+//Quen mật khẩu
+export const forgetPassWord = createAsyncThunk(
+    // Tên action
+    'user/forgetPassWord ',
+    async (data) => {
+        // Gọi lên API backend
+        const { phoneNumber, newPassword } = data;
 
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}accounts/forget-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ phoneNumber, newPassword }),
+        });
+
+        // Convert dữ liệu ra json
+        const jsonData = await response.json();
+        return jsonData;
+    },
+);
+//
 const userSlice = createSlice({
     name: 'user',
     initialState: {
