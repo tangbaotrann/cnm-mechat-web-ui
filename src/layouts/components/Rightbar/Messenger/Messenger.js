@@ -29,12 +29,14 @@ import messagesSlice, {
     fetchApiSendMessage,
     fetchApiMessagesByConversationId,
 } from '~/redux/features/messages/messagesSlice';
+import FileMessage from '~/components/FileMessage/FileMessage';
 
 const cx = classNames.bind(styles);
 
 function Messenger() {
     const [newMessage, setNewMessage] = useState('');
     const [newImageMessage, setNewImageMessage] = useState(null);
+    const [newFileMessage, setNewFileMessage] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [btnClosePreview, setBtnClosePreview] = useState(false);
 
@@ -46,6 +48,8 @@ function Messenger() {
     const isLoading = useSelector((state) => state.messages.isLoading);
 
     const scrollMessenger = useRef();
+
+    // console.log('[FILE] - ', newFileMessage?.name);
 
     // fetch message from conversationId
     useEffect(() => {
@@ -89,12 +93,27 @@ function Messenger() {
         setBtnClosePreview(!btnClosePreview);
     };
 
+    // handle change file
+    const handleChangeFileMessage = (e) => {
+        const file = e.target.files[0];
+
+        file.previewFile = URL.createObjectURL(file);
+
+        setNewFileMessage(file);
+    };
+
     // cleanup func
     useEffect(() => {
         return () => {
             newImageMessage && URL.revokeObjectURL(newImageMessage.preview);
         };
     }, [newImageMessage]);
+
+    useEffect(() => {
+        return () => {
+            newFileMessage && URL.revokeObjectURL(newFileMessage.previewFile);
+        };
+    }, [newFileMessage]);
 
     // handle button send message
     const handleSendMessage = async (e) => {
@@ -106,6 +125,7 @@ function Messenger() {
                 senderID: user._id,
                 content: newMessage,
                 imageLink: newImageMessage,
+                fileLink: newFileMessage,
             }),
         );
 
@@ -191,19 +211,19 @@ function Messenger() {
                                 {/* Sub menu option footer */}
                                 <Popper className={cx('menu-option-file')}>
                                     <>
-                                        <label htmlFor="file">
+                                        <label htmlFor="files">
                                             <div className={cx('option-file-btn-fix')}>
                                                 <FontAwesomeIcon className={cx('sub-menu-icon-footer')} icon={faFile} />
                                                 Chọn File
                                                 <input
                                                     className={cx('hide')}
                                                     type="file"
-                                                    id="file"
-                                                    accept=".png, .jpg, .jpeg"
+                                                    id="files"
+                                                    accept=".docx, .pptx, .pdf, .xlsx"
+                                                    onChange={handleChangeFileMessage}
                                                 />
                                             </div>
                                         </label>
-
                                         <button className={cx('option-file-btn')}>
                                             <FontAwesomeIcon
                                                 className={cx('sub-menu-icon-footer')}
@@ -241,7 +261,7 @@ function Messenger() {
                         <FontAwesomeIcon className={cx('icon-right')} icon={faFaceSmile} />
                     </Tippy>
                     {/* Button send message */}
-                    {newMessage || newImageMessage ? (
+                    {newMessage || newImageMessage || newFileMessage ? (
                         <button className={cx('send-message-btn')} onClick={handleSendMessage}>
                             GỬI
                         </button>
@@ -267,6 +287,12 @@ function Messenger() {
                     {newImageMessage?.name.split('.')[newImageMessage?.name.split('.').length - 1] === 'mp4' && (
                         <video className={cx('image-upload')} src={newImageMessage.preview} alt="video" controls />
                     )}
+
+                    {/* file message */}
+                    {/* {newFileMessage?.name.split('.')[newFileMessage?.name.split('.').length - 1] === 'docx' && (
+                        <h1>icon file: {newFileMessage.name}</h1>
+                    )} */}
+                    {newFileMessage && <FileMessage newFileMessage={newFileMessage} />}
                 </div>
             </div>
         </div>

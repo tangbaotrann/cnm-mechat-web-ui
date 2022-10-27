@@ -39,8 +39,9 @@ const messagesSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(fetchApiMessagesByConversationId.rejected, (state, action) => {
-                console.log('Error');
+                console.log('Error!');
             })
+            // send message
             .addCase(fetchApiSendMessage.fulfilled, (state, action) => {
                 state.data.push(action.payload);
 
@@ -50,7 +51,31 @@ const messagesSlice = createSlice({
                 });
             })
             .addCase(fetchApiSendMessage.rejected, (state, action) => {
-                console.log('Error');
+                console.log('Error!');
+            })
+            // delete message
+            .addCase(fetchApiDeleteMessage.fulfilled, (state, action) => {
+                const { id } = action.payload;
+                const message = state.data.findIndex((mess) => mess._id === id);
+
+                if (message) {
+                    state.data.splice(message, 1);
+                } else {
+                    console.log('Error!');
+                }
+            })
+            .addCase(fetchApiDeleteMessage.rejected, (state, action) => {
+                console.log('Error!');
+            })
+            // re-call message
+            .addCase(fetchApiRecallMessage.fulfilled, (state, action) => {
+                const message = action.payload;
+                const listMessage = state.data.map((mess) => (mess._id === message._id ? message : mess));
+
+                state.data = listMessage;
+            })
+            .addCase(fetchApiRecallMessage.rejected, (state, action) => {
+                console.log('Error!');
             });
     },
 });
@@ -61,7 +86,7 @@ export const fetchApiMessagesByConversationId = createAsyncThunk(
     async (conversationID) => {
         try {
             const res = await axios.get(`${process.env.REACT_APP_BASE_URL}messages/${conversationID}`);
-            // console.log('RES - ', res.data);
+
             return res.data;
         } catch (err) {
             console.log(err);
@@ -70,7 +95,7 @@ export const fetchApiMessagesByConversationId = createAsyncThunk(
 );
 
 const createFormData = (imageMessage) => {
-    const { senderID, conversationID, content, imageLink } = imageMessage;
+    const { senderID, conversationID, content, imageLink, fileLink } = imageMessage;
 
     const dataForm = new FormData();
 
@@ -78,6 +103,7 @@ const createFormData = (imageMessage) => {
     dataForm.append('conversationID', conversationID);
     dataForm.append('content', content);
     dataForm.append('imageLink', imageLink);
+    dataForm.append('fileLink', fileLink);
 
     return dataForm;
 };
@@ -96,5 +122,39 @@ export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessag
         return resFormData.data;
     }
 });
+
+// delete message
+export const fetchApiDeleteMessage = createAsyncThunk(
+    'messages/fetchApiDeleteMessage',
+    async ({ messageId, conversationID }) => {
+        try {
+            const res = await axios.delete(`${process.env.REACT_APP_BASE_URL}messages/${messageId}`, {
+                data: { conversationID },
+                headers: { Authorization: '***' },
+            });
+
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+// re-call message
+export const fetchApiRecallMessage = createAsyncThunk(
+    'messages/fetchApiRecallMessage',
+    async ({ messageId, conversationID }) => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_BASE_URL}messages/recall/${messageId}`, {
+                data: { conversationID },
+                headers: { Authorization: '***' },
+            });
+
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
 
 export default messagesSlice;

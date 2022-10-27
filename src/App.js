@@ -1,5 +1,6 @@
 // libs
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // me
 import Home from './pages/Home';
@@ -28,17 +29,19 @@ function App() {
     return (
         <Router>
             <Routes>
-                {/* Login */}
-
-                <Route exact path="/" element={<Login />} />
-                {/* Home page */}
-                <Route path="/me.chat" element={<Home />} />
                 {/* Register */}
                 <Route path="/register" element={<Register />} />
 
-                <Route path="/forgetPassWord" element={<ForgetPassWord />} />
+                {/* Login */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Navigate replace to="/login" />} />
 
+                {/* Home page */}
+                <Route exact path="/me.chat" element={<Home />} />
+
+                {/* Confirm otp */}
                 <Route path="/confirmotp" element={<ConFirmOTP />} />
+
                 {/* PhoneBook */}
                 <Route path="/phonebook" element={<PhoneBook />} />
             </Routes>
