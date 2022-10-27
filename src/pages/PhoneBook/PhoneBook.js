@@ -26,10 +26,12 @@ function PhoneBook() {
     const [changeLayout, setChangeLayout] = useState(false);
 
     const listFriends = useSelector(listFriend);
-    const user = useSelector((state) => state.user.data);
-    const cc = useSelector(c);
-    console.log(user);
-    console.log(cc);
+
+    //de lại lam chuyen man
+    // const user = useSelector((state) => state.user.data);
+    // const cc = useSelector(c);
+    // console.log(user);
+    // console.log(cc);
     // const conversation = useSelector((state) => state.conversations.conversationClick);
     // const message = useSelector((state) => state.messages.clickSendMessage);
 
@@ -38,7 +40,6 @@ function PhoneBook() {
     const listAccept = useSelector(listFriendAccept);
 
     const listMeRequest = useSelector(listMeRequests);
-    console.log(listMeRequest);
 
     //
     const handleModelOpenInfoAccount = () => {
@@ -108,8 +109,10 @@ function PhoneBook() {
                                 })}
                             </div>
                             <div className={cx('meRequestFriend')}>
-                                {listMeRequest.length === 0 ? null : <h1>Yêu cầu kết bạn ({listMeRequest.length})</h1>}
-                                {listMeRequest.map((user) => {
+                                {listMeRequest?.length === 0 ? null : (
+                                    <h1>Yêu cầu kết bạn ({listMeRequest?.length})</h1>
+                                )}
+                                {listMeRequest?.map((user) => {
                                     return <FriendRequestList key={user.idFriendRequest} user={user} />;
                                 })}
                             </div>

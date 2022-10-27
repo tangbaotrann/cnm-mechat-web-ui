@@ -12,7 +12,6 @@ export const usersRemainingSelector = createSelector(
     userInfoSelector,
     searchTextSelector,
     (users, user, search) => {
-        console.log(users);
         if (search) {
             if (search.startsWith('0')) {
                 const usersFilter = users.filter((_user) => _user.phoneNumber === search);
@@ -36,8 +35,24 @@ export const usersRemainingSelector = createSelector(
     },
 );
 //
+// export const accountExists = createSelector(listMeRequests, searchTextSelector, (lMR, search) => {
+//     if (search) {
+//         if (search.startsWith('0')) {
+//             const usersFilter = lMR.filter((_lMR) => _lMR.phoneNumber === search);
+//             //don't find
+//             console.log('-----45', usersFilter);
+//             if (!usersFilter.length) {
+//                 return 1;
+//             }
+//             return true;
+//         } else {
+//             return 1;
+//         }
+//     }
+//     return false;
+// });
+//tim ban da gui loi moi ket hay chua
 export const accountExists = createSelector(userListSelector, searchTextSelector, (users, search) => {
-    console.log(users);
     if (search) {
         if (search.startsWith('0')) {
             const usersFilter = users.filter((_user) => _user.phoneNumber === search);
@@ -73,7 +88,6 @@ export const searchFilterFriend = createSelector(
     userInfoSelector,
     searchTextSelector,
     (users, user, search) => {
-        console.log(users);
         if (search) {
             if (search.startsWith('0')) {
                 const usersFilter1 = users.filter(
@@ -83,7 +97,6 @@ export const searchFilterFriend = createSelector(
                 if (!usersFilter1.length) {
                     return false;
                 }
-
                 return true;
             } else {
                 return 1;

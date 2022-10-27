@@ -6,22 +6,28 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { authentication } from '~/util/firebase';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { forgetPassWord } from '~/redux/features/user/userSlice';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 function ConFirmOTP() {
+    useEffect(() => {
+        document.title = 'Trang xác thực';
+    });
+    const dispatch = useDispatch();
     const [OTP, setOTP] = useState('');
     const navigate = useNavigate();
     const [counter, setCounter] = useState(60);
     const location = useLocation();
-    //dữ liệu truyền
-    const tokenS = location.state.token;
+    //dữ liệu tu truyền dki
     const phoneNumber = location.state.phoneNumber;
     const userName = location.state.userName;
     const password = location.state.password;
+    //dữ liệu tu truyền quen mk
 
     //register
     const register = () => {
-        return fetch(`${process.env.REACT_APP_BASE_URL}/users/signup`, {
+        return fetch(`${process.env.REACT_APP_BASE_URL}auths/signup`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -79,22 +85,25 @@ function ConFirmOTP() {
                         .then((result) => {
                             // User signed in successfully.
                             // ...
-                            if (typeof tokenS != 'undefined') {
-                                alert('Đăng nhập thành công');
-                                console.log('hoan thanh');
-                                localStorage.setItem('user_login', JSON.stringify(tokenS));
-                                navigate('/me.chat');
-                            } else {
+                            if (typeof userName != 'undefined') {
                                 register().then((token) => {
-                                    console.log(token);
-                                    if (token !== null) {
+                                    if (typeof token != 'undefined') {
                                         alert('Đăng ký thành công');
                                         console.log('hoan thanh');
-                                        console.log(token);
                                         localStorage.setItem('user_login', JSON.stringify(token));
                                         navigate('/me.chat');
                                     }
                                 });
+                            } else {
+                                const data = {
+                                    phoneNumber: phoneNumber,
+                                    newPassword: password,
+                                };
+                                dispatch(forgetPassWord(data));
+                                if (forgetPassWord()) {
+                                    alert('Đổi mật khẩu thành công');
+                                    navigate('/login');
+                                }
                             }
                         })
                         .catch((error) => {
@@ -103,6 +112,8 @@ function ConFirmOTP() {
                             console.log(error);
                             alert('Mã OTP sai');
                         });
+                } else {
+                    alert('Mã OTP Phải là 6 số');
                 }
             }
         } else {
@@ -111,8 +122,7 @@ function ConFirmOTP() {
     };
     //lấy capcha
     const handleCallBackCode = () => {
-        setCounter(30);
-        console.log(phoneNumber);
+        setCounter(60);
         if (phoneNumber.length > 0) {
             generateRecaptcha();
             const phoneNumbers = '+84' + phoneNumber.slice(1);
@@ -166,7 +176,7 @@ function ConFirmOTP() {
                     </div>
                     <div className={cx('form-back')}>
                         <ArrowLeft className={cx('item')} />{' '}
-                        <Link to="/Login" className={cx('back')}>
+                        <Link to="/" className={cx('back')}>
                             Quay lại
                         </Link>
                     </div>

@@ -14,7 +14,6 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
     try {
         const res = await fetch(`${process.env.REACT_APP_BASE_URL}users`);
         const users = await res.json();
-        console.log(users.data);
         return users.data;
     } catch (err) {
         console.log(`err fetch users: ${err}`);

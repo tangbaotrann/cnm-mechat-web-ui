@@ -7,9 +7,6 @@ import { PhoneIphone, Lock } from '@material-ui/icons';
 import { Link, useNavigate } from 'react-router-dom';
 //
 
-import { authentication } from '~/util/firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
-
 const cx = classNames.bind(styles);
 
 function Login() {
@@ -26,7 +23,7 @@ function Login() {
         }
     });
     const sign = () => {
-        return fetch(`${process.env.REACT_APP_BASE_URL}users/login`, {
+        return fetch(`${process.env.REACT_APP_BASE_URL}auths/login`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -40,60 +37,45 @@ function Login() {
             .then((res) => res.json())
             .then((resData) => {
                 if (resData.status === 'success') {
-                    console.log(resData);
                     return resData;
-                } else {
-                    return Promise.reject(new Error('404 else'));
+                } else if (resData?.error.statusCode === 403) {
+                    throw new Error('Sai mật khẩu');
+                } else if (resData?.error.statusCode === 402) {
+                    throw new Error('Tài khoản không tồn tại');
                 }
-            })
-            .catch((err) => {
-                return Promise.reject(new Error('404 else'));
             });
-    };
-
-    const generateRecaptcha = () => {
-        window.recaptchaVerifier = new RecaptchaVerifier(
-            'tam',
-            {
-                size: 'invisible',
-                callback: (response) => {},
-            },
-            authentication,
-        );
+        // .catch((err) => {
+        //     return Promise.reject(new Error('404 else'));
+        // });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        sign()
-            .then((token) => {
-                console.log(phoneNumber);
-                if (phoneNumber.length >= 10) {
-                    generateRecaptcha();
-                    const phoneNumbers = '+84' + phoneNumber.slice(1);
-                    console.log(phoneNumbers + 'sao khi +84');
-                    const appVerifier = window.recaptchaVerifier;
-                    signInWithPhoneNumber(authentication, phoneNumbers, appVerifier)
-                        .then((confirmationResult) => {
-                            // SMS sent. Prompt user to type the code from the message, then sign the
-                            // user in with confirmationResult.confirm(code).
-
-                            window.confirmationResult = confirmationResult;
-                            console.log('ĐÃ gửi OTP');
-                            // ...
-                            navigate('/ConFirmOTP', { state: { token, phoneNumber } });
-                        })
-                        .catch((error) => {
-                            // Error; SMS not sent
-                            // ...
-                            alert('Số điện thoại chưa đăng ký tài khoảng');
-                            console.log('Chưa gửi về OTP' + error);
-                        });
-                }
-            })
-            .catch((err) => {
-                // console.log(err + 'handleSubmit');
-                alert('tài khoản không tồn tại');
-            });
+        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        var number = /^[0-9]{10}$/;
+        if (phoneNumber === '' || password === '') {
+            alert('Vui lòng nhập đầy đủ thông tin');
+        } else if (!number.test(phoneNumber)) {
+            alert('Số điện thoại phải là số và đủ 10 số');
+        } else if (!phoneNumberForm.test(phoneNumber)) {
+            alert('Số điện thoại không đúng');
+        } else {
+            sign()
+                .then((token) => {
+                    if (typeof token != 'undefined') {
+                        console.log(token);
+                        alert('Đăng nhập thành công');
+                        console.log('hoan thanh');
+                        console.log(token);
+                        localStorage.setItem('user_login', JSON.stringify(token));
+                        navigate('/me.chat');
+                    }
+                })
+                .catch((err) => {
+                    // console.log(err + 'handleSubmit');
+                    alert(err.message);
+                });
+        }
     };
 
     return (
@@ -130,10 +112,9 @@ function Login() {
                         <button type="submit" variant="contained" color="primary" onClick={sign}>
                             ĐĂNG NHẬP
                         </button>
-                        <div id="tam"></div>
                     </div>
                     <div className={cx('form-forget')}>
-                        <a href="/forgotpassword">Quên mật khẩu?</a>
+                        <a href="/forgetPassWord">Quên mật khẩu?</a>
                     </div>
                 </form>
             </div>
