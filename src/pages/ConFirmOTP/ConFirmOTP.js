@@ -146,43 +146,45 @@ function ConFirmOTP() {
         }
     };
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('logo')}>
-                <img className={cx('logo-image')} src={images.logo} alt="" />
+        <body className={cx('body-login')}>
+            <div className={cx('wrapper')}>
+                <div className={cx('logo')}>
+                    <img className={cx('logo-image')} src={images.logo} alt="" />
+                </div>
+                <div className={cx('login-title')}>
+                    <h1>Xác nhận mã OTP</h1>
+                </div>
+                <div className={cx('otp-form')}>
+                    <form onSubmit={handleConfirm}>
+                        <div className={cx('form-otp')}>
+                            <input
+                                type="tel"
+                                placeholder="Nhập mã OTP"
+                                value={OTP}
+                                onChange={(e) => setOTP(e.target.value)}
+                                name="otp"
+                            />
+                            <p>{counter}</p>
+                        </div>
+                        <div className={cx('form-button-otp')}>
+                            <h5 className={cx('form-resend-code')} onClick={handleCallBackCode}>
+                                Gửi lại mã
+                            </h5>
+                            <button type="submit" variant="contained" color="primary">
+                                Xác nhận
+                            </button>
+                            <div id="tam"></div>
+                        </div>
+                        <div className={cx('form-back')}>
+                            <ArrowLeft className={cx('item')} />{' '}
+                            <Link to="/" className={cx('back')}>
+                                Quay lại
+                            </Link>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div className={cx('login-title')}>
-                <h1>Xác nhận mã OTP</h1>
-            </div>
-            <div className={cx('otp-form')}>
-                <form onSubmit={handleConfirm}>
-                    <div className={cx('form-otp')}>
-                        <input
-                            type="tel"
-                            placeholder="Nhập mã OTP"
-                            value={OTP}
-                            onChange={(e) => setOTP(e.target.value)}
-                            name="otp"
-                        />
-                        <p>{counter}</p>
-                    </div>
-                    <div className={cx('form-button-otp')}>
-                        <h5 className={cx('form-resend-code')} onClick={handleCallBackCode}>
-                            Gửi lại mã
-                        </h5>
-                        <button type="submit" variant="contained" color="primary">
-                            Xác nhận
-                        </button>
-                        <div id="tam"></div>
-                    </div>
-                    <div className={cx('form-back')}>
-                        <ArrowLeft className={cx('item')} />{' '}
-                        <Link to="/" className={cx('back')}>
-                            Quay lại
-                        </Link>
-                    </div>
-                </form>
-            </div>
-        </div>
+        </body>
     );
 }
 export default ConFirmOTP;

@@ -25,8 +25,6 @@ function SubModelInfoAccount({ user }) {
     const infoUser = useSelector(userLogin);
     const [avatar, setAvatar] = useState(user?.avatarLink); //
 
-    console.log('28 - ', avatar);
-
     useEffect(() => {
         return () => {
             avatar && URL.revokeObjectURL(avatar.preview);

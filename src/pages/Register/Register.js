@@ -84,72 +84,74 @@ function Register() {
         }
     };
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('logo')}>
-                <img className={cx('logo-image')} src={images.logo} alt="" />
-            </div>
-            <div className={cx('login-title')}>
-                <h1>Đăng Ký</h1>
-            </div>
+        <body className={cx('body-register')}>
+            <div className={cx('wrapper')}>
+                <div className={cx('logo')}>
+                    <img className={cx('logo-image')} src={images.logo} alt="" />
+                </div>
+                <div className={cx('login-title')}>
+                    <h1>Đăng Ký</h1>
+                </div>
 
-            <div className={cx('register-form')}>
-                <form onSubmit={handleSubmitForm}>
-                    <div className={cx('form-phoneNumber')}>
-                        <PhoneIphone className={cx('item')} />
-                        <input
-                            type="text"
-                            placeholder="Số điện thoại"
-                            name="phoneNumber"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                        />
-                    </div>
-                    <div className={cx('form-user')}>
-                        <Person className={cx('item')} />
-                        <input
-                            type="text"
-                            placeholder="Tên người dùng"
-                            name="userName"
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value)}
-                        />
-                    </div>
-                    <div className={cx('form-password')}>
-                        <Lock className={cx('item')} />
-                        <input
-                            type="password"
-                            placeholder="Mật khẩu"
-                            name="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className={cx('form-password')}>
-                        <Lock className={cx('item')} />
-                        <input
-                            type="password"
-                            placeholder="Nhập lại mật khẩu"
-                            name="enterPassword"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                    </div>
+                <div className={cx('register-form')}>
+                    <form onSubmit={handleSubmitForm}>
+                        <div className={cx('form-phoneNumber')}>
+                            <PhoneIphone className={cx('item')} />
+                            <input
+                                type="text"
+                                placeholder="Số điện thoại"
+                                name="phoneNumber"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+                        </div>
+                        <div className={cx('form-user')}>
+                            <Person className={cx('item')} />
+                            <input
+                                type="text"
+                                placeholder="Tên người dùng"
+                                name="userName"
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                            />
+                        </div>
+                        <div className={cx('form-password')}>
+                            <Lock className={cx('item')} />
+                            <input
+                                type="password"
+                                placeholder="Mật khẩu"
+                                name="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className={cx('form-password')}>
+                            <Lock className={cx('item')} />
+                            <input
+                                type="password"
+                                placeholder="Nhập lại mật khẩu"
+                                name="enterPassword"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
+                        </div>
 
-                    <div className={cx('form-button')}>
-                        <button type="submit" variant="contained" color="primary">
-                            ĐĂNG KÝ
-                        </button>
-                        <div id="tam"></div>
-                    </div>
-                    <div className={cx('form-back')}>
-                        <ArrowLeft className={cx('item-back')} />
-                        <Link to="/" className={cx('back')}>
-                            Quay lại
-                        </Link>
-                    </div>
-                </form>
+                        <div className={cx('form-button')}>
+                            <button type="submit" variant="contained" color="primary">
+                                ĐĂNG KÝ
+                            </button>
+                            <div id="tam"></div>
+                        </div>
+                        <div className={cx('form-back')}>
+                            <ArrowLeft className={cx('item-back')} />
+                            <Link to="/" className={cx('back')}>
+                                Quay lại
+                            </Link>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+        </body>
     );
 }
 export default Register;
