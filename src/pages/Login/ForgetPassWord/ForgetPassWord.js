@@ -93,7 +93,7 @@ function ForgetPassWord() {
         }
     };
     return (
-        <body className={cx('body-forget')}>
+        <div className={cx('body-forget')}>
             <div className={cx('wrapper')}>
                 <div className={cx('logo')}>
                     <img className={cx('logo-image')} src={images.logo} alt="" />
@@ -162,7 +162,7 @@ function ForgetPassWord() {
                     </form>
                 </div>
             </div>
-        </body>
+        </div>
     );
 }
 export default ForgetPassWord;

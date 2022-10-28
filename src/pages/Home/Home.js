@@ -17,12 +17,18 @@ const cx = classNames.bind(styles);
 function Home() {
     //Da doi qua ben app.js
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        document.title = 'Mechat Web';
+    }, []);
+
     useEffect(() => {
         // dispatch(fetchUsers());
         dispatch(fetchApiUser());
         // dispatch(friendAccept());
         // dispatch(meRequestFriend());
     });
+
     return (
         <div className={cx('wrapper')}>
             <Sidebar />
