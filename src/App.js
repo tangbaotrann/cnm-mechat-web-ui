@@ -20,9 +20,9 @@ function App() {
 
     useEffect(() => {
         dispatch(fetchUsers());
-        // dispatch(fetchApiUser());
-        // dispatch(friendAccept());
-        // dispatch(meRequestFriend());
+        dispatch(fetchApiUser());
+        dispatch(friendAccept());
+        dispatch(meRequestFriend());
     });
 
     // useEffect(() => {
@@ -49,6 +49,7 @@ function App() {
 
                 {/* PhoneBook */}
                 <Route path="/phonebook" element={<PhoneBook />} />
+                <Route path="/forgetPassWord" element={<ForgetPassWord />} />
             </Routes>
         </Router>
     );

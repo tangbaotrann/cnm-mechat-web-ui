@@ -79,54 +79,56 @@ function Login() {
     };
 
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('logo')}>
-                <img className={cx('logo-image')} src={images.logo} alt="" />
+        <body className={cx('body-login')}>
+            <div className={cx('wrapper')}>
+                <div className={cx('logo')}>
+                    <img className={cx('logo-image')} src={images.logo} alt="" />
+                </div>
+                <div className={cx('login-title')}>
+                    <h1>Đăng Nhập</h1>
+                </div>
+                <div className={cx('login-form')}>
+                    <form onSubmit={handleSubmit}>
+                        <div className={cx('form-phoneNumber')}>
+                            <PhoneIphone className={cx('item')} />
+                            <input
+                                type="text"
+                                placeholder="Số điện thoại"
+                                name="phoneNumber"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+                        </div>
+                        <div className={cx('form-password')}>
+                            <Lock className={cx('password-item')} />
+                            <input
+                                type="password"
+                                placeholder="Mật khẩu"
+                                name="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className={cx('form-button')}>
+                            <button type="submit" variant="contained" color="primary" onClick={sign}>
+                                ĐĂNG NHẬP
+                            </button>
+                        </div>
+                        <div className={cx('form-forget')}>
+                            <a href="/forgetPassWord">Quên mật khẩu?</a>
+                        </div>
+                    </form>
+                </div>
+                <div className={cx('form-register')}>
+                    <h1>
+                        <p>Bạn chưa có tài khoản? </p>
+                        <Link to="/Register" className={cx('form-register-register')}>
+                            Đăng ký ngay
+                        </Link>
+                    </h1>
+                </div>
             </div>
-            <div className={cx('login-title')}>
-                <h1>Đăng Nhập</h1>
-            </div>
-            <div className={cx('login-form')}>
-                <form onSubmit={handleSubmit}>
-                    <div className={cx('form-phoneNumber')}>
-                        <PhoneIphone className={cx('item')} />
-                        <input
-                            type="text"
-                            placeholder="Số điện thoại"
-                            name="phoneNumber"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                        />
-                    </div>
-                    <div className={cx('form-password')}>
-                        <Lock className={cx('password-item')} />
-                        <input
-                            type="password"
-                            placeholder="Mật khẩu"
-                            name="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className={cx('form-button')}>
-                        <button type="submit" variant="contained" color="primary" onClick={sign}>
-                            ĐĂNG NHẬP
-                        </button>
-                    </div>
-                    <div className={cx('form-forget')}>
-                        <a href="/forgetPassWord">Quên mật khẩu?</a>
-                    </div>
-                </form>
-            </div>
-            <div className={cx('form-register')}>
-                <h1>
-                    <p>Bạn chưa có tài khoản? </p>
-                    <Link to="/Register" className={cx('form-register-register')}>
-                        Đăng ký ngay
-                    </Link>
-                </h1>
-            </div>
-        </div>
+        </body>
     );
 }
 export default Login;

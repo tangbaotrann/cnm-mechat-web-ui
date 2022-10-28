@@ -93,74 +93,76 @@ function ForgetPassWord() {
         }
     };
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('logo')}>
-                <img className={cx('logo-image')} src={images.logo} alt="" />
-            </div>
-            <div className={cx('login-title')}>
-                <h1>Khôi phục mật khẩu</h1>
-            </div>
+        <body className={cx('body-forget')}>
+            <div className={cx('wrapper')}>
+                <div className={cx('logo')}>
+                    <img className={cx('logo-image')} src={images.logo} alt="" />
+                </div>
+                <div className={cx('login-title')}>
+                    <h1>Khôi phục mật khẩu</h1>
+                </div>
 
-            <div className={cx('forget-form')}>
-                <form onSubmit={handleSubmitForm}>
-                    <div className={cx('form-phoneNumber')}>
-                        <PhoneIphone className={cx('item')} />
-                        <input
-                            type="text"
-                            placeholder="Số điện thoại"
-                            name="phoneNumber"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                        />
-                    </div>
-                    {show === true ? (
-                        <div className={cx('form-password')}>
-                            <Lock className={cx('item')} />
+                <div className={cx('forget-form')}>
+                    <form onSubmit={handleSubmitForm}>
+                        <div className={cx('form-phoneNumber')}>
+                            <PhoneIphone className={cx('item')} />
                             <input
-                                type="password"
-                                placeholder="Mật khẩu mới"
-                                name="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                type="text"
+                                placeholder="Số điện thoại"
+                                name="phoneNumber"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
                             />
                         </div>
-                    ) : null}
-                    {show === true ? (
-                        <div className={cx('form-password')}>
-                            <Lock className={cx('item')} />
-                            <input
-                                type="password"
-                                placeholder="Nhập lại mật khẩu mới"
-                                name="enterPassword"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                            />
+                        {show === true ? (
+                            <div className={cx('form-password')}>
+                                <Lock className={cx('item')} />
+                                <input
+                                    type="password"
+                                    placeholder="Mật khẩu mới"
+                                    name="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </div>
+                        ) : null}
+                        {show === true ? (
+                            <div className={cx('form-password')}>
+                                <Lock className={cx('item')} />
+                                <input
+                                    type="password"
+                                    placeholder="Nhập lại mật khẩu mới"
+                                    name="enterPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                            </div>
+                        ) : null}
+                        {show === true ? (
+                            <div className={cx('form-button')}>
+                                <button type="submit" variant="contained" color="primary">
+                                    Xác nhận
+                                </button>
+                                <div id="tam"></div>
+                            </div>
+                        ) : (
+                            <div className={cx('form-button')}>
+                                <button type="submit" variant="contained" color="primary" onClick={handleSubmit}>
+                                    Kiểm tra
+                                </button>
+                                <div id="tam"></div>
+                            </div>
+                        )}
+                        <div className={cx('form-back')}>
+                            <ArrowLeft className={cx('item-back')} />
+                            <Link to="/" className={cx('back')}>
+                                Quay lại
+                            </Link>
                         </div>
-                    ) : null}
-                    {show === true ? (
-                        <div className={cx('form-button')}>
-                            <button type="submit" variant="contained" color="primary">
-                                Xác nhận
-                            </button>
-                            <div id="tam"></div>
-                        </div>
-                    ) : (
-                        <div className={cx('form-button')}>
-                            <button type="submit" variant="contained" color="primary" onClick={handleSubmit}>
-                                Kiểm tra
-                            </button>
-                            <div id="tam"></div>
-                        </div>
-                    )}
-                    <div className={cx('form-back')}>
-                        <ArrowLeft className={cx('item-back')} />
-                        <Link to="/" className={cx('back')}>
-                            Quay lại
-                        </Link>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
+        </body>
     );
 }
 export default ForgetPassWord;

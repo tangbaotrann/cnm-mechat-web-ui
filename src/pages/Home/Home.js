@@ -20,8 +20,8 @@ function Home() {
     useEffect(() => {
         // dispatch(fetchUsers());
         dispatch(fetchApiUser());
-        dispatch(friendAccept());
-        dispatch(meRequestFriend());
+        // dispatch(friendAccept());
+        // dispatch(meRequestFriend());
     });
     return (
         <div className={cx('wrapper')}>
