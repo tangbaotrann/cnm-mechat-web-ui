@@ -49,7 +49,7 @@ function App() {
 
                 {/* PhoneBook */}
                 <Route path="/phonebook" element={<PhoneBook />} />
-                <Route path="/forgetPassWord" element={<ForgetPassWord />} />
+                <Route path="/forget-password" element={<ForgetPassWord />} />
             </Routes>
         </Router>
     );

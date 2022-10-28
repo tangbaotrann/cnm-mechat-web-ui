@@ -79,7 +79,7 @@ function Login() {
     };
 
     return (
-        <body className={cx('body-login')}>
+        <div className={cx('body-login')}>
             <div className={cx('wrapper')}>
                 <div className={cx('logo')}>
                     <img className={cx('logo-image')} src={images.logo} alt="" />
@@ -115,20 +115,20 @@ function Login() {
                             </button>
                         </div>
                         <div className={cx('form-forget')}>
-                            <a href="/forgetPassWord">Quên mật khẩu?</a>
+                            <a href="/forget-password">Quên mật khẩu?</a>
                         </div>
                     </form>
                 </div>
                 <div className={cx('form-register')}>
                     <h1>
                         <p>Bạn chưa có tài khoản? </p>
-                        <Link to="/Register" className={cx('form-register-register')}>
+                        <Link to="/register" className={cx('form-register-register')}>
                             Đăng ký ngay
                         </Link>
                     </h1>
                 </div>
             </div>
-        </body>
+        </div>
     );
 }
 export default Login;

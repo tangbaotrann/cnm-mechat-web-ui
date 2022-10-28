@@ -4,6 +4,8 @@
     background-image: url('../../assets/images/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    height: 100vh;
+    position: relative;
 }
 .logo {
     display: block;
@@ -19,11 +21,16 @@
     border-radius: 50%;
 }
 .wrapper {
-    height: 710px;
-    margin-top: 40px;
+    margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
     width: 30%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 16px;
+    bottom: 0;
+    margin: auto;
 }
 .login-title {
     font-family: var(--font-family);

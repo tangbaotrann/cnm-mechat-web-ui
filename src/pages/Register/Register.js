@@ -84,7 +84,7 @@ function Register() {
         }
     };
     return (
-        <body className={cx('body-register')}>
+        <div className={cx('body-register')}>
             <div className={cx('wrapper')}>
                 <div className={cx('logo')}>
                     <img className={cx('logo-image')} src={images.logo} alt="" />
@@ -151,7 +151,7 @@ function Register() {
                     </form>
                 </div>
             </div>
-        </body>
+        </div>
     );
 }
 export default Register;
