@@ -12,16 +12,17 @@ import { MoreHoriz } from '@material-ui/icons';
 import { userLogin } from '~/redux/selector';
 import Popper from '../Popper';
 import { friendDelete } from '~/redux/features/friend/friendAcceptSlice';
+import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 
 const cx = classNames.bind(styles);
 
-function Conversation({ conversation, isPhoneBook }) {
+function Conversation({ conversation, isPhoneBook, user }) {
     const message = useSelector((state) => state.messages.clickSendMessage);
     const infoUser = useSelector(userLogin);
 
     const dispatch = useDispatch();
     // console.log('MESSAGE - CONVERSATION - ', message);
-    console.log('CONVERSATION - CONVERSATION - ', conversation);
+    //  console.log('CONVERSATION - CONVERSATION - ', conversation);
     const handleCancel = () => {
         let deletes = window.confirm('Bạn có chắc chắn muốn sửa không?');
         if (deletes === true) {
@@ -35,6 +36,9 @@ function Conversation({ conversation, isPhoneBook }) {
         } else {
             alert('bạn đã hủy yêu cầu xóa bạn');
         }
+    };
+    const handleSeenInfor = () => {
+        console.log('----40 id', conversation);
     };
     return (
         <div className={cx('list-conversation')}>
@@ -58,8 +62,11 @@ function Conversation({ conversation, isPhoneBook }) {
                     render={(attrs) => (
                         <div tabIndex="-1" {...attrs}>
                             <Popper className={cx('own-menu-list-children')}>
+                                <p className={cx('deleteFriend')} onClick={handleSeenInfor}>
+                                    <ModelInfoAccount yourProfile friend user={conversation} />
+                                </p>
                                 <p className={cx('deleteFriend')} onClick={handleCancel}>
-                                    Xóa Bạn
+                                    <button className={cx('item-btn')}> Xóa Bạn</button>
                                 </p>
                             </Popper>
                         </div>
