@@ -63,7 +63,6 @@ function Register() {
         } else {
             generateRecaptcha();
             const phoneNumbers = '+84' + phoneNumber.slice(1);
-            console.log(phoneNumbers + 'sao khi +84');
             const appVerifier = window.recaptchaVerifier;
             signInWithPhoneNumber(authentication, phoneNumbers, appVerifier)
                 .then((confirmationResult) => {
@@ -71,7 +70,7 @@ function Register() {
                     // user in with confirmationResult.confirm(code).
 
                     window.confirmationResult = confirmationResult;
-                    console.log('ĐÃ gửi OTP');
+
                     // ...
                     navigate('/ConFirmOTP', { state: { userName, phoneNumber, password } });
                 })

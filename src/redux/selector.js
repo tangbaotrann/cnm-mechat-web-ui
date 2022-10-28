@@ -77,7 +77,14 @@ export const listFriend = createSelector(userInfoSelector, userListSelector, (us
         return friends.map((user) => ({
             _id: user._id,
             name: user.fullName,
+            fullName: user.fullName,
+            backgroundLink: user.backgroundLink,
             imageLinkOfConver: user.avatarLink,
+            avatarLink: user.avatarLink,
+            gender: user.gender,
+            status: user.status,
+            phoneNumber: user.phoneNumber,
+            birthday: user.birthday,
         }));
     }
     return null;

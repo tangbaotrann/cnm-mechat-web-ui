@@ -77,9 +77,16 @@ const listFriendAccept = createSlice({
     name: 'listAccept',
     initialState: { data: [] },
     extraReducers: (builder) => {
-        builder.addCase(friendAccept.fulfilled, (state, action) => {
-            state.data = action.payload;
-        });
+        builder
+            .addCase(friendAccept.fulfilled, (state, action) => {
+                state.data = action.payload;
+            })
+            .addCase(accept.fulfilled, (state, action) => {
+                state.data = action.payload;
+            })
+            .addCase(friendDelete.fulfilled, (state, action) => {
+                state.data = action.payload;
+            });
     },
 });
 export default listFriendAccept;
