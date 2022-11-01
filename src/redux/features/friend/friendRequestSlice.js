@@ -1,8 +1,8 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const friendRequests = createAsyncThunk(
     // Tên action
-    'user/friendRequest',
+    'user/friendRequests',
 
     // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
     async (data) => {
@@ -21,3 +21,13 @@ export const friendRequests = createAsyncThunk(
         return jsonData;
     },
 );
+const listFriendRequests = createSlice({
+    name: 'friendRequest',
+    initialState: { data: [] },
+    extraReducers: (builder) => {
+        builder.addCase(friendRequests.fulfilled, (state, action) => {
+            state.data = action.payload;
+        });
+    },
+});
+export default listFriendRequests;

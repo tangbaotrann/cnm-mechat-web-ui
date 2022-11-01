@@ -12,7 +12,6 @@ import styles from './Sidebar.module.scss';
 import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
 import { MenuSetting } from './Menu';
-import { userLogin } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 

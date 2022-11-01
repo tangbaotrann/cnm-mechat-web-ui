@@ -12,7 +12,7 @@ import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
-function ModelInfoAccount({ yourProfile, user }) {
+function ModelInfoAccount({ yourProfile, user, friend }) {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
 
     // Handle open/ close model info account
@@ -27,7 +27,7 @@ function ModelInfoAccount({ yourProfile, user }) {
         <>
             {yourProfile ? (
                 <button className={cx('item-btn')} onClick={handleModelOpenInfoAccount}>
-                    Hồ sơ của bạn
+                    {friend ? 'Xem thông tin' : ' Hồ sơ của bạn'}
                 </button>
             ) : (
                 <>
@@ -84,9 +84,10 @@ function ModelInfoAccount({ yourProfile, user }) {
                             <div>{moment(user?.birthday).format('DD/MM/YYYY')}</div>
                         </div>
                     </div>
+
                     <div className={cx('model-info-acc-footer')}>
                         {/* model update info account */}
-                        <SubModelInfoAccount user={user} />
+                        {friend ? null : <SubModelInfoAccount user={user} />}
                     </div>
                 </div>
             </ModelWrapper>
