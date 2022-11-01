@@ -1,1 +1,2 @@
-export { default } from './FileMessage.module.scss';
+export { default } from './FileMessage';
+export { default as PreviewFileMessage } from './PreviewFileMessage';

@@ -39,7 +39,7 @@ function ForgetPassWord() {
     };
     const handleSubmitForm = (e) => {
         e.preventDefault();
-        var mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+        const mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
         if (password === '') {
             alert('Vui lòng nhập mật khẩu mới');
         } else if (!mk.test(password)) {
@@ -71,8 +71,8 @@ function ForgetPassWord() {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
-        var number = /^[0-9]{10}$/;
+        const phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        const number = /^[0-9]{10}$/;
 
         if (phoneNumber === '') {
             alert('Vui lòng nhập số điện thoại');

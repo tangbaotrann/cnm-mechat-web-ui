@@ -45,9 +45,9 @@ function Register() {
     const handleSubmitForm = (e) => {
         e.preventDefault();
         // var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
-        var number = /^[0-9]{10}$/;
-        var mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+        const phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        const number = /^[0-9]{10}$/;
+        const mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
         if (userName === '' || phoneNumber === '' || password === '' || confirmPassword === '') {
             alert('Vui lòng nhập đầy đủ thông tin');
         } else if (!number.test(phoneNumber)) {
