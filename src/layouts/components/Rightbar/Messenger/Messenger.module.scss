@@ -209,3 +209,14 @@
         color: var(--primary);
     }
 }
+
+.preview-emoji {
+    border: none;
+    outline: none;
+    background-color: red;
+}
+
+// preview emoji
+.display-preview-emoji {
+    z-index: 9999px;
+}

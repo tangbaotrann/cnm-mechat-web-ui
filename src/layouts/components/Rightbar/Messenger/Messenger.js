@@ -18,6 +18,7 @@ import {
     faVideo,
 } from '@fortawesome/free-solid-svg-icons';
 import { CircularProgress } from '@material-ui/core';
+import EmojiPicker, { SkinTones } from 'emoji-picker-react';
 
 // me
 import styles from './Messenger.module.scss';
@@ -39,6 +40,7 @@ function Messenger() {
     const [newFileMessage, setNewFileMessage] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [btnClosePreview, setBtnClosePreview] = useState(false);
+    const [previewEmoji, setPreviewEmoji] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -50,6 +52,7 @@ function Messenger() {
     const scrollMessenger = useRef();
 
     // console.log('[FILE] - ', newFileMessage);
+    // console.log('EMOJI - ', chosenEmoji);
 
     // fetch message from conversationId
     useEffect(() => {
@@ -71,6 +74,14 @@ function Messenger() {
     useEffect(() => {
         socket.on('receiver_message', (message) => {
             dispatch(messagesSlice.actions.arrivalMessageFromSocket(message));
+        });
+    }, [dispatch]);
+
+    // realtime re-call message of receiver
+    useEffect(() => {
+        socket.on('receiver_recall_message', (message) => {
+            console.log('RE-CALL - ', message);
+            dispatch(messagesSlice.actions.recallMessageFromSocket(message));
         });
     }, [dispatch]);
 
@@ -117,6 +128,18 @@ function Messenger() {
         };
     }, [newFileMessage]);
 
+    // handle preview emoji
+    const handlePreviewEmoji = () => {
+        setPreviewEmoji(true);
+    };
+
+    const handleEmojiClicked = (emojiObj, e) => {
+        // setChosenEmoji(emojiObj);
+        console.log('EMO - ', emojiObj);
+        setNewMessage(emojiObj.emoji);
+        // setNewMessage(emojiObj);
+    };
+
     // handle button send message
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -125,13 +148,14 @@ function Messenger() {
             fetchApiSendMessage({
                 conversationID: conversation.id,
                 senderID: user._id,
-                content: newMessage,
+                content: newMessage.emoji ? newMessage.emoji : newMessage,
                 imageLink: newImageMessage,
                 fileLink: newFileMessage,
             }),
         );
 
         setNewMessage('');
+        // setChosenEmoji(null);
         setNewImageMessage(null);
         setNewFileMessage(null);
         setBtnClosePreview(false);
@@ -202,6 +226,7 @@ function Messenger() {
                             <input
                                 className={cx('hide')}
                                 type="file"
+                                multiple
                                 id="file"
                                 accept=".png, .jpg, .jpeg, .mov, .mp4"
                                 onChange={handleChangeImageMessage}
@@ -256,15 +281,47 @@ function Messenger() {
                     {/* Input message */}
                     <textarea
                         className={cx('message-input')}
-                        value={newMessage}
+                        value={
+                            newMessage && newMessage.emoji
+                                ? newMessage && newMessage.emoji
+                                : newMessage.emoji
+                                ? newMessage.emoji
+                                : newMessage
+                        }
                         onChange={handleChangeMessage}
                         placeholder="Nhập tin nhắn ..."
                     ></textarea>
 
-                    <Tippy className={cx('tool-tip')} content="Biểu cảm" delay={[200, 0]}>
-                        <FontAwesomeIcon className={cx('icon-right')} icon={faFaceSmile} />
-                    </Tippy>
-                    {/* Button send message */}
+                    {/* Preview emoji */}
+                    <TippyHeadless
+                        render={(attrs) => (
+                            <div tabIndex="-1" {...attrs}>
+                                <Popper>
+                                    {previewEmoji && (
+                                        <div className={cx('display-preview-emoji')}>
+                                            <EmojiPicker
+                                                onEmojiClick={handleEmojiClicked}
+                                                defaultSkinTone={SkinTones}
+                                                width={300}
+                                            />
+                                        </div>
+                                    )}
+                                </Popper>
+                            </div>
+                        )}
+                        delay={[0, 100]}
+                        trigger="click"
+                        interactive
+                        appendTo={document.body}
+                    >
+                        <button className={cx('preview-emoji')} onClick={handlePreviewEmoji}>
+                            <Tippy className={cx('tool-tip')} content="Biểu cảm" delay={[200, 0]}>
+                                <FontAwesomeIcon className={cx('icon-right')} icon={faFaceSmile} />
+                            </Tippy>
+                        </button>
+                    </TippyHeadless>
+
+                    {/* Button send message || chosenEmoji*/}
                     {newMessage || newImageMessage || newFileMessage ? (
                         <button className={cx('send-message-btn')} onClick={handleSendMessage}>
                             GỬI
