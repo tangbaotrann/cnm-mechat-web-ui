@@ -16,13 +16,15 @@ import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 
 const cx = classNames.bind(styles);
 
-function Conversation({ conversation, isPhoneBook, user }) {
-    const message = useSelector((state) => state.messages.clickSendMessage);
+function Conversation({ conversation, isPhoneBook }) {
+    //const message = useSelector((state) => state.messages.clickSendMessage);
     const infoUser = useSelector(userLogin);
 
     const dispatch = useDispatch();
+
     // console.log('MESSAGE - CONVERSATION - ', message);
-    //  console.log('CONVERSATION - CONVERSATION - ', conversation);
+    // console.log('CONVERSATION - CONVERSATION - ', conversation);
+
     const handleCancel = () => {
         let deletes = window.confirm('Bạn có chắc chắn muốn sửa không?');
         if (deletes === true) {
@@ -51,9 +53,7 @@ function Conversation({ conversation, isPhoneBook, user }) {
             <div className={cx('content')}>
                 <h4 className={cx('username')}>{conversation?.name} </h4>
                 {isPhoneBook ? null : (
-                    <p className={cx('message')}>
-                        {message?.conversationID === conversation?.id ? message.content : conversation.content}
-                    </p>
+                    <p className={cx('message')}>{conversation.content || conversation.lastMessage}</p>
                 )}
             </div>
 

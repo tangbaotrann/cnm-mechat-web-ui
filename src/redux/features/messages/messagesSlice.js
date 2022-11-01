@@ -16,6 +16,10 @@ const messagesSlice = createSlice({
         messageCurrent: (state, action) => {
             state.clickSendMessage = action.payload;
         },
+        changeFileMessage: (state, action) => {
+            // console.log('[FILE MESSAGE STORE] - ', action.payload);
+            state.fileSendMessage = action.payload;
+        },
         arrivalMessageFromSocket: (state, action) => {
             const newMessage = action.payload;
             const messageId = state.data.find((message) => message._id === newMessage._id);
@@ -126,10 +130,10 @@ export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessag
 // delete message
 export const fetchApiDeleteMessage = createAsyncThunk(
     'messages/fetchApiDeleteMessage',
-    async ({ messageId, conversationID }) => {
+    async ({ messageId, userId }) => {
         try {
-            const res = await axios.delete(`${process.env.REACT_APP_BASE_URL}messages/${messageId}`, {
-                data: { conversationID },
+            const res = await axios.delete(`${process.env.REACT_APP_BASE_URL}messages/delete-for-you/${messageId}`, {
+                data: { userId },
                 headers: { Authorization: '***' },
             });
 

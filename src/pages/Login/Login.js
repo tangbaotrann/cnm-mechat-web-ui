@@ -51,8 +51,8 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
-        var number = /^[0-9]{10}$/;
+        const phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        const number = /^[0-9]{10}$/;
         if (phoneNumber === '' || password === '') {
             alert('Vui lòng nhập đầy đủ thông tin');
         } else if (!number.test(phoneNumber)) {

@@ -12,6 +12,7 @@ const images = {
     pdfIcon: require('~/assets/images/icons/pdf-icon.png'),
     pwpIcon: require('~/assets/images/icons/pwp-icon.png'),
     wordIcon: require('~/assets/images/icons/word-icon.png'),
+    txtIcon: require('~/assets/images/icons/txt-icon.png'),
 };
 
 export default images;

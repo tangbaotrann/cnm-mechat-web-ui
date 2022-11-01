@@ -4,14 +4,16 @@ import { useState } from 'react';
 
 // me
 import styles from './Message.module.scss';
+import images from '~/assets/images';
 import ModelWrapper from '../ModelWrapper';
+import FileMessage from '../FileMessage/FileMessage';
 
 const cx = classNames.bind(styles);
 
 function MessageItem({ message, own }) {
     const [showPreview, setShowPreview] = useState(false);
 
-    // console.log('MESSAGE - ', message);
+    console.log('MESSAGE - ', message);
 
     // show preview
     const handleShowPreviewImageAndVideo = () => {
@@ -27,7 +29,21 @@ function MessageItem({ message, own }) {
         <>
             {own ? (
                 <>
-                    {message.imageLink && message.content && (
+                    {/* File message */}
+                    {message.fileLink ? (
+                        <FileMessage message={message} />
+                    ) : (
+                        message.fileLink &&
+                        message.content && (
+                            <>
+                                <p className={cx('message-top-text')}>{message.content}</p>
+                                <FileMessage message={message} />
+                            </>
+                        )
+                    )}
+
+                    {/* Image + Video message */}
+                    {message.imageLink && !message.fileLink && message.content && (
                         <>
                             {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
                                 <>
@@ -74,7 +90,7 @@ function MessageItem({ message, own }) {
                             )}
                         </>
                     )}
-                    {message.imageLink && !message.content && (
+                    {message.imageLink && !message.fileLink && !message.content && (
                         <>
                             {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
                                 <>
@@ -122,12 +138,27 @@ function MessageItem({ message, own }) {
                     {message.action ? (
                         <p className={cx('message-top-text')}>{message.action}</p>
                     ) : (
-                        message.imageLink === null && <p className={cx('message-top-text')}>{message.content}</p>
+                        message.imageLink === null &&
+                        message.fileLink === null && <p className={cx('message-top-text')}>{message.content}</p>
                     )}
                 </>
             ) : (
                 <>
-                    {message.imageLink && message.content && (
+                    {/* File message */}
+                    {message.fileLink ? (
+                        <FileMessage message={message} />
+                    ) : (
+                        message.fileLink !== null &&
+                        message.content && (
+                            <>
+                                <p className={cx('message-top-text')}>{message.content}</p>
+                                <FileMessage message={message} />
+                            </>
+                        )
+                    )}
+
+                    {/* Image + video message */}
+                    {message.imageLink && !message.fileLink && message.content && (
                         <>
                             {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
                                 <>
@@ -174,7 +205,7 @@ function MessageItem({ message, own }) {
                             )}
                         </>
                     )}
-                    {message.imageLink && !message.content && (
+                    {message.imageLink && !message.fileLink && !message.content && (
                         <>
                             {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
                                 <>
@@ -210,7 +241,7 @@ function MessageItem({ message, own }) {
                                         onClose={handleHidePreviewImageAndVideo}
                                     >
                                         <img
-                                            className={cx('preview-image-send-user-left')}
+                                            className={cx('preview-image-send-user')}
                                             src={message.imageLink}
                                             alt="img"
                                         />
@@ -222,7 +253,8 @@ function MessageItem({ message, own }) {
                     {message.action ? (
                         <p className={cx('message-top-text')}>{message.action}</p>
                     ) : (
-                        message.imageLink === null && <p className={cx('message-top-text')}>{message.content}</p>
+                        message.imageLink === null &&
+                        message.fileLink === null && <p className={cx('message-top-text')}>{message.content}</p>
                     )}
                 </>
             )}

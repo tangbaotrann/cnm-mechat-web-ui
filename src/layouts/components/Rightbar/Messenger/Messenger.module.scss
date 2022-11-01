@@ -197,15 +197,15 @@
     outline: none;
     background-color: transparent;
     top: 0;
-    left: 110px;
+    left: 0;
     font-size: 1.4rem;
-    z-index: 9999;
+}
 
-    .close-icon {
-        cursor: pointer;
+.close-icon {
+    cursor: pointer;
 
-        &:hover {
-            opacity: 0.6;
-        }
+    &:hover {
+        opacity: 0.6;
+        color: var(--primary);
     }
 }
