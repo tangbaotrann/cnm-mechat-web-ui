@@ -1,5 +1,5 @@
 .wrapper {
-    flex: 2.5;
+    flex: 2.8; //2.5
     top: 10px;
     height: calc(100vh - 10px);
     overflow-y: scroll;
@@ -29,7 +29,8 @@
     z-index: -9999;
 }
 
-.info-avatar, .info-name {
+.info-avatar,
+.info-name {
     display: flex;
     justify-content: center;
 }
@@ -55,7 +56,7 @@
 
 // header
 .header {
-    position: relative;    
+    position: relative;
     margin-bottom: 10px;
 }
 
@@ -82,14 +83,15 @@
     overflow-y: scroll;
     overflow-y: overlay;
     display: flex;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
     justify-content: flex-start;
 }
 
 .body-list-image {
     display: flex;
-    flex-direction: column;
-    margin-right: 12px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    // margin-right: 12px;
     margin-bottom: 10px;
 }
 
@@ -98,6 +100,7 @@
     height: 62px;
     border-radius: 6px;
     object-fit: cover;
+    margin-left: 5px;
     cursor: pointer;
 }
 
@@ -121,4 +124,81 @@
     border: none;
     outline: none;
     cursor: pointer;
+}
+///chinh xem tat ca
+.body-show {
+    height: calc(85vh - 100px);
+    overflow-y: scroll;
+    overflow-y: overlay;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+.body-list-image-show {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.item-image-show {
+    width: 90px;
+    height: 90px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+//
+.title-name-show {
+    display: flex;
+}
+.title-name-show p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    margin-left: 70px;
+}
+.title-name-show .item-back {
+    font-size: 2.5rem;
+    margin-top: 17px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+.info-show {
+    flex-direction: row;
+    display: flex;
+    margin-top: 10px;
+    z-index: -9999;
+}
+.info-show label {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-right: 25px;
+    margin-left: 15px;
+}
+.info-show .info-show-1 {
+    border-bottom: solid 3px #d3d3d3;
+    &:hover {
+        opacity: 0.6;
+        color: blue;
+        border-bottom: solid 3px blue;
+    }
+}
+.info-show .info-show-2 {
+    border-bottom: solid 3px #d3d3d3;
+    margin-left: 10px;
+    &:hover {
+        opacity: 0.6;
+        color: blue;
+        border-bottom: solid 3px blue;
+    }
+}
+.info-show .info-show-3 {
+    border-bottom: solid 3px #d3d3d3;
+    &:hover {
+        opacity: 0.6;
+        color: blue;
+        border-bottom: solid 3px blue;
+    }
 }

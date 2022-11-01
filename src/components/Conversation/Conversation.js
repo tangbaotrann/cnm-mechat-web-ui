@@ -16,7 +16,7 @@ import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 
 const cx = classNames.bind(styles);
 
-function Conversation({ conversation, isPhoneBook, user }) {
+function Conversation({ conversation, isPhoneBook, Group }) {
     const message = useSelector((state) => state.messages.clickSendMessage);
     const infoUser = useSelector(userLogin);
 
@@ -57,7 +57,7 @@ function Conversation({ conversation, isPhoneBook, user }) {
                 )}
             </div>
 
-            {isPhoneBook ? (
+            {isPhoneBook && !Group ? (
                 <TippyHeadless
                     render={(attrs) => (
                         <div tabIndex="-1" {...attrs}>

@@ -16,7 +16,7 @@ function ForgetPassWord() {
         document.title = 'Trang quên mật khẩu';
     });
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('asac');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [show, setShow] = useState(false);
     //
@@ -24,6 +24,11 @@ function ForgetPassWord() {
     const navigate = useNavigate();
     const searchAccountExists = useSelector(accountExists);
     const debouncedValue = useDebounce(phoneNumber, 500);
+
+    //loi
+    const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
+    const [errorPassWord, setErrorPassword] = useState('');
+    const [errorConfirmPassWord, setErrorConfirmPassWord] = useState('');
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(phoneNumber));
     }, [debouncedValue]);
@@ -39,13 +44,11 @@ function ForgetPassWord() {
     };
     const handleSubmitForm = (e) => {
         e.preventDefault();
-        var mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-        if (password === '') {
-            alert('Vui lòng nhập mật khẩu mới');
-        } else if (!mk.test(password)) {
-            alert('Mật khẩu phải lớn 8 ký tự trong đó 1 ký tự viết hoa, 1 ký tự viết thường và số');
+        if (password === '' && confirmPassword === '') {
+            setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+            setErrorConfirmPassWord('Vui lòng nhập đầy đủ thông tin');
         } else if (password !== confirmPassword) {
-            alert('Mật khẩu không trùng khớp');
+            setErrorConfirmPassWord('Mật khẩu không trùng khớp');
         } else {
             generateRecaptcha();
             const phoneNumbers = '+84' + phoneNumber.slice(1);
@@ -71,26 +74,49 @@ function ForgetPassWord() {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
-        var number = /^[0-9]{10}$/;
-
         if (phoneNumber === '') {
-            alert('Vui lòng nhập số điện thoại');
-        } else if (!number.test(phoneNumber)) {
-            alert('Số điện thoại phải là số và đủ 10 số');
-        } else if (!phoneNumberForm.test(phoneNumber)) {
-            alert('Số điện thoại Chưa không đúng');
+            setErrorPhoneNumber('Vui lòng nhập số điện thoại');
         } else if (searchAccountExists !== 1) {
             setShow(true);
-            console.log('27-----', phoneNumber);
-
-            console.log('24-----  ton tai');
         } else {
             setShow(false);
-            console.log('27-----', phoneNumber);
-            alert('Tài khoản không tồn tại');
-            console.log('24-----  không tồn tại');
+            setErrorPhoneNumber('Số điện thoại chưa đăng ký tài khoảng');
         }
+    };
+    //loi
+    useEffect(() => {
+        var number = /^[0-9]{10}$/;
+        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        if (phoneNumber.length >= 10) {
+            if (!number.test(phoneNumber)) {
+                setErrorPhoneNumber('Số điện thoại phải là số và đủ 10 số');
+            } else if (!phoneNumberForm.test(phoneNumber)) {
+                setErrorPhoneNumber('Số điện thoại không đúng');
+            } else {
+                setErrorPhoneNumber('');
+            }
+        }
+    }, [phoneNumber]);
+    useEffect(() => {
+        var mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+        if (password.length > 5) {
+            if (!mk.test(password)) {
+                setErrorPassword('Mật khẩu phải lớn 8 ký tự 1 ký tự viết hoa, 1 ký tự viết thường và số');
+            } else {
+                setErrorPassword('');
+            }
+        }
+        if (confirmPassword > 0) {
+            setErrorConfirmPassWord('');
+        }
+    }, [password, confirmPassword]);
+    const handleCancel = () => {
+        setPhoneNumber('');
+        setPassword('');
+        setConfirmPassword('');
+        setErrorPassword('');
+        setErrorConfirmPassWord('');
+        setShow(false);
     };
     return (
         <div className={cx('body-forget')}>
@@ -106,48 +132,72 @@ function ForgetPassWord() {
                     <form onSubmit={handleSubmitForm}>
                         <div className={cx('form-phoneNumber')}>
                             <PhoneIphone className={cx('item')} />
-                            <input
-                                type="text"
-                                placeholder="Số điện thoại"
-                                name="phoneNumber"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                            />
-                        </div>
-                        {show === true ? (
-                            <div className={cx('form-password')}>
-                                <Lock className={cx('item')} />
+                            {show === false ? (
                                 <input
-                                    type="password"
-                                    placeholder="Mật khẩu mới"
-                                    name="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    type="text"
+                                    placeholder="Số điện thoại"
+                                    name="phoneNumber"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
                                 />
-                            </div>
+                            ) : (
+                                <input
+                                    type="text"
+                                    placeholder="Số điện thoại"
+                                    name="phoneNumber"
+                                    value={phoneNumber}
+                                    disabled
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                />
+                            )}
+                        </div>
+                        <span className={cx('error')}>{errorPhoneNumber}</span>
+                        {show === true ? (
+                            <>
+                                <div className={cx('form-password')}>
+                                    <Lock className={cx('item')} />
+                                    <input
+                                        type="password"
+                                        placeholder="Mật khẩu mới"
+                                        name="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                </div>
+                                <span className={cx('error')}>
+                                    <p>{errorPassWord}</p>
+                                </span>
+                            </>
                         ) : null}
                         {show === true ? (
-                            <div className={cx('form-password')}>
-                                <Lock className={cx('item')} />
-                                <input
-                                    type="password"
-                                    placeholder="Nhập lại mật khẩu mới"
-                                    name="enterPassword"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                />
-                            </div>
+                            <>
+                                <div className={cx('form-password')}>
+                                    <Lock className={cx('item')} />
+                                    <input
+                                        type="password"
+                                        placeholder="Nhập lại mật khẩu mới"
+                                        name="enterPassword"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                    />
+                                </div>
+                                <span className={cx('error')}>{errorConfirmPassWord}</span>
+                            </>
                         ) : null}
                         {show === true ? (
                             <div className={cx('form-button')}>
-                                <button type="submit" variant="contained" color="primary">
+                                <button variant="contained" className={cx('cancel')} onClick={handleCancel}>
+                                    Hủy
+                                </button>
+                                <button type="submit" variant="contained" color="primary" className={cx('confirm')}>
                                     Xác nhận
                                 </button>
+
                                 <div id="tam"></div>
                             </div>
                         ) : (
                             <div className={cx('form-button')}>
-                                <button type="submit" variant="contained" color="primary" onClick={handleSubmit}>
+                                <button variant="contained" color="primary" onClick={handleSubmit}>
                                     Kiểm tra
                                 </button>
                                 <div id="tam"></div>

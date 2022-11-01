@@ -62,7 +62,7 @@ function Messenger() {
         socket.emit('status_user', user._id);
 
         socket.on('get_users', (users) => {
-            console.log('USER - ONLINE -', users);
+            //  console.log('USER - ONLINE -', users);
             setOnlineUsers(conversation?.members.filter((member) => users.some((us) => us.userId === member)));
         });
     }, [user._id, conversation]);

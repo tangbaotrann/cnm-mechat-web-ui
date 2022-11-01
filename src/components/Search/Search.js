@@ -19,6 +19,7 @@ import Popper from '../Popper';
 import Conversation from '../Conversation';
 import ModelWrapper from '../ModelWrapper';
 import AddFriend from '../AddFriend';
+import AddGroup from '../AddGroup';
 const cx = classNames.bind(styles);
 
 function Search() {
@@ -27,6 +28,7 @@ function Search() {
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
+    const [openAddGroup, setOpenAddGroup] = useState(false);
     const searchRef = useRef();
 
     useEffect(() => {
@@ -69,6 +71,13 @@ function Search() {
     };
     const handleModelCloseInfoAccount = () => {
         setOpenInfoAccount(false);
+    };
+
+    const handleModelOpenAddGroup = () => {
+        setOpenAddGroup(true);
+    };
+    const handleModelCloseOpenAddGroup = () => {
+        setOpenAddGroup(false);
     };
     return (
         <div className={cx('wrapper')}>
@@ -128,7 +137,11 @@ function Search() {
                             </Tippy>
                             <Tippy className={cx('tool-tip')} content="Tạo nhóm chat" delay={[200, 0]}>
                                 <button className={cx('btn-click-icon')}>
-                                    <FontAwesomeIcon className={cx('item')} icon={faUserGroup} />
+                                    <FontAwesomeIcon
+                                        className={cx('item')}
+                                        icon={faUserGroup}
+                                        onClick={handleModelOpenAddGroup}
+                                    />
                                 </button>
                             </Tippy>
                         </div>
@@ -152,6 +165,23 @@ function Search() {
                         </button>
                     </div>
                     <AddFriend />
+                </div>
+            </ModelWrapper>
+
+            {/* Tạo nhóm */}
+            <ModelWrapper className={cx('model-add-friend')} open={openAddGroup} onClose={handleModelCloseOpenAddGroup}>
+                <div className={cx('model-add-group-bg')}>
+                    <div className={cx('add-friend-title')}>
+                        <span className={cx('friend-title')}>Tạo nhóm</span>
+                        <button className={cx('close-btn')}>
+                            <FontAwesomeIcon
+                                className={cx('friend-close-ic')}
+                                icon={faXmark}
+                                onClick={handleModelCloseInfoAccount}
+                            />
+                        </button>
+                    </div>
+                    <AddGroup />
                 </div>
             </ModelWrapper>
         </div>
