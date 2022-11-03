@@ -15,6 +15,9 @@ function Login() {
     });
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
+    //loi
+    const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
+    const [errorPassWord, setErrorPassWord] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,6 +25,7 @@ function Login() {
             navigate('/me.chat');
         }
     });
+
     const sign = () => {
         return fetch(`${process.env.REACT_APP_BASE_URL}auths/login`, {
             method: 'POST',
@@ -38,10 +42,12 @@ function Login() {
             .then((resData) => {
                 if (resData.status === 'success') {
                     return resData;
+                } else if (resData?.error.statusCode === 401) {
+                    throw new Error(401);
                 } else if (resData?.error.statusCode === 403) {
-                    throw new Error('Sai mật khẩu');
+                    throw new Error(403);
                 } else if (resData?.error.statusCode === 402) {
-                    throw new Error('Tài khoản không tồn tại');
+                    throw new Error(402);
                 }
             });
         // .catch((err) => {
@@ -51,19 +57,13 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
-        const number = /^[0-9]{10}$/;
-        if (phoneNumber === '' || password === '') {
-            alert('Vui lòng nhập đầy đủ thông tin');
-        } else if (!number.test(phoneNumber)) {
-            alert('Số điện thoại phải là số và đủ 10 số');
-        } else if (!phoneNumberForm.test(phoneNumber)) {
-            alert('Số điện thoại không đúng');
+        var number = /^[0-9]{10}$/;
+        if (!number.test(phoneNumber)) {
+            setErrorPhoneNumber('Số điện thoại phải là số và đủ 10 số');
         } else {
             sign()
                 .then((token) => {
                     if (typeof token != 'undefined') {
-                        console.log(token);
                         alert('Đăng nhập thành công');
                         console.log('hoan thanh');
                         console.log(token);
@@ -72,12 +72,43 @@ function Login() {
                     }
                 })
                 .catch((err) => {
-                    // console.log(err + 'handleSubmit');
-                    alert(err.message);
+                    if (err.message === '401') {
+                        if (phoneNumber === '') {
+                            setErrorPhoneNumber('Vui lòng nhập số điện thoại');
+                        } else if (password === '') {
+                            setErrorPassWord('Vui lòng nhập mật khẩu');
+                        } else {
+                            setErrorPhoneNumber('Vui lòng nhập số điện thoại');
+                            setErrorPassWord('Vui lòng nhập mật khẩu');
+                        }
+                    } else if (err.message === '403') {
+                        setErrorPassWord('Sai nhập mật khẩu');
+                    } else if (err.message === '402') {
+                        setErrorPhoneNumber('Tài khoản không tồn tại');
+                    }
                 });
         }
     };
 
+    ///bat loi sdt
+    useEffect(() => {
+        var number = /^[0-9]{10}$/;
+        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        if (phoneNumber.length === 10) {
+            if (!number.test(phoneNumber)) {
+                setErrorPhoneNumber('Số điện thoại phải là số và đủ 10 số');
+            } else if (!phoneNumberForm.test(phoneNumber)) {
+                setErrorPhoneNumber('Số điện thoại không đúng');
+            } else {
+                setErrorPhoneNumber('');
+            }
+        }
+    }, [phoneNumber]);
+    useEffect(() => {
+        if (password.length > 0) {
+            setErrorPassWord('');
+        }
+    }, [password]);
     return (
         <div className={cx('body-login')}>
             <div className={cx('wrapper')}>
@@ -99,6 +130,7 @@ function Login() {
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                             />
                         </div>
+                        <span className={cx('error')}>{errorPhoneNumber}</span>
                         <div className={cx('form-password')}>
                             <Lock className={cx('password-item')} />
                             <input
@@ -109,6 +141,7 @@ function Login() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
+                        <span className={cx('error')}>{errorPassWord}</span>
                         <div className={cx('form-button')}>
                             <button type="submit" variant="contained" color="primary" onClick={sign}>
                                 ĐĂNG NHẬP

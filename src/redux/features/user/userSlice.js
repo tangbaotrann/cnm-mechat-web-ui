@@ -20,6 +20,7 @@ export const fetchApiUser = createAsyncThunk('user/fetchApiUser', async (arg, { 
         rejectWithValue(err);
     }
 });
+
 //Quen mật khẩu
 export const forgetPassWord = createAsyncThunk(
     // Tên action
@@ -42,6 +43,7 @@ export const forgetPassWord = createAsyncThunk(
     },
 );
 //
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {

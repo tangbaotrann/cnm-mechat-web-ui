@@ -50,6 +50,7 @@ export const updateAvatar = createAsyncThunk(
         }
     },
 );
+
 const updateUserSlice = createSlice({
     name: 'user',
     initialState: { data: [] },

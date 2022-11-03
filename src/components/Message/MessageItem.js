@@ -5,14 +5,12 @@ import { useState } from 'react';
 // me
 import styles from './Message.module.scss';
 import ModelWrapper from '../ModelWrapper';
-import FileMessage from '../FileMessage/FileMessage';
+import FileMessage from '../FileMessage';
 
 const cx = classNames.bind(styles);
 
 function MessageItem({ message, own }) {
     const [showPreview, setShowPreview] = useState(false);
-
-    console.log('MESSAGE - ', message);
 
     // show preview
     const handleShowPreviewImageAndVideo = () => {

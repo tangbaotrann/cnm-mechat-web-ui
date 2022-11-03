@@ -6,10 +6,13 @@ import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 // me
 import styles from './ItemStored.module.scss';
 import images from '~/assets/images';
+import { useSelector } from 'react-redux';
+import FileMessage from '../FileMessage';
 
 const cx = classNames.bind(styles);
 
-function ItemStored({ isLink }) {
+function ItemStored({ message, isLink }) {
+    // const listMessage = useSelector((state) => state.messages.data);
     return (
         <div className={cx('list-item-stored')}>
             <div className={cx('header')}>
@@ -19,23 +22,24 @@ function ItemStored({ isLink }) {
             <div className={cx('body')}>
                 {/* render image (map) after */}
                 <div className={cx('body-list-item-stored')}>
-                    <div className={cx('container')}>
-                        <img className={cx('left-item-image')} src={images.avt} alt="file-and-link" />
+                    {/* <div className={cx('container')}> */}
+                    {/* <img className={cx('left-item-image')} src={images.avt} alt="file-and-link" /> */}
 
-                        <div className={cx('right-container')}>
-                            {isLink ? (
-                                <>
-                                    <div className={cx('title-name')}>Name url</div>
-                                    <div className={cx('info-link')}>www.react</div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className={cx('title-name')}>Name file</div>
-                                    <div className={cx('info')}>1.2 MB</div>
-                                </>
-                            )}
-                        </div>
+                    <div className={cx('right-container')}>
+                        {isLink ? (
+                            <>
+                                <div className={cx('title-name')}>Name url</div>
+                                <div className={cx('info-link')}>www.react</div>
+                            </>
+                        ) : (
+                            <>
+                                <FileMessage message={message} />
+                                {/* <div className={cx('title-name')}>Name file</div>
+                                    <div className={cx('info')}>1.2 MB</div> */}
+                            </>
+                        )}
                     </div>
+                    {/* </div> */}
                 </div>
             </div>
             <div className={cx('footer')}>
