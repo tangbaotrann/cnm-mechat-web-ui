@@ -20,6 +20,8 @@
 }
 
 .message-top-img {
+    margin-left: 10px;
+    margin-right: 10px;
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -28,20 +30,18 @@
 
 .message-top-text {
     padding: 10px;
-    margin: 0 10px;
-    border-radius: 20px;
+    margin-bottom: 6px;
+    border-radius: 10px;
     background-color: var(--white);
     color: var(--text);
     font-size: 1.4rem;
     max-width: 300px;
-    // position: relative;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
 }
 
 .image-send-user {
-    margin-top: 4px;
-    margin-right: 12px;
     border-radius: 10px;
-    width: 200px;
+    width: 220px;
     height: 200px;
 }
 
@@ -70,7 +70,6 @@
 
 .image-send-user-left {
     margin-top: 4px;
-    margin-left: 12px;
     border-radius: 10px;
     width: 200px;
     height: 200px;
@@ -79,14 +78,14 @@
 .message-bottom {
     font-size: 1rem;
     margin-top: 6px;
-    margin-right: 44px;
+    margin-right: 52px;
     color: var(--text-opacity);
 }
 
 .message-bottom-left {
     font-size: 1rem;
     margin-top: 6px;
-    margin-left: 44px;
+    margin-left: 52px;
     color: var(--text-opacity);
 }
 
@@ -236,4 +235,18 @@
     margin-top: 4px;
     font-size: 1.1rem;
     color: var(--text-opacity);
+}
+
+.file-own {
+    border-radius: 10px;
+    padding: 10px;
+    background-color: var(--bg-message);
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
+}
+
+.file-receiver {
+    border-radius: 10px;
+    padding: 10px;
+    background-color: var(--white);
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
 }

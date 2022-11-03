@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 // me
 import styles from './Message.module.scss';
-import images from '~/assets/images';
 import ModelWrapper from '../ModelWrapper';
 import FileMessage from '../FileMessage';
 
@@ -28,15 +27,19 @@ function MessageItem({ message, own }) {
             {own ? (
                 <>
                     {/* File message */}
-                    {message.fileLink ? (
-                        <FileMessage message={message} />
-                    ) : (
-                        message.fileLink &&
-                        message.content && (
-                            <>
-                                <p className={cx('message-top-text')}>{message.content}</p>
+                    {!message.deleteBy && message.fileLink && message.content ? (
+                        <>
+                            <p className={cx('message-top-text')}>{message.content}</p>
+                            <div className={cx('file-own')}>
                                 <FileMessage message={message} />
-                            </>
+                            </div>
+                        </>
+                    ) : (
+                        !message.deleteBy &&
+                        message.fileLink && (
+                            <div className={cx('file-own')}>
+                                <FileMessage message={message} />
+                            </div>
                         )
                     )}
 
@@ -45,15 +48,22 @@ function MessageItem({ message, own }) {
                         <>
                             {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
                                 <>
-                                    <p className={cx('message-top-text')}>{message.content}</p>
-                                    <button className={cx('preview-image')} onClick={handleShowPreviewImageAndVideo}>
-                                        <video
-                                            controls
-                                            className={cx('image-send-user')}
-                                            src={message.imageLink}
-                                            alt="img"
-                                        />
-                                    </button>
+                                    {!message.deleteBy && (
+                                        <>
+                                            <p className={cx('message-top-text')}>{message.content}</p>
+                                            <button
+                                                className={cx('preview-image')}
+                                                onClick={handleShowPreviewImageAndVideo}
+                                            >
+                                                <video
+                                                    controls
+                                                    className={cx('image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </button>
+                                        </>
+                                    )}
                                     <ModelWrapper
                                         className={cx('model-preview')}
                                         open={showPreview}
@@ -69,10 +79,21 @@ function MessageItem({ message, own }) {
                                 </>
                             ) : (
                                 <>
-                                    <p className={cx('message-top-text')}>{message.content}</p>
-                                    <button className={cx('preview-image')} onClick={handleShowPreviewImageAndVideo}>
-                                        <img className={cx('image-send-user')} src={message.imageLink} alt="img" />
-                                    </button>
+                                    {!message.deleteBy && (
+                                        <>
+                                            <p className={cx('message-top-text')}>{message.content}</p>
+                                            <button
+                                                className={cx('preview-image')}
+                                                onClick={handleShowPreviewImageAndVideo}
+                                            >
+                                                <img
+                                                    className={cx('image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            </button>
+                                        </>
+                                    )}
                                     <ModelWrapper
                                         className={cx('model-preview')}
                                         open={showPreview}
@@ -92,14 +113,19 @@ function MessageItem({ message, own }) {
                         <>
                             {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
                                 <>
-                                    <button className={cx('preview-image')} onClick={handleShowPreviewImageAndVideo}>
-                                        <video
-                                            controls
-                                            className={cx('image-send-user')}
-                                            src={message.imageLink}
-                                            alt="img"
-                                        />
-                                    </button>
+                                    {!message.deleteBy && (
+                                        <button
+                                            className={cx('preview-image')}
+                                            onClick={handleShowPreviewImageAndVideo}
+                                        >
+                                            <video
+                                                controls
+                                                className={cx('image-send-user')}
+                                                src={message.imageLink}
+                                                alt="img"
+                                            />
+                                        </button>
+                                    )}
                                     <ModelWrapper
                                         className={cx('model-preview')}
                                         open={showPreview}
@@ -115,9 +141,14 @@ function MessageItem({ message, own }) {
                                 </>
                             ) : (
                                 <>
-                                    <button className={cx('preview-image')} onClick={handleShowPreviewImageAndVideo}>
-                                        <img className={cx('image-send-user')} src={message.imageLink} alt="img" />
-                                    </button>
+                                    {!message.deleteBy && (
+                                        <button
+                                            className={cx('preview-image')}
+                                            onClick={handleShowPreviewImageAndVideo}
+                                        >
+                                            <img className={cx('image-send-user')} src={message.imageLink} alt="img" />
+                                        </button>
+                                    )}
                                     <ModelWrapper
                                         className={cx('model-preview')}
                                         open={showPreview}
@@ -136,6 +167,7 @@ function MessageItem({ message, own }) {
                     {message.action ? (
                         <p className={cx('message-top-text')}>{message.action}</p>
                     ) : (
+                        !message.deleteBy &&
                         message.imageLink === null &&
                         message.fileLink === null && <p className={cx('message-top-text')}>{message.content}</p>
                     )}
@@ -143,15 +175,18 @@ function MessageItem({ message, own }) {
             ) : (
                 <>
                     {/* File message */}
-                    {message.fileLink ? (
-                        <FileMessage message={message} />
-                    ) : (
-                        message.fileLink !== null &&
-                        message.content && (
-                            <>
-                                <p className={cx('message-top-text')}>{message.content}</p>
+                    {message.fileLink !== null && message.content ? (
+                        <>
+                            <p className={cx('message-top-text')}>{message.content}</p>
+                            <div className={cx('file-receiver')}>
                                 <FileMessage message={message} />
-                            </>
+                            </div>
+                        </>
+                    ) : (
+                        message.fileLink && (
+                            <div className={cx('file-receiver')}>
+                                <FileMessage message={message} />
+                            </div>
                         )
                     )}
 

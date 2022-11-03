@@ -32,6 +32,12 @@ const messagesSlice = createSlice({
                 return;
             }
         },
+        recallMessageFromSocket: (state, action) => {
+            const message = action.payload;
+            const messages = state.data.map((mess) => (mess._id === message._id ? message : mess));
+
+            state.data = messages;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -77,6 +83,11 @@ const messagesSlice = createSlice({
                 const listMessage = state.data.map((mess) => (mess._id === message._id ? message : mess));
 
                 state.data = listMessage;
+
+                // socket
+                socket.emit('recall_message', {
+                    message: action.payload,
+                });
             })
             .addCase(fetchApiRecallMessage.rejected, (state, action) => {
                 console.log('Error!');

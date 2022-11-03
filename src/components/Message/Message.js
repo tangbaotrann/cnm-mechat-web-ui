@@ -140,13 +140,17 @@ function Message({ message, own, conversation, user }) {
                                 <MessageItem message={message} own={own} />
                             </div>
                         </TippyHeadless>
-                        <img
-                            className={cx('message-top-img')}
-                            src={user.avatarLink ? user.avatarLink : images.noImg}
-                            alt="avatar"
-                        />
+                        {!message.deleteBy && (
+                            <img
+                                className={cx('message-top-img')}
+                                src={user.avatarLink ? user.avatarLink : images.noImg}
+                                alt="avatar"
+                            />
+                        )}
                     </div>
-                    <span className={cx('message-bottom')}>{moment(message.createdAt).format('h:mm a')}</span>
+                    {!message.deleteBy && (
+                        <span className={cx('message-bottom')}>{moment(message.createdAt).format('h:mm a')}</span>
+                    )}
                 </div>
             ) : (
                 <div className={cx('wrapper')}>
