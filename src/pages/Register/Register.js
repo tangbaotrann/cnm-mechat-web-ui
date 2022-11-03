@@ -1,7 +1,7 @@
 //lib
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { PhoneIphone, Lock, Person, ArrowLeft } from '@material-ui/icons';
+import { PhoneIphone, Lock, Person, ArrowLeft, Check } from '@material-ui/icons';
 import classNames from 'classnames/bind';
 //me
 import styles from './Register.module.scss';
@@ -28,6 +28,12 @@ function Register() {
     const debouncedValue = useDebounce(phoneNumber, 500);
     const searchAccountExists = useSelector(accountExists);
 
+    // bat loi
+    // const [check, setCheck] = useState(false);
+    const [errorUserName, setErrorUserName] = useState('');
+    const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
+    const [errorPassword, setErrorPassword] = useState('');
+    const [errorConfirmPassword, setErrorConfirmPassword] = useState('');
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(phoneNumber));
     }, [debouncedValue]);
@@ -45,21 +51,21 @@ function Register() {
     const handleSubmitForm = (e) => {
         e.preventDefault();
         // var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-        const phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
-        const number = /^[0-9]{10}$/;
-        const mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-        if (userName === '' || phoneNumber === '' || password === '' || confirmPassword === '') {
-            alert('Vui lòng nhập đầy đủ thông tin');
-        } else if (!number.test(phoneNumber)) {
-            alert('Số điện thoại phải là số và đủ 10 số');
-        } else if (!phoneNumberForm.test(phoneNumber)) {
-            alert('Số điện thoại Chưa không đúng');
-        } else if (searchAccountExists !== 1) {
-            alert('Số điện thoại đã được đăng ký');
-        } else if (!mk.test(password)) {
-            alert('Mật khẩu phải lớn 8 ký tự trong đó 1 ký tự viết hoa, 1 ký tự viết thường và số');
+        if (userName === '' && phoneNumber === '' && password === '' && confirmPassword === '') {
+            setErrorUserName('Vui lòng nhập đầy đủ thông tin');
+            setErrorPhoneNumber('Vui lòng nhập đầy đủ thông tin');
+            setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+            setErrorConfirmPassword('Vui lòng nhập đầy đủ thông tin');
+        } else if (userName === '') {
+            setErrorUserName('Vui lòng nhập họ tên');
+        } else if (phoneNumber === '') {
+            setErrorPhoneNumber('Vui lòng nhập số điện thoại');
+        } else if (password === '') {
+            setErrorPassword('Vui lòng nhập mật khẩu');
+        } else if (confirmPassword === '') {
+            setErrorConfirmPassword('Vui lòng nhập xác nhận mật khẩu');
         } else if (password !== confirmPassword) {
-            alert('Mật khẩu không trùng khớp');
+            setErrorConfirmPassword('Mật khẩu không trùng khớp');
         } else {
             generateRecaptcha();
             const phoneNumbers = '+84' + phoneNumber.slice(1);
@@ -77,11 +83,46 @@ function Register() {
                 .catch((error) => {
                     // Error; SMS not sent
                     // ...
-                    alert('Tài khoản đã yêu cầu quá nhiều lần!!!');
+                    //alert('Tài khoản đã yêu cầu quá nhiều lần!!!');
                     console.log('Chưa gửi về OTP' + error);
                 });
         }
     };
+
+    // bat loi
+    useEffect(() => {
+        var number = /^[0-9]{10}$/;
+        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        if (phoneNumber.length === 10) {
+            if (!number.test(phoneNumber)) {
+                setErrorPhoneNumber('Số điện thoại phải là số và đủ 10 số');
+            } else if (!phoneNumberForm.test(phoneNumber)) {
+                setErrorPhoneNumber('Số điện thoại không đúng');
+            } else if (searchAccountExists !== 1) {
+                setErrorPhoneNumber('Số điện thoại đã được đăng ký');
+            } else {
+                setErrorPhoneNumber('');
+            }
+        }
+    }, [phoneNumber]);
+    useEffect(() => {
+        var mk = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+        if (password.length > 5) {
+            if (!mk.test(password)) {
+                setErrorPassword('Mật khẩu phải lớn 8 ký tự 1 ký tự viết hoa, 1 ký tự viết thường và số');
+            } else {
+                setErrorPassword('');
+            }
+        }
+    }, [password]);
+    useEffect(() => {
+        if (userName.length > 0) {
+            setErrorUserName('');
+        }
+        if (confirmPassword.length > 0) {
+            setErrorConfirmPassword('');
+        }
+    }, [confirmPassword, userName]);
     return (
         <div className={cx('body-register')}>
             <div className={cx('wrapper')}>
@@ -103,7 +144,9 @@ function Register() {
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                             />
+                            {/* {check === true ? <Check className={cx('item-check')} /> : null} */}
                         </div>
+                        <span className={cx('error')}>{errorPhoneNumber}</span>
                         <div className={cx('form-user')}>
                             <Person className={cx('item')} />
                             <input
@@ -113,7 +156,9 @@ function Register() {
                                 value={userName}
                                 onChange={(e) => setUserName(e.target.value)}
                             />
+                            {/* <Check className={cx('item-check')} /> */}
                         </div>
+                        <span className={cx('error')}>{errorUserName}</span>
                         <div className={cx('form-password')}>
                             <Lock className={cx('item')} />
                             <input
@@ -123,7 +168,11 @@ function Register() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
+                            {/* <Check className={cx('item-check')} /> */}
                         </div>
+                        <span className={cx('error')}>
+                            <p>{errorPassword}</p>
+                        </span>
                         <div className={cx('form-password')}>
                             <Lock className={cx('item')} />
                             <input
@@ -133,8 +182,9 @@ function Register() {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
+                            {/* <Check className={cx('item-check')} /> */}
                         </div>
-
+                        <span className={cx('error')}>{errorConfirmPassword}</span>
                         <div className={cx('form-button')}>
                             <button type="submit" variant="contained" color="primary">
                                 ĐĂNG KÝ

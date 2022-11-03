@@ -66,6 +66,16 @@
     object-fit: cover;
     border: 1px solid var(--white);
 }
+.img-avatar-ConversationInfo {
+    position: absolute;
+    margin: auto;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--white);
+    cursor: pointer;
+}
 
 // sub model update info account (change avatar)
 .icon-camera {

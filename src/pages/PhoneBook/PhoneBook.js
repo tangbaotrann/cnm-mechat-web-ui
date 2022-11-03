@@ -77,12 +77,12 @@ function PhoneBook() {
                     <h2 className={cx('list-add-friend-title')}>Danh sách nhóm</h2>
                 </div>
                 <div className={cx('list-friend')}>
-                    <h1>Bạn bè ({listFriends.length})</h1>
+                    <h1>Bạn bè ({listFriends?.length})</h1>
 
                     {/* Conversation or MiddleDirectory */}
                     <div className={cx('conversations')}>
-                        {listFriends.map((user) => {
-                            return <Conversation key={user._id} conversation={user} isPhoneBook />;
+                        {listFriends?.map((user) => {
+                            return <Conversation key={user?._id} conversation={user} isPhoneBook />;
                         })}
                     </div>
                 </div>
@@ -103,8 +103,8 @@ function PhoneBook() {
                     {!changeLayout ? (
                         <div className={cx('list-FriendRequest')}>
                             <div className={cx('friendRequest')}>
-                                {listAccept.length === 0 ? null : <h1>Lời mời kết bạn ({listAccept.length})</h1>}
-                                {listAccept.map((user) => {
+                                {listAccept?.length === 0 ? null : <h1>Lời mời kết bạn ({listAccept?.length})</h1>}
+                                {listAccept?.map((user) => {
                                     return <FriendRequestList key={user.idFriendRequest} user={user} isPhoneBook />;
                                 })}
                             </div>

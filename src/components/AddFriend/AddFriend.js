@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './AddFriend.module.scss';
-import { listMeRequests, searchFilterFriend, userLogin } from '~/redux/selector';
+import { searchFilterFriend, userLogin } from '~/redux/selector';
 import filterSlice from '~/redux/features/filter/filterSlice';
 import useDebounce from '../hooks/useDebounce';
 import { usersRemainingSelector } from '~/redux/selector';
@@ -19,7 +19,6 @@ function AddFriend() {
     const userSearching = useSelector(usersRemainingSelector);
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
-    const listMeRequest = useSelector(listMeRequests);
 
     // Handle open/ close model info account
     const dispatch = useDispatch();
@@ -38,7 +37,6 @@ function AddFriend() {
                 alert('Tài khoản không tồn tại');
             }
         }
-        console.log(phoneNumber);
     };
     const handleBtnClearText = (e) => {
         setSearchPhone('');
@@ -55,6 +53,7 @@ function AddFriend() {
             setPhoneNumber('');
             dispatch(filterSlice.actions.searchFilterChange(null));
             setSearchResult(false);
+            window.location.reload(true);
         }
     };
     return (

@@ -21,6 +21,7 @@ function FriendRequestList({ user, isPhoneBook }) {
         dispatch(accept(data));
         if (accept()) {
             alert('chấp nhận kết bạn thành công');
+            window.location.reload(true);
         } else {
             alert('Số điện thoại chưa đăng ký tài khoảng');
         }
@@ -33,6 +34,12 @@ function FriendRequestList({ user, isPhoneBook }) {
             idRequest: user.idFriendRequest,
         };
         dispatch(accept(data));
+        if (accept()) {
+            alert('Từ chối kết bạn thành công');
+            window.location.reload(true);
+        } else {
+            alert('Từ chối kết bạn thất bại');
+        }
     };
     const handleCallback = () => {
         const data = {

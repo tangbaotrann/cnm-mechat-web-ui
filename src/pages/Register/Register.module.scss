@@ -54,13 +54,14 @@
     height: auto;
     margin-left: 15%;
     border-bottom: solid 0.5px #d3d3d3;
-    padding-top: 50px;
+    //  padding-top: 50px;
+    margin-top: 80px;
 }
 .register-form .item {
     font-size: 25px;
 }
 .register-form input {
-    width: 80%;
+    width: 75%;
     height: 25px;
     margin-left: 8%;
     margin-bottom: 10px;
@@ -70,6 +71,12 @@
     font-family: var(--font-family);
     background: transparent;
     transition: border-color 0.2s;
+}
+.item-check {
+    outline: 0;
+    border: 0;
+    color: Green;
+    margin-top: 5px;
 }
 
 .form-user {
@@ -126,6 +133,23 @@
     font-family: var(--font-family);
     text-align: center;
 }
-//-----------------OTP
+//-----------------loi
+.error {
+    color: red;
+    font-size: 1.5rem;
+    margin-left: 15%;
+    margin-top: 5px;
+
+    font-family: var(--font-family);
+}
+.error p {
+    text-align: left;
+    color: red;
+    font-size: 1.5rem;
+    margin-left: 15%;
+    margin-top: -15px;
+    width: 70%;
+    font-family: var(--font-family);
+}
 
 //----

@@ -12,6 +12,7 @@ export const usersRemainingSelector = createSelector(
     userInfoSelector,
     searchTextSelector,
     (users, user, search) => {
+        console.log(search);
         if (search) {
             if (search.startsWith('0')) {
                 const usersFilter = users.filter((_user) => _user.phoneNumber === search);
@@ -72,6 +73,8 @@ export const userLogin = createSelector(userInfoSelector, (user) => {
     return user;
 });
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
+    console.log('USER', user);
+    console.log('USERs', users);
     if (users) {
         const friends = users.filter((_user) => user.friends.includes(_user._id));
         return friends.map((user) => ({
