@@ -29,6 +29,7 @@ import socket from '~/util/socket';
 import messagesSlice, {
     fetchApiSendMessage,
     fetchApiMessagesByConversationId,
+    fetchApiMessageLastByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
 
@@ -57,6 +58,12 @@ function Messenger() {
     // fetch message from conversationId
     useEffect(() => {
         dispatch(fetchApiMessagesByConversationId(conversation.id));
+        // dispatch(
+        //     fetchApiMessageLastByConversationId({
+        //         conversationID: conversation.id,
+        //         count: 0,
+        //     }),
+        // );
     }, [conversation.id, dispatch]);
 
     // user join room
@@ -80,7 +87,6 @@ function Messenger() {
     // realtime re-call message of receiver
     useEffect(() => {
         socket.on('receiver_recall_message', (message) => {
-            console.log('RE-CALL - ', message);
             dispatch(messagesSlice.actions.recallMessageFromSocket(message));
         });
     }, [dispatch]);
@@ -134,10 +140,10 @@ function Messenger() {
     };
 
     const handleEmojiClicked = (emojiObj, e) => {
-        // setChosenEmoji(emojiObj);
-        console.log('EMO - ', emojiObj);
-        setNewMessage(emojiObj.emoji);
-        // setNewMessage(emojiObj);
+        let emojis = emojiObj.emoji;
+        const _message = [...newMessage, emojis];
+
+        setNewMessage(_message.join(''));
     };
 
     // handle button send message
@@ -282,10 +288,10 @@ function Messenger() {
                     <textarea
                         className={cx('message-input')}
                         value={
-                            newMessage && newMessage.emoji
-                                ? newMessage && newMessage.emoji
-                                : newMessage.emoji
-                                ? newMessage.emoji
+                            newMessage && newMessage.emoji?.join('')
+                                ? newMessage && newMessage.emoji?.join('')
+                                : newMessage.emoji?.join('')
+                                ? newMessage.emoji?.join('')
                                 : newMessage
                         }
                         onChange={handleChangeMessage}
