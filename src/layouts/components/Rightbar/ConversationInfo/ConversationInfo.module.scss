@@ -202,3 +202,26 @@
         border-bottom: solid 3px blue;
     }
 }
+////@at-roo file
+.file {
+    margin-bottom: 10px;
+}
+.button-image {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.model-preview {
+    position: relative;
+}
+.preview-image-send-user {
+    width: 420px;
+    height: 420px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}

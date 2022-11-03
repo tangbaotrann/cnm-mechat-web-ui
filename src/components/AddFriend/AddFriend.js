@@ -37,7 +37,6 @@ function AddFriend() {
                 alert('Tài khoản không tồn tại');
             }
         }
-        console.log(phoneNumber);
     };
     const handleBtnClearText = (e) => {
         setSearchPhone('');

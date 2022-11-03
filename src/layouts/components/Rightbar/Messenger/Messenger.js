@@ -29,7 +29,7 @@ import messagesSlice, {
     fetchApiSendMessage,
     fetchApiMessagesByConversationId,
 } from '~/redux/features/messages/messagesSlice';
-import FileMessage from '~/components/FileMessage/FileMessage';
+import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
 
 const cx = classNames.bind(styles);
 
@@ -49,7 +49,7 @@ function Messenger() {
 
     const scrollMessenger = useRef();
 
-    // console.log('[FILE] - ', newFileMessage?.name);
+    // console.log('[FILE] - ', newFileMessage);
 
     // fetch message from conversationId
     useEffect(() => {
@@ -100,6 +100,8 @@ function Messenger() {
         file.previewFile = URL.createObjectURL(file);
 
         setNewFileMessage(file);
+        // dispatch(messagesSlice.actions.changeFileMessage(file));
+        setBtnClosePreview(!btnClosePreview);
     };
 
     // cleanup func
@@ -131,12 +133,14 @@ function Messenger() {
 
         setNewMessage('');
         setNewImageMessage(null);
+        setNewFileMessage(null);
         setBtnClosePreview(false);
     };
 
     // handle close preview
     const handleClosePreview = () => {
         setNewImageMessage(null);
+        setNewFileMessage(null);
         setBtnClosePreview(false);
     };
 
@@ -289,10 +293,7 @@ function Messenger() {
                     )}
 
                     {/* file message */}
-                    {/* {newFileMessage?.name.split('.')[newFileMessage?.name.split('.').length - 1] === 'docx' && (
-                        <h1>icon file: {newFileMessage.name}</h1>
-                    )} */}
-                    {newFileMessage && <FileMessage newFileMessage={newFileMessage} />}
+                    {newFileMessage && <PreviewFileMessage newFileMessage={newFileMessage} />}
                 </div>
             </div>
         </div>

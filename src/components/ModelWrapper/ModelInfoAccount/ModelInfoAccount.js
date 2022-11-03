@@ -12,7 +12,7 @@ import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
-function ModelInfoAccount({ yourProfile, user, friend }) {
+function ModelInfoAccount({ yourProfile, user, friend, ConversationInfo }) {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
 
     // Handle open/ close model info account
@@ -25,18 +25,30 @@ function ModelInfoAccount({ yourProfile, user, friend }) {
 
     return (
         <>
-            {yourProfile ? (
-                <button className={cx('item-btn')} onClick={handleModelOpenInfoAccount}>
-                    {friend ? 'Xem thông tin' : ' Hồ sơ của bạn'}
-                </button>
+            {ConversationInfo ? (
+                <img
+                    className={cx('img-avatar-ConversationInfo')}
+                    src={user?.avatarLink ? user?.avatarLink : images.noImg}
+                    alt="img-avatar"
+                    onClick={handleModelOpenInfoAccount}
+                />
             ) : (
                 <>
-                    <FontAwesomeIcon className={cx('setting-icon')} icon={faUser} />
-                    <button className={cx('setting-item-btn')} onClick={handleModelOpenInfoAccount}>
-                        Thông tin tài khoản
-                    </button>
+                    {yourProfile ? (
+                        <button className={cx('item-btn')} onClick={handleModelOpenInfoAccount}>
+                            {friend ? 'Xem thông tin' : ' Hồ sơ của bạn'}
+                        </button>
+                    ) : (
+                        <>
+                            <FontAwesomeIcon className={cx('setting-icon')} icon={faUser} />
+                            <button className={cx('setting-item-btn')} onClick={handleModelOpenInfoAccount}>
+                                Thông tin tài khoản
+                            </button>
+                        </>
+                    )}
                 </>
             )}
+
             <ModelWrapper className={cx('model-info-acc')} open={openInfoAccount} onClose={handleModelCloseInfoAccount}>
                 <div className={cx('model-info-acc-bg')}>
                     <div className={cx('model-info-acc-header')}>
@@ -87,7 +99,7 @@ function ModelInfoAccount({ yourProfile, user, friend }) {
 
                     <div className={cx('model-info-acc-footer')}>
                         {/* model update info account */}
-                        {friend ? null : <SubModelInfoAccount user={user} />}
+                        {friend || ConversationInfo ? null : <SubModelInfoAccount user={user} />}
                     </div>
                 </div>
             </ModelWrapper>

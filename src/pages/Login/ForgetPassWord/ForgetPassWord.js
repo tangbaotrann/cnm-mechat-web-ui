@@ -74,6 +74,9 @@ function ForgetPassWord() {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
+        var phoneNumberForm = /^(09|03|07|08|05)\d{4}\d{4}$/;
+        var number = /^[0-9]{10}$/;
+
         if (phoneNumber === '') {
             setErrorPhoneNumber('Vui lòng nhập số điện thoại');
         } else if (searchAccountExists !== 1) {

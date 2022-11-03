@@ -28,7 +28,8 @@ function Message({ message, own, conversation, user }) {
         dispatch(
             fetchApiDeleteMessage({
                 messageId: message._id,
-                conversationID: conversation.id,
+                // conversationID: conversation.id,
+                userId: user._id,
             }),
         );
     };
