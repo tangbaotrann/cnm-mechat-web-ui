@@ -220,3 +220,11 @@
 .display-preview-emoji {
     z-index: 9999px;
 }
+
+// pre loading messages
+.prev-loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+}

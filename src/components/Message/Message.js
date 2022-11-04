@@ -22,6 +22,8 @@ function Message({ message, own, conversation, user }) {
     const dispatch = useDispatch();
 
     // console.log('[USER - 25] - ', user);
+    console.log('[message] - ', message);
+    // console.log('[conversation] - ', conversation);
 
     // handle delete message
     const handleDeleteMessage = async () => {

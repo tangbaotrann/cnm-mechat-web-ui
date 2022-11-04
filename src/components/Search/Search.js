@@ -3,6 +3,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import TippyHeadless from '@tippyjs/react/headless';
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faMagnifyingGlass,
@@ -12,6 +13,7 @@ import {
     faUserGroup,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import { fetchApiFriendsById } from '~/redux/features/friend/friendsSlice';
 
 // me
 import styles from './Search.module.scss';
@@ -47,7 +49,7 @@ function Search() {
         setLoading(true);
         //setSearchResult([userSearching[0], userSearching[0]._id]);
         setLoading(false);
-    }, [searchValue]);
+    }, [dispatch, searchValue]);
 
     // Handle change value input
 
@@ -84,8 +86,9 @@ function Search() {
                         <Popper className={cx('menu-list-search')}>
                             <div className={cx('menu-search-title')}>Trò chuyện</div>
                             {/* Render result search */}
-                            {searchResult.map((result, index) => {
-                                return <Conversation key={index} user={result} />;
+                            {searchResult.map((result) => {
+                                console.log('----', result);
+                                return <Conversation key={result._id} user={result} />;
                             })}
                         </Popper>
                     </div>
