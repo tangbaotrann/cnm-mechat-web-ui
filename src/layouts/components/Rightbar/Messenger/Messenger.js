@@ -22,6 +22,7 @@ import EmojiPicker, { SkinTones } from 'emoji-picker-react';
 
 // me
 import styles from './Messenger.module.scss';
+import images from '~/assets/images';
 import Message from '~/components/Message';
 import Popper from '~/components/Popper';
 import OnlineStatus from '~/components/OnlineStatus';
@@ -32,6 +33,7 @@ import messagesSlice, {
     fetchApiMessageLastByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
+import useDebounce from '~/components/hooks/useDebounce';
 
 const cx = classNames.bind(styles);
 
@@ -49,21 +51,17 @@ function Messenger() {
     const conversation = useSelector((state) => state.conversations.conversationClick);
     const listMessage = useSelector((state) => state.messages.data);
     const isLoading = useSelector((state) => state.messages.isLoading);
+    const preLoading = useSelector((state) => state.messages.preLoading);
 
     const scrollMessenger = useRef();
 
+    console.log('[LIST MESSAGES] - ', listMessage);
     // console.log('[FILE] - ', newFileMessage);
     // console.log('EMOJI - ', chosenEmoji);
 
     // fetch message from conversationId
     useEffect(() => {
         dispatch(fetchApiMessagesByConversationId(conversation.id));
-        // dispatch(
-        //     fetchApiMessageLastByConversationId({
-        //         conversationID: conversation.id,
-        //         count: 0,
-        //     }),
-        // );
     }, [conversation.id, dispatch]);
 
     // user join room
@@ -161,7 +159,6 @@ function Messenger() {
         );
 
         setNewMessage('');
-        // setChosenEmoji(null);
         setNewImageMessage(null);
         setNewFileMessage(null);
         setBtnClosePreview(false);
@@ -178,6 +175,20 @@ function Messenger() {
     useEffect(() => {
         conversation && listMessage && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
     }, [conversation, listMessage]);
+
+    // handle loading messages last
+    // const handleLoadingMessagesLast = (e) => {
+    //     if (e.target?.scrollTop === 0) {
+    //         if (listMessage.length >= 10) {
+    //             dispatch(
+    //                 fetchApiMessageLastByConversationId({
+    //                     conversationID: conversation.id,
+    //                     countMessage: listMessage.length,
+    //                 }),
+    //             );
+    //         }
+    //     }
+    // };
 
     return (
         <div className={cx('messenger')}>
@@ -199,7 +210,9 @@ function Messenger() {
                 </div>
             </div>
 
+            {/* onScroll={handleLoadingMessagesLast} */}
             <div className={cx('messenger-body')}>
+                {preLoading && <img className={cx('prev-loading')} src={images.preLoadingMessage} alt="prev-loading" />}
                 {/* Messages */}
                 {isLoading ? (
                     <CircularProgress className={cx('loading-messages')} />

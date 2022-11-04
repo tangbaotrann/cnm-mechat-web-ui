@@ -10,6 +10,7 @@ const messagesSlice = createSlice({
     initialState: {
         data: [],
         isLoading: false,
+        preLoading: false,
         clickSendMessage: null,
     },
     reducers: {
@@ -47,20 +48,29 @@ const messagesSlice = createSlice({
             .addCase(fetchApiMessagesByConversationId.fulfilled, (state, action) => {
                 state.data = action.payload;
                 state.isLoading = false;
+
+                //const sortMessages = action.payload;
+                //console.log('SORT - ', sortMessages);
+                // const messages = sortMessages.includes((mess) => mess._id === sortMessages._id);
+                // const _sort = sortMessages.sort((a, b) => b.createdAt?.localeCompare(a.createdAt));
             })
             .addCase(fetchApiMessagesByConversationId.rejected, (state, action) => {
                 console.log('Error!');
             })
             //fetch 10 messages last
             .addCase(fetchApiMessageLastByConversationId.pending, (state, action) => {
-                state.isLoading = true;
+                state.preLoading = true;
             })
             .addCase(fetchApiMessageLastByConversationId.fulfilled, (state, action) => {
-                const { count } = action.payload;
-                const messages = state.data.length;
+                const messages = action.payload;
 
-                state.data = action.payload;
-                state.isLoading = false;
+                // if (!messages) {
+                const preMessages = state.data.concat([...messages, messages]);
+                state.data = preMessages;
+                // }
+
+                state.preLoading = false;
+                //console.log('preMessages - ', preMessages);
             })
             .addCase(fetchApiMessageLastByConversationId, (state, action) => {
                 console.log('Error!');
@@ -115,6 +125,12 @@ export const fetchApiMessagesByConversationId = createAsyncThunk(
     async (conversationID) => {
         try {
             const res = await axios.get(`${process.env.REACT_APP_BASE_URL}messages/${conversationID}`);
+            // const res = await axios.post(
+            //     `${process.env.REACT_APP_BASE_URL}messages/ten-last-messages/${conversationID}`,
+            //     {
+            //         data: { count: 0 },
+            //     },
+            // );
 
             return res.data;
         } catch (err) {
@@ -126,13 +142,16 @@ export const fetchApiMessagesByConversationId = createAsyncThunk(
 // fetch 10 messages last
 export const fetchApiMessageLastByConversationId = createAsyncThunk(
     'messages/fetchApiMessageLastByConversationId',
-    async ({ conversationID, count }) => {
+    async ({ conversationID, countMessage }) => {
         try {
-            // console.log('COUNT - ', count);
-            // console.log('conversationID - ', conversationID);
-            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}ten-last-messages/${conversationID}`, {
-                data: { count },
-            });
+            console.log('COUNT - ', countMessage);
+            console.log('conversationID - ', conversationID);
+            const res = await axios.post(
+                `${process.env.REACT_APP_BASE_URL}messages/ten-last-messages/${conversationID}`,
+                {
+                    data: { count: countMessage },
+                },
+            );
 
             console.log('LAST MESSAGE - ', res.data);
 
