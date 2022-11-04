@@ -22,8 +22,9 @@ import Conversation from '../Conversation';
 import ModelWrapper from '../ModelWrapper';
 import AddFriend from '../AddFriend';
 import AddGroup from '../AddGroup';
-import useDebounce from '../hooks/useDebounce';
-
+import filterSlice from '~/redux/features/filter/filterSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { allSearch } from '~/redux/selector';
 const cx = classNames.bind(styles);
 
 function Search() {
@@ -33,44 +34,24 @@ function Search() {
     const [loading, setLoading] = useState(false);
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const [openAddGroup, setOpenAddGroup] = useState(false);
+    const userSearching = useSelector(allSearch);
+    console.log(userSearching);
     const searchRef = useRef();
-
     const dispatch = useDispatch();
-
-    // const userCurrent = useSelector((state) => state.user.data);
-    // const searchResult = useSelector((state) => state.friends.data);
-
-    // const debounceValue = useDebounce(searchValue, 800);
-
-    console.log('searchResult - ', searchResult);
-
-    // useEffect(() => {
-    //     dispatch(fetchApiFriendsById(userCurrent._id));
-    // }, [dispatch, userCurrent._id]);
-
+    useEffect(() => {
+        dispatch(filterSlice.actions.searchFilterChange(searchValue));
+    }, [searchValue]);
     useEffect(() => {
         if (!searchValue.trim()) {
             return;
         }
 
         setLoading(true);
-
-        // fetch api
-        setSearchResult([1, 2]);
-        //dispatch(fetchApiFriendsById(userCurrent._id));
-
+        //setSearchResult([userSearching[0], userSearching[0]._id]);
         setLoading(false);
     }, [dispatch, searchValue]);
 
     // Handle change value input
-    const handleChange = (e) => {
-        const value = e.target.value;
-
-        // Check no space first
-        if (!value.startsWith(' ')) {
-            setSearchValue(value);
-        }
-    };
 
     // Handle button clear text
     const handleBtnClearText = () => {
@@ -122,7 +103,7 @@ function Search() {
                         type="text"
                         className={cx('input-search')}
                         value={searchValue}
-                        onChange={handleChange}
+                        onChange={(e) => setSearchValue(e.target.value)}
                         onFocus={() => setShowResult(true)}
                         ref={searchRef}
                         placeholder="Tìm kiếm"

@@ -5,7 +5,16 @@ import 'tippy.js/dist/tippy.css';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faAddressBook, faGear } from '@fortawesome/free-solid-svg-icons';
+import {
+    faComment,
+    faAddressBook,
+    faGear,
+    faSquareCheck,
+    faVideo,
+    faToolbox,
+    faCloud,
+} from '@fortawesome/free-solid-svg-icons';
+import { UserIcon } from 'outline-icons';
 
 // me
 import styles from './Sidebar.module.scss';
@@ -56,11 +65,55 @@ function Sidebar() {
                             <FontAwesomeIcon icon={faAddressBook} />
                         </NavLink>
                     </Tippy>
+                    <Tippy
+                        className={cx('tool-tip')}
+                        content="To-do"
+                        delay={[200, 0]}
+                        placement="bottom-end"
+                        offset={[40, -6]}
+                    >
+                        <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="#">
+                            <FontAwesomeIcon icon={faSquareCheck} />
+                        </NavLink>
+                    </Tippy>
+                    <Tippy
+                        className={cx('tool-tip')}
+                        content="Za-vi"
+                        delay={[200, 0]}
+                        placement="bottom-end"
+                        offset={[40, -6]}
+                    >
+                        <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="#">
+                            <FontAwesomeIcon icon={faVideo} />
+                        </NavLink>
+                    </Tippy>
                 </div>
             </div>
 
             {/* bottom */}
             <div className={cx('sidebar-bottom')}>
+                <Tippy
+                    className={cx('tool-tip')}
+                    content="Cloud"
+                    delay={[200, 0]}
+                    placement="bottom-end"
+                    offset={[40, -6]}
+                >
+                    <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="#">
+                        <FontAwesomeIcon icon={faCloud} />
+                    </NavLink>
+                </Tippy>
+                <Tippy
+                    className={cx('tool-tip')}
+                    content="Công cụ"
+                    delay={[200, 0]}
+                    placement="bottom-end"
+                    offset={[40, -6]}
+                >
+                    <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="#">
+                        <FontAwesomeIcon icon={faToolbox} />
+                    </NavLink>
+                </Tippy>
                 <MenuSetting user={user}>
                     <Tippy className={cx('tool-tip')} content="Cài đặt" delay={[200, 0]}>
                         {/* Add div fix warning of Tippy */}

@@ -53,7 +53,7 @@ function Conversation({ conversation, isPhoneBook, Group }) {
             <div className={cx('content')}>
                 <h4 className={cx('username')}>{conversation?.name} </h4>
                 {isPhoneBook ? null : (
-                    <p className={cx('message')}>{conversation.content || conversation.lastMessage}</p>
+                    <p className={cx('message')}>{conversation?.content || conversation?.lastMessage}</p>
                 )}
             </div>
 
@@ -85,7 +85,7 @@ function Conversation({ conversation, isPhoneBook, Group }) {
             ) : null}
             {isPhoneBook ? null : (
                 <div className={cx('notification')}>
-                    <span className={cx('time')}>{format(conversation.time)}</span>
+                    <span className={cx('time')}>{format(conversation?.time)}</span>
                     {/* <span className={cx('badge')}>5+</span> */}
                 </div>
             )}
