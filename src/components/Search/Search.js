@@ -23,7 +23,7 @@ import ModelWrapper from '../ModelWrapper';
 import AddFriend from '../AddFriend';
 import AddGroup from '../AddGroup';
 import filterSlice from '~/redux/features/filter/filterSlice';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import { allSearch } from '~/redux/selector';
 const cx = classNames.bind(styles);
 

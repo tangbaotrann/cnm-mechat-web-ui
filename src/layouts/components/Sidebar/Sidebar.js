@@ -14,7 +14,7 @@ import {
     faToolbox,
     faCloud,
 } from '@fortawesome/free-solid-svg-icons';
-import { UserIcon } from 'outline-icons';
+// import { UserIcon } from 'outline-icons';
 
 // me
 import styles from './Sidebar.module.scss';
