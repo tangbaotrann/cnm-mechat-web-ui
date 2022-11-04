@@ -37,7 +37,7 @@ function Search() {
 
     const dispatch = useDispatch();
 
-    const userCurrent = useSelector((state) => state.user.data);
+    // const userCurrent = useSelector((state) => state.user.data);
     // const searchResult = useSelector((state) => state.friends.data);
 
     // const debounceValue = useDebounce(searchValue, 800);
@@ -60,7 +60,7 @@ function Search() {
         //dispatch(fetchApiFriendsById(userCurrent._id));
 
         setLoading(false);
-    }, [dispatch, searchValue, userCurrent._id]);
+    }, [dispatch, searchValue]);
 
     // Handle change value input
     const handleChange = (e) => {
