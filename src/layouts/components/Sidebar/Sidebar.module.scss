@@ -11,8 +11,8 @@
 
 // Sidebar top
 .avatar-img {
-    width: 52px;
-    height: 52px;
+    width: 62px;
+    height: 62px;
     border-radius: 50%;
     object-fit: cover;
     cursor: pointer;
@@ -27,20 +27,23 @@
 }
 
 .option-item {
-    font-size: 2.4rem;
+    font-size: 2.6rem;
     padding: 10px;
     color: var(--not-active);
+
     cursor: pointer;
 
     &.active {
-       color: var(--white);
+        color: var(--white);
     }
 
     &:hover {
         opacity: 0.8;
     }
 }
-
+.sidebar-bottom .option-item {
+    margin-top: 20px;
+}
 // Notification message
 .badge {
     display: flex;
@@ -63,10 +66,12 @@
 .sidebar-bottom {
     position: absolute;
     bottom: 0;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
 }
 
 // Tippy tool tip
 .tool-tip {
     font-size: 1rem;
 }
-
