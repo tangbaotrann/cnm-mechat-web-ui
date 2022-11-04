@@ -163,15 +163,27 @@ export const fetchApiMessageLastByConversationId = createAsyncThunk(
 );
 
 const createFormData = (imageMessage) => {
-    const { senderID, conversationID, content, imageLink, fileLink } = imageMessage;
+    const { senderID, conversationID, content, imageLinks, fileLink } = imageMessage;
+
+    console.log('senderID --------', senderID);
 
     const dataForm = new FormData();
 
     dataForm.append('senderID', senderID);
     dataForm.append('conversationID', conversationID);
     dataForm.append('content', content);
-    dataForm.append('imageLink', imageLink);
+
+    if (imageLinks.length === 1) {
+        dataForm.append('imageLinks', imageLinks.preview);
+    } else if (imageLinks.length > 1) {
+        imageLinks.forEach((img) => {
+            console.log('IMG - ', img);
+            dataForm.append('imageLinks', img.preview);
+        });
+    }
     dataForm.append('fileLink', fileLink);
+
+    console.log('dataForm - ', dataForm.getAll('imageLinks'));
 
     return dataForm;
 };
@@ -186,6 +198,8 @@ export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessag
                 'content-type': 'multipart/form-data',
             },
         });
+
+        console.log('resFormData', resFormData);
 
         return resFormData.data;
     }

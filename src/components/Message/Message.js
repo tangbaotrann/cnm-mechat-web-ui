@@ -21,9 +21,9 @@ const cx = classNames.bind(styles);
 function Message({ message, own, conversation, user }) {
     const dispatch = useDispatch();
 
-    // console.log('[USER - 25] - ', user);
-    console.log('[message] - ', message);
-    // console.log('[conversation] - ', conversation);
+    console.log('[USER - 25] - ', user);
+    console.log('[message] - 25 -', message);
+    console.log('[conversation] - ', conversation);
 
     // handle delete message
     const handleDeleteMessage = async () => {
@@ -142,7 +142,7 @@ function Message({ message, own, conversation, user }) {
                                 <MessageItem message={message} own={own} />
                             </div>
                         </TippyHeadless>
-                        {!message.deleteBy && (
+                        {message.deleteBy.length >= 0 && (
                             <img
                                 className={cx('message-top-img')}
                                 src={user.avatarLink ? user.avatarLink : images.noImg}
@@ -150,7 +150,7 @@ function Message({ message, own, conversation, user }) {
                             />
                         )}
                     </div>
-                    {!message.deleteBy && (
+                    {message.deleteBy.length >= 0 && (
                         <span className={cx('message-bottom')}>{moment(message.createdAt).format('h:mm a')}</span>
                     )}
                 </div>

@@ -22,8 +22,8 @@ function Conversation({ conversation, isPhoneBook, Group }) {
 
     const dispatch = useDispatch();
 
-    // console.log('MESSAGE - CONVERSATION - ', message);
-    // console.log('CONVERSATION - CONVERSATION - ', conversation);
+    console.log('MESSAGE - CONVERSATION - ', message);
+    console.log('CONVERSATION - CONVERSATION - ', conversation);
 
     const handleCancel = () => {
         let deletes = window.confirm('Bạn có chắc chắn muốn sửa không?');

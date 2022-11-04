@@ -12,6 +12,8 @@ const cx = classNames.bind(styles);
 function MessageItem({ message, own }) {
     const [showPreview, setShowPreview] = useState(false);
 
+    console.log('MESSAGE - ', message);
+
     // show preview
     const handleShowPreviewImageAndVideo = () => {
         setShowPreview(!showPreview);
@@ -27,7 +29,7 @@ function MessageItem({ message, own }) {
             {own ? (
                 <>
                     {/* File message */}
-                    {!message.deleteBy && message.fileLink && message.content ? (
+                    {message.deleteBy.length >= 0 && message.fileLink && message.content ? (
                         <>
                             <p className={cx('message-top-text')}>{message.content}</p>
                             <div className={cx('file-own')}>
@@ -35,7 +37,7 @@ function MessageItem({ message, own }) {
                             </div>
                         </>
                     ) : (
-                        !message.deleteBy &&
+                        message.deleteBy.length >= 0 &&
                         message.fileLink && (
                             <div className={cx('file-own')}>
                                 <FileMessage message={message} />
@@ -44,13 +46,109 @@ function MessageItem({ message, own }) {
                     )}
 
                     {/* Image + Video message */}
-                    {message.imageLink && !message.fileLink && message.content && (
-                        <>
-                            {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
-                                <>
-                                    {!message.deleteBy && (
-                                        <>
-                                            <p className={cx('message-top-text')}>{message.content}</p>
+                    {message.imageLink !== null &&
+                        message.imageLink.length > 0 &&
+                        !message.fileLink &&
+                        message.content && (
+                            <>
+                                {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
+                                    <>
+                                        {message.deleteBy.length >= 0 && (
+                                            <>
+                                                <p className={cx('message-top-text')}>{message.content}</p>
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <video
+                                                        controls
+                                                        className={cx('image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                            </>
+                                        )}
+                                        <ModelWrapper
+                                            className={cx('model-preview')}
+                                            open={showPreview}
+                                            onClose={handleHidePreviewImageAndVideo}
+                                        >
+                                            <video
+                                                controls
+                                                className={cx('preview-image-send-user')}
+                                                src={message.imageLink}
+                                                alt="img"
+                                            />
+                                        </ModelWrapper>
+                                    </>
+                                ) : (
+                                    <>
+                                        {message.imageLink !== null &&
+                                            message.imageLink.length > 0 &&
+                                            message.deleteBy.length >= 0 && (
+                                                <>
+                                                    {message.imageLink.length === 1 ? (
+                                                        <>
+                                                            <p className={cx('message-top-text')}>{message.content}</p>
+                                                            <button
+                                                                className={cx('preview-image')}
+                                                                onClick={handleShowPreviewImageAndVideo}
+                                                            >
+                                                                <img
+                                                                    className={cx('image-send-user')}
+                                                                    src={message.imageLink[0]}
+                                                                    alt="img"
+                                                                />
+                                                            </button>
+                                                        </>
+                                                    ) : (
+                                                        message.imageLink.map((mess) => {
+                                                            return (
+                                                                <>
+                                                                    {/* <p className={cx('message-top-text')}>
+                                                                        {mess.content}
+                                                                    </p> */}
+                                                                    <button
+                                                                        className={cx('preview-image')}
+                                                                        onClick={handleShowPreviewImageAndVideo}
+                                                                    >
+                                                                        <img
+                                                                            className={cx('image-send-user')}
+                                                                            src={mess}
+                                                                            alt="img"
+                                                                        />
+                                                                    </button>
+                                                                </>
+                                                            );
+                                                        })
+                                                    )}
+                                                    <ModelWrapper
+                                                        className={cx('model-preview')}
+                                                        open={showPreview}
+                                                        onClose={handleHidePreviewImageAndVideo}
+                                                    >
+                                                        <img
+                                                            className={cx('preview-image-send-user')}
+                                                            src={message?.imageLink}
+                                                            alt="img"
+                                                        />
+                                                    </ModelWrapper>
+                                                </>
+                                            )}
+                                    </>
+                                )}
+                            </>
+                        )}
+                    {message.imageLink !== null &&
+                        message.imageLink.length > 0 &&
+                        !message.fileLink &&
+                        !message.content && (
+                            <>
+                                {message.imageLink[0].split('.')[message.imageLink[0].split('.').length - 1] ===
+                                'mp4' ? (
+                                    <>
+                                        {message.deleteBy.length >= 0 && (
                                             <button
                                                 className={cx('preview-image')}
                                                 onClick={handleShowPreviewImageAndVideo}
@@ -62,112 +160,55 @@ function MessageItem({ message, own }) {
                                                     alt="img"
                                                 />
                                             </button>
-                                        </>
-                                    )}
-                                    <ModelWrapper
-                                        className={cx('model-preview')}
-                                        open={showPreview}
-                                        onClose={handleHidePreviewImageAndVideo}
-                                    >
-                                        <video
-                                            controls
-                                            className={cx('preview-image-send-user')}
-                                            src={message.imageLink}
-                                            alt="img"
-                                        />
-                                    </ModelWrapper>
-                                </>
-                            ) : (
-                                <>
-                                    {!message.deleteBy && (
-                                        <>
-                                            <p className={cx('message-top-text')}>{message.content}</p>
-                                            <button
-                                                className={cx('preview-image')}
-                                                onClick={handleShowPreviewImageAndVideo}
-                                            >
-                                                <img
-                                                    className={cx('image-send-user')}
-                                                    src={message.imageLink}
-                                                    alt="img"
-                                                />
-                                            </button>
-                                        </>
-                                    )}
-                                    <ModelWrapper
-                                        className={cx('model-preview')}
-                                        open={showPreview}
-                                        onClose={handleHidePreviewImageAndVideo}
-                                    >
-                                        <img
-                                            className={cx('preview-image-send-user')}
-                                            src={message.imageLink}
-                                            alt="img"
-                                        />
-                                    </ModelWrapper>
-                                </>
-                            )}
-                        </>
-                    )}
-                    {message.imageLink && !message.fileLink && !message.content && (
-                        <>
-                            {message.imageLink.split('.')[message.imageLink.split('.').length - 1] === 'mp4' ? (
-                                <>
-                                    {!message.deleteBy && (
-                                        <button
-                                            className={cx('preview-image')}
-                                            onClick={handleShowPreviewImageAndVideo}
+                                        )}
+                                        <ModelWrapper
+                                            className={cx('model-preview')}
+                                            open={showPreview}
+                                            onClose={handleHidePreviewImageAndVideo}
                                         >
                                             <video
                                                 controls
-                                                className={cx('image-send-user')}
+                                                className={cx('preview-image-send-user')}
                                                 src={message.imageLink}
                                                 alt="img"
                                             />
-                                        </button>
-                                    )}
-                                    <ModelWrapper
-                                        className={cx('model-preview')}
-                                        open={showPreview}
-                                        onClose={handleHidePreviewImageAndVideo}
-                                    >
-                                        <video
-                                            controls
-                                            className={cx('preview-image-send-user')}
-                                            src={message.imageLink}
-                                            alt="img"
-                                        />
-                                    </ModelWrapper>
-                                </>
-                            ) : (
-                                <>
-                                    {!message.deleteBy && (
-                                        <button
-                                            className={cx('preview-image')}
-                                            onClick={handleShowPreviewImageAndVideo}
+                                        </ModelWrapper>
+                                    </>
+                                ) : (
+                                    <>
+                                        {message.imageLink !== null &&
+                                            message.imageLink.length > 0 &&
+                                            message.deleteBy.length >= 0 && (
+                                                <button
+                                                    className={cx('preview-image')}
+                                                    onClick={handleShowPreviewImageAndVideo}
+                                                >
+                                                    <img
+                                                        className={cx('image-send-user')}
+                                                        src={message.imageLink}
+                                                        alt="img"
+                                                    />
+                                                </button>
+                                            )}
+                                        <ModelWrapper
+                                            className={cx('model-preview')}
+                                            open={showPreview}
+                                            onClose={handleHidePreviewImageAndVideo}
                                         >
-                                            <img className={cx('image-send-user')} src={message.imageLink} alt="img" />
-                                        </button>
-                                    )}
-                                    <ModelWrapper
-                                        className={cx('model-preview')}
-                                        open={showPreview}
-                                        onClose={handleHidePreviewImageAndVideo}
-                                    >
-                                        <img
-                                            className={cx('preview-image-send-user')}
-                                            src={message.imageLink}
-                                            alt="img"
-                                        />
-                                    </ModelWrapper>
-                                </>
-                            )}
-                        </>
-                    )}
+                                            <img
+                                                className={cx('preview-image-send-user')}
+                                                src={message.imageLink}
+                                                alt="img"
+                                            />
+                                        </ModelWrapper>
+                                    </>
+                                )}
+                            </>
+                        )}
                     {message.action ? (
                         <p className={cx('message-top-text')}>{message.action}</p>
                     ) : (
-                        !message.deleteBy &&
+                        message.deleteBy.length >= 0 &&
                         message.imageLink === null &&
                         message.fileLink === null && <p className={cx('message-top-text')}>{message.content}</p>
                     )}

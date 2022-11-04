@@ -39,7 +39,7 @@ const cx = classNames.bind(styles);
 
 function Messenger() {
     const [newMessage, setNewMessage] = useState('');
-    const [newImageMessage, setNewImageMessage] = useState(null);
+    const [newImageMessage, setNewImageMessage] = useState([]);
     const [newFileMessage, setNewFileMessage] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [btnClosePreview, setBtnClosePreview] = useState(false);
@@ -56,6 +56,7 @@ function Messenger() {
     const scrollMessenger = useRef();
 
     console.log('[LIST MESSAGES] - ', listMessage);
+    console.log('[newImageMessage] - ', newImageMessage);
     // console.log('[FILE] - ', newFileMessage);
     // console.log('EMOJI - ', chosenEmoji);
 
@@ -104,7 +105,8 @@ function Messenger() {
 
         file.preview = URL.createObjectURL(file);
 
-        setNewImageMessage(file);
+        setNewImageMessage([file]);
+
         setBtnClosePreview(!btnClosePreview);
     };
 
@@ -114,7 +116,7 @@ function Messenger() {
 
         file.previewFile = URL.createObjectURL(file);
 
-        setNewFileMessage(file);
+        setNewFileMessage((prev) => [...prev, file]);
         // dispatch(messagesSlice.actions.changeFileMessage(file));
         setBtnClosePreview(!btnClosePreview);
     };
@@ -148,25 +150,27 @@ function Messenger() {
     const handleSendMessage = async (e) => {
         e.preventDefault();
 
+        console.log('newImageMessage 1', newImageMessage);
+
         dispatch(
             fetchApiSendMessage({
                 conversationID: conversation.id,
                 senderID: user._id,
                 content: newMessage.emoji ? newMessage.emoji : newMessage,
-                imageLink: newImageMessage,
+                imageLinks: newImageMessage,
                 fileLink: newFileMessage,
             }),
         );
 
         setNewMessage('');
-        setNewImageMessage(null);
+        setNewImageMessage([]);
         setNewFileMessage(null);
         setBtnClosePreview(false);
     };
 
     // handle close preview
     const handleClosePreview = () => {
-        setNewImageMessage(null);
+        setNewImageMessage([]);
         setNewFileMessage(null);
         setBtnClosePreview(false);
     };
@@ -360,13 +364,14 @@ function Messenger() {
                             <FontAwesomeIcon icon={faClose} className={cx('close-icon')} />
                         </button>
                     )}
-                    {newImageMessage?.preview &&
-                        newImageMessage?.name.split('.')[newImageMessage?.name.split('.').length - 1] !== 'mp4' && (
-                            <img className={cx('image-upload')} src={newImageMessage.preview} alt="img" />
-                        )}
-                    {newImageMessage?.name.split('.')[newImageMessage?.name.split('.').length - 1] === 'mp4' && (
-                        <video className={cx('image-upload')} src={newImageMessage.preview} alt="video" controls />
-                    )}
+
+                    {/* {newImageMessage[0]?.preview &&
+                        newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] !==
+                            'mp4' && <img className={cx('image-upload')} src={newImageMessage[0].preview} alt="img" />}
+
+                    {newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] === 'mp4' && (
+                        <video className={cx('image-upload')} src={newImageMessage[0].preview} alt="video" controls />
+                    )} */}
 
                     {/* file message */}
                     {newFileMessage && <PreviewFileMessage newFileMessage={newFileMessage} />}

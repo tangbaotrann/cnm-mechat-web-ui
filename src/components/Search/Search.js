@@ -60,7 +60,7 @@ function Search() {
         //dispatch(fetchApiFriendsById(userCurrent._id));
 
         setLoading(false);
-    }, [dispatch, searchValue, userCurrent._id]);
+    }, [dispatch, searchValue]);
 
     // Handle change value input
     const handleChange = (e) => {
@@ -105,9 +105,9 @@ function Search() {
                         <Popper className={cx('menu-list-search')}>
                             <div className={cx('menu-search-title')}>Trò chuyện</div>
                             {/* Render result search */}
-                            {searchResult.map((result) => {
+                            {searchResult.map((result, index) => {
                                 console.log('----', result);
-                                return <Conversation key={result._id} user={result} />;
+                                return <Conversation key={index} user={result} />;
                             })}
                         </Popper>
                     </div>
