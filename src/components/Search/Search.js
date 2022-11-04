@@ -3,6 +3,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import TippyHeadless from '@tippyjs/react/headless';
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faMagnifyingGlass,
@@ -12,6 +13,7 @@ import {
     faUserGroup,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import { fetchApiFriendsById } from '~/redux/features/friend/friendsSlice';
 
 // me
 import styles from './Search.module.scss';
@@ -20,6 +22,8 @@ import Conversation from '../Conversation';
 import ModelWrapper from '../ModelWrapper';
 import AddFriend from '../AddFriend';
 import AddGroup from '../AddGroup';
+import useDebounce from '../hooks/useDebounce';
+
 const cx = classNames.bind(styles);
 
 function Search() {
@@ -31,6 +35,19 @@ function Search() {
     const [openAddGroup, setOpenAddGroup] = useState(false);
     const searchRef = useRef();
 
+    const dispatch = useDispatch();
+
+    // const userCurrent = useSelector((state) => state.user.data);
+    // const searchResult = useSelector((state) => state.friends.data);
+
+    // const debounceValue = useDebounce(searchValue, 800);
+
+    console.log('searchResult - ', searchResult);
+
+    // useEffect(() => {
+    //     dispatch(fetchApiFriendsById(userCurrent._id));
+    // }, [dispatch, userCurrent._id]);
+
     useEffect(() => {
         if (!searchValue.trim()) {
             return;
@@ -40,9 +57,10 @@ function Search() {
 
         // fetch api
         setSearchResult([1, 2]);
+        //dispatch(fetchApiFriendsById(userCurrent._id));
 
         setLoading(false);
-    }, [searchValue]);
+    }, [dispatch, searchValue]);
 
     // Handle change value input
     const handleChange = (e) => {
@@ -87,8 +105,9 @@ function Search() {
                         <Popper className={cx('menu-list-search')}>
                             <div className={cx('menu-search-title')}>Trò chuyện</div>
                             {/* Render result search */}
-                            {searchResult.map((result, index) => {
-                                return <Conversation key={index} user={result} />;
+                            {searchResult.map((result) => {
+                                console.log('----', result);
+                                return <Conversation key={result._id} user={result} />;
                             })}
                         </Popper>
                     </div>

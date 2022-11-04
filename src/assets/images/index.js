@@ -13,6 +13,7 @@ const images = {
     pwpIcon: require('~/assets/images/icons/pwp-icon.png'),
     wordIcon: require('~/assets/images/icons/word-icon.png'),
     txtIcon: require('~/assets/images/icons/txt-icon.png'),
+    preLoadingMessage: require('~/assets/images/gif/loading-messages.gif'),
 };
 
 export default images;

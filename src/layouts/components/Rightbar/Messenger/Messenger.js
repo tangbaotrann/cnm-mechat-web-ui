@@ -22,6 +22,7 @@ import EmojiPicker, { SkinTones } from 'emoji-picker-react';
 
 // me
 import styles from './Messenger.module.scss';
+import images from '~/assets/images';
 import Message from '~/components/Message';
 import Popper from '~/components/Popper';
 import OnlineStatus from '~/components/OnlineStatus';
@@ -29,8 +30,10 @@ import socket from '~/util/socket';
 import messagesSlice, {
     fetchApiSendMessage,
     fetchApiMessagesByConversationId,
+    fetchApiMessageLastByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
+import useDebounce from '~/components/hooks/useDebounce';
 
 const cx = classNames.bind(styles);
 
@@ -48,9 +51,11 @@ function Messenger() {
     const conversation = useSelector((state) => state.conversations.conversationClick);
     const listMessage = useSelector((state) => state.messages.data);
     const isLoading = useSelector((state) => state.messages.isLoading);
+    const preLoading = useSelector((state) => state.messages.preLoading);
 
     const scrollMessenger = useRef();
 
+    console.log('[LIST MESSAGES] - ', listMessage);
     // console.log('[FILE] - ', newFileMessage);
     // console.log('EMOJI - ', chosenEmoji);
 
@@ -80,7 +85,6 @@ function Messenger() {
     // realtime re-call message of receiver
     useEffect(() => {
         socket.on('receiver_recall_message', (message) => {
-            console.log('RE-CALL - ', message);
             dispatch(messagesSlice.actions.recallMessageFromSocket(message));
         });
     }, [dispatch]);
@@ -134,10 +138,10 @@ function Messenger() {
     };
 
     const handleEmojiClicked = (emojiObj, e) => {
-        // setChosenEmoji(emojiObj);
-        console.log('EMO - ', emojiObj);
-        setNewMessage(emojiObj.emoji);
-        // setNewMessage(emojiObj);
+        let emojis = emojiObj.emoji;
+        const _message = [...newMessage, emojis];
+
+        setNewMessage(_message.join(''));
     };
 
     // handle button send message
@@ -155,7 +159,6 @@ function Messenger() {
         );
 
         setNewMessage('');
-        // setChosenEmoji(null);
         setNewImageMessage(null);
         setNewFileMessage(null);
         setBtnClosePreview(false);
@@ -172,6 +175,20 @@ function Messenger() {
     useEffect(() => {
         conversation && listMessage && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
     }, [conversation, listMessage]);
+
+    // handle loading messages last
+    // const handleLoadingMessagesLast = (e) => {
+    //     if (e.target?.scrollTop === 0) {
+    //         if (listMessage.length >= 10) {
+    //             dispatch(
+    //                 fetchApiMessageLastByConversationId({
+    //                     conversationID: conversation.id,
+    //                     countMessage: listMessage.length,
+    //                 }),
+    //             );
+    //         }
+    //     }
+    // };
 
     return (
         <div className={cx('messenger')}>
@@ -193,7 +210,9 @@ function Messenger() {
                 </div>
             </div>
 
+            {/* onScroll={handleLoadingMessagesLast} */}
             <div className={cx('messenger-body')}>
+                {preLoading && <img className={cx('prev-loading')} src={images.preLoadingMessage} alt="prev-loading" />}
                 {/* Messages */}
                 {isLoading ? (
                     <CircularProgress className={cx('loading-messages')} />
@@ -282,10 +301,10 @@ function Messenger() {
                     <textarea
                         className={cx('message-input')}
                         value={
-                            newMessage && newMessage.emoji
-                                ? newMessage && newMessage.emoji
-                                : newMessage.emoji
-                                ? newMessage.emoji
+                            newMessage && newMessage.emoji?.join('')
+                                ? newMessage && newMessage.emoji?.join('')
+                                : newMessage.emoji?.join('')
+                                ? newMessage.emoji?.join('')
                                 : newMessage
                         }
                         onChange={handleChangeMessage}

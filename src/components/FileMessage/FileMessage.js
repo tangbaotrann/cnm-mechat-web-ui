@@ -35,7 +35,28 @@ function FileMessage({ message }) {
         <>
             {message.fileLink.split('.')[message.fileLink.split('.').length - 1] === 'txt' && (
                 <div className={cx('files')}>
-                    <img className={cx('img-icon')} src={images.blankIcon} alt="icon-file" />
+                    <button className={cx('preview-file')} onClick={handlePreviewFile}>
+                        <img className={cx('img-icon')} src={images.blankIcon} alt="icon-file" />
+                    </button>
+
+                    {/* show preview file */}
+                    {previewFile && (
+                        <ModelWrapper className={cx('model-preview')} open={previewFile}>
+                            <center>
+                                <button className={cx('close-btn')} onClick={() => setPreviewFile(false)}>
+                                    <FontAwesomeIcon icon={faClose} className={cx('close-icon')} />
+                                </button>
+                                <div className={cx('model-preview-file')}>
+                                    {/* "/KTPM_Design_Web_App_N2_V4.pdf" - "/tai-lieu-hdsd-v2.pdf" */}
+                                    <Document file={message.fileLink} onLoadSuccess={handleViewer}>
+                                        {Array.from(new Array(numPages), (el, index) => (
+                                            <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+                                        ))}
+                                    </Document>
+                                </div>
+                            </center>
+                        </ModelWrapper>
+                    )}
 
                     <a href={message.fileLink} download className={cx('download-file')}>
                         <div className={cx('display')}>

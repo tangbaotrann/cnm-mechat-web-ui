@@ -12,6 +12,7 @@ import listFriendAccept from './features/friend/friendAcceptSlice';
 import listMeRequestFriend from './features/friend/meFriendRequestSlice';
 import updateUserSlice from './features/user/updateUserSlice';
 import userCurrents from './features/user/userCurrent';
+import friendsSlice from './features/friend/friendsSlice';
 
 const store = configureStore({
     reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
         listMeRequest: listMeRequestFriend.reducer,
         updateUser: updateUserSlice.reducer,
         userCurrents: userCurrents.reducer,
+        friends: friendsSlice.reducer,
     },
 });
 
