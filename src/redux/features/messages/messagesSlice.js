@@ -153,8 +153,6 @@ export const fetchApiMessageLastByConversationId = createAsyncThunk(
                 },
             );
 
-            console.log('LAST MESSAGE - ', res.data);
-
             return res.data;
         } catch (err) {
             console.log(err);
@@ -163,14 +161,23 @@ export const fetchApiMessageLastByConversationId = createAsyncThunk(
 );
 
 const createFormData = (imageMessage) => {
-    const { senderID, conversationID, content, imageLink, fileLink } = imageMessage;
+    const { senderID, conversationID, content, imageLinks, fileLink } = imageMessage;
 
     const dataForm = new FormData();
 
     dataForm.append('senderID', senderID);
     dataForm.append('conversationID', conversationID);
     dataForm.append('content', content);
-    dataForm.append('imageLink', imageLink);
+
+    if (imageLinks.length === 1) {
+        console.log('IMAGE LINK = 1.1 - ', imageLinks[0].data);
+        dataForm.append('imageLinks', imageLinks[0].data);
+    } else if (imageLinks.length > 1) {
+        imageLinks.forEach((img) => {
+            dataForm.append('imageLinks', img.data);
+        });
+    }
+
     dataForm.append('fileLink', fileLink);
 
     return dataForm;
@@ -180,12 +187,13 @@ const createFormData = (imageMessage) => {
 export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessage', async (imageMessage) => {
     if (imageMessage) {
         let formData = createFormData(imageMessage);
-
         const resFormData = await axios.post(`${process.env.REACT_APP_BASE_URL}messages`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
             },
         });
+
+        console.log('resFormData', resFormData.data);
 
         return resFormData.data;
     }

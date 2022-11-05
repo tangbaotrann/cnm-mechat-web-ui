@@ -106,10 +106,10 @@ function ConversationInfo() {
                                     {listMessage.map((message) => {
                                         return (
                                             <div key={message._id}>
-                                                {message.imageLink ? (
+                                                {message.imageLink && message.imageLink.length > 0 ? (
                                                     <>
-                                                        {message.imageLink.split('.')[
-                                                            message.imageLink.split('.').length - 1
+                                                        {message.imageLink[0].split('.')[
+                                                            message.imageLink[0].split('.').length - 1
                                                         ] === 'mp4' ? (
                                                             <video
                                                                 controls

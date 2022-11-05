@@ -14,7 +14,7 @@ export const infoUserConversation = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        console.log(jsonData);
+        //console.log(jsonData);
         return jsonData.data;
     },
 );

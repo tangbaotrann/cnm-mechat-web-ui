@@ -35,7 +35,7 @@ function Search() {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const [openAddGroup, setOpenAddGroup] = useState(false);
     const userSearching = useSelector(allSearch);
-    console.log(userSearching);
+    //console.log(userSearching);
     const searchRef = useRef();
     const dispatch = useDispatch();
     useEffect(() => {
@@ -86,9 +86,9 @@ function Search() {
                         <Popper className={cx('menu-list-search')}>
                             <div className={cx('menu-search-title')}>Trò chuyện</div>
                             {/* Render result search */}
-                            {searchResult.map((result) => {
+                            {searchResult.map((result, index) => {
                                 console.log('----', result);
-                                return <Conversation key={result._id} user={result} />;
+                                return <Conversation key={index} user={result} />;
                             })}
                         </Popper>
                     </div>

@@ -250,3 +250,19 @@
     background-color: var(--white);
     box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
 }
+
+.display-group-preview-image {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.display-group-preview-image-receiver {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.display-group-item-image {
+    padding: 4px;
+}
