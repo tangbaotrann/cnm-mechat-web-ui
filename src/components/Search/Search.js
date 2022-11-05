@@ -35,7 +35,7 @@ function Search() {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const [openAddGroup, setOpenAddGroup] = useState(false);
     const userSearching = useSelector(allSearch);
-    console.log(userSearching);
+    //console.log(userSearching);
     const searchRef = useRef();
     const dispatch = useDispatch();
     useEffect(() => {

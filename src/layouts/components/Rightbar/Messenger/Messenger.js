@@ -33,7 +33,6 @@ import messagesSlice, {
     fetchApiMessageLastByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
-import useDebounce from '~/components/hooks/useDebounce';
 
 const cx = classNames.bind(styles);
 
@@ -55,7 +54,7 @@ function Messenger() {
 
     const scrollMessenger = useRef();
 
-    console.log('[LIST MESSAGES] - ', listMessage);
+    //console.log('[LIST MESSAGES] - ', listMessage);
     console.log('[newImageMessage] - ', newImageMessage);
     // console.log('[FILE] - ', newFileMessage);
     // console.log('EMOJI - ', chosenEmoji);
@@ -101,11 +100,17 @@ function Messenger() {
 
     // handle change image and preview image
     const handleChangeImageMessage = (e) => {
-        const file = e.target.files[0];
+        const files = e.target.files;
+        const listImg = [];
 
-        file.preview = URL.createObjectURL(file);
+        [...files].forEach((file) => {
+            listImg.push({
+                data: file,
+                preview: URL.createObjectURL(file),
+            });
+        });
 
-        setNewImageMessage([file]);
+        setNewImageMessage(listImg);
 
         setBtnClosePreview(!btnClosePreview);
     };
@@ -116,7 +121,7 @@ function Messenger() {
 
         file.previewFile = URL.createObjectURL(file);
 
-        setNewFileMessage((prev) => [...prev, file]);
+        setNewFileMessage(file);
         // dispatch(messagesSlice.actions.changeFileMessage(file));
         setBtnClosePreview(!btnClosePreview);
     };
@@ -249,10 +254,10 @@ function Messenger() {
                             <input
                                 className={cx('hide')}
                                 type="file"
-                                multiple
                                 id="file"
                                 accept=".png, .jpg, .jpeg, .mov, .mp4"
                                 onChange={handleChangeImageMessage}
+                                multiple
                             />
                         </div>
                     </label>
@@ -365,13 +370,36 @@ function Messenger() {
                         </button>
                     )}
 
-                    {/* {newImageMessage[0]?.preview &&
-                        newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] !==
-                            'mp4' && <img className={cx('image-upload')} src={newImageMessage[0].preview} alt="img" />}
-
-                    {newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] === 'mp4' && (
+                    {/* {newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] === 'mp4' && (
                         <video className={cx('image-upload')} src={newImageMessage[0].preview} alt="video" controls />
                     )} */}
+
+                    {newImageMessage.length > 0 ? (
+                        <div>
+                            {newImageMessage.map((img, index) => {
+                                return (
+                                    <>
+                                        {img.data.name.split('.')[img.data.name.split('.').length - 1] === 'mp4' ? (
+                                            <video
+                                                className={cx('image-upload')}
+                                                key={index}
+                                                src={img.preview}
+                                                alt="video"
+                                                controls
+                                            />
+                                        ) : (
+                                            <img
+                                                className={cx('image-upload')}
+                                                key={index}
+                                                src={img.preview}
+                                                alt="preview-img"
+                                            />
+                                        )}
+                                    </>
+                                );
+                            })}
+                        </div>
+                    ) : null}
 
                     {/* file message */}
                     {newFileMessage && <PreviewFileMessage newFileMessage={newFileMessage} />}
