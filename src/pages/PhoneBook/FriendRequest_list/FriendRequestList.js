@@ -48,6 +48,7 @@ function FriendRequestList({ user, isPhoneBook }) {
             idRequest: user.idFriendRequest,
         };
         dispatch(callBack(data));
+        window.location.reload(true);
     };
     return (
         <div className={cx('content')}>

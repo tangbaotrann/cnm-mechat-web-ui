@@ -28,10 +28,9 @@ function ConversationInfo() {
     const infoUser = useSelector(userLogin);
     const userCurrent = useSelector((state) => state.userCurrents.data);
     const [showPreview, setShowPreview] = useState(false);
-    const [tam, setTam] = useState('');
+    const [showImg, setShowImg] = useState();
     const infoConversation =
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
-    console.log('---32 ', infoConversation);
     const debouncedValue = useDebounce(infoConversation, 500);
     const dispatch = useDispatch();
     useEffect(() => {
@@ -56,11 +55,10 @@ function ConversationInfo() {
         setShow(false);
         setShowFile(false);
     };
-    const handleShowPreviewImageAndVideo = () => {
+    const handleShowPreviewImageAndVideo = (e) => {
         setShowPreview(!showPreview);
-        listMessage.map((message) => {
-            console.log(message.imageLink);
-        });
+        console.log(e.target);
+        setShowImg(e.target.src);
     };
 
     // hide preview
@@ -78,16 +76,16 @@ function ConversationInfo() {
 
                         <div className={cx('info')}>
                             <div className={cx('info-avatar')}>
-                                <img
+                                {/* <img
                                     className={cx('avatar')}
                                     src={
                                         conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg
                                     }
                                     alt="avatar"
-                                />
-                                {/* <div className={cx('avatar')}>
+                                /> */}
+                                <div className={cx('avatar')}>
                                     <ModelInfoAccount ConversationInfo user={userCurrent} />
-                                </div> */}
+                                </div>
                             </div>
                             <div className={cx('info-name')}>
                                 <h3 className={cx('name')}>{conversation?.name}</h3>
@@ -127,23 +125,23 @@ function ConversationInfo() {
                                                                 >
                                                                     <img
                                                                         className={cx('item-image')}
-                                                                        src={
-                                                                            message.imageLink ? message.imageLink : null
-                                                                        }
+                                                                        src={message.imageLink}
                                                                         alt="avatar"
+                                                                        id="file-upload"
                                                                     />
                                                                 </button>
-                                                                {/* <ModelWrapper
+
+                                                                <ModelWrapper
                                                                     className={cx('model-preview')}
                                                                     open={showPreview}
                                                                     onClose={handleHidePreviewImageAndVideo}
                                                                 >
                                                                     <img
                                                                         className={cx('preview-image-send-user')}
-                                                                        src={message.imageLink}
+                                                                        src={showImg}
                                                                         alt="img"
                                                                     />
-                                                                </ModelWrapper> */}
+                                                                </ModelWrapper>
                                                             </>
                                                         )}
                                                     </>
@@ -236,13 +234,29 @@ function ConversationInfo() {
                                                                 />
                                                             ) : (
                                                                 <>
-                                                                    <img
-                                                                        className={cx('item-image-show')}
-                                                                        src={
-                                                                            message.imageLink ? message.imageLink : null
-                                                                        }
-                                                                        alt="avatar"
-                                                                    />
+                                                                    <button
+                                                                        className={cx('button-image')}
+                                                                        onClick={handleShowPreviewImageAndVideo}
+                                                                    >
+                                                                        <img
+                                                                            className={cx('item-image-show')}
+                                                                            src={message.imageLink}
+                                                                            alt="avatar"
+                                                                            id="file-upload"
+                                                                        />
+                                                                    </button>
+
+                                                                    <ModelWrapper
+                                                                        className={cx('model-preview')}
+                                                                        open={showPreview}
+                                                                        onClose={handleHidePreviewImageAndVideo}
+                                                                    >
+                                                                        <img
+                                                                            className={cx('preview-image-send-user')}
+                                                                            src={showImg}
+                                                                            alt="img"
+                                                                        />
+                                                                    </ModelWrapper>
                                                                 </>
                                                             )}{' '}
                                                         </>
