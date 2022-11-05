@@ -48,7 +48,7 @@ function MessageItem({ message, own }) {
                     {message.imageLink !== null && message.imageLink.length > 0 && !message.fileLink && (
                         <>
                             {message.imageLink[0].split('.')[message.imageLink[0].split('.').length - 1] === 'mp4' ? (
-                                <>
+                                <div>
                                     {message.content && <p className={cx('message-top-text')}>{message.content}</p>}
                                     <button className={cx('preview-image')} onClick={handleShowPreviewImageAndVideo}>
                                         <video
@@ -70,13 +70,13 @@ function MessageItem({ message, own }) {
                                             alt="img"
                                         />
                                     </ModelWrapper>
-                                </>
+                                </div>
                             ) : (
                                 <>
                                     {message.imageLink !== null && message.imageLink.length > 0 && (
                                         <>
                                             {message.imageLink.length === 1 ? (
-                                                <>
+                                                <div>
                                                     {message.content && (
                                                         <p className={cx('message-top-text')}>{message.content}</p>
                                                     )}
@@ -90,7 +90,7 @@ function MessageItem({ message, own }) {
                                                             alt="img"
                                                         />
                                                     </button>
-                                                </>
+                                                </div>
                                             ) : (
                                                 message.imageLink.map((mess, index) => {
                                                     return (
@@ -158,7 +158,7 @@ function MessageItem({ message, own }) {
                     {message.imageLink !== null && message.imageLink.length > 0 && !message.fileLink && (
                         <>
                             {message.imageLink[0].split('.')[message.imageLink[0].split('.').length - 1] === 'mp4' ? (
-                                <>
+                                <div>
                                     {message.content && <p className={cx('message-top-text')}>{message.content}</p>}
                                     <button className={cx('preview-image')} onClick={handleShowPreviewImageAndVideo}>
                                         <video
@@ -180,13 +180,13 @@ function MessageItem({ message, own }) {
                                             alt="img"
                                         />
                                     </ModelWrapper>
-                                </>
+                                </div>
                             ) : (
                                 <>
                                     {message.imageLink !== null && message.imageLink.length > 0 && (
                                         <>
                                             {message.imageLink.length === 1 ? (
-                                                <>
+                                                <div>
                                                     {message.content && (
                                                         <p className={cx('message-top-text')}>{message.content}</p>
                                                     )}
@@ -200,7 +200,7 @@ function MessageItem({ message, own }) {
                                                             alt="img"
                                                         />
                                                     </button>
-                                                </>
+                                                </div>
                                             ) : (
                                                 message.imageLink.map((mess, index) => {
                                                     return (

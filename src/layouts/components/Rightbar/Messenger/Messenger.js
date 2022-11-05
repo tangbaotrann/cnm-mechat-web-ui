@@ -350,7 +350,7 @@ function Messenger() {
                     </TippyHeadless>
 
                     {/* Button send message || chosenEmoji*/}
-                    {newMessage || newImageMessage || newFileMessage ? (
+                    {newMessage || newImageMessage.length !== 0 || newFileMessage ? (
                         <button className={cx('send-message-btn')} onClick={handleSendMessage}>
                             GỬI
                         </button>
