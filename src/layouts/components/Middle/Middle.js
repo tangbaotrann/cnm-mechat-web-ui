@@ -19,9 +19,6 @@ function Middle() {
 
     const user = useSelector((state) => state.user.data);
 
-    // console.log('[conversations] - ', conversations);
-    // console.log('[user] - ', user);
-
     // Handle fetch conversation
     useEffect(() => {
         const fetchApi = async () => {

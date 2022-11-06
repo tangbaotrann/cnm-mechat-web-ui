@@ -13,6 +13,7 @@ import listMeRequestFriend from './features/friend/meFriendRequestSlice';
 import updateUserSlice from './features/user/updateUserSlice';
 import userCurrents from './features/user/userCurrent';
 import friendsSlice from './features/friend/friendsSlice';
+import listGroupUsers from './features/Group/GroupSlice';
 
 const store = configureStore({
     reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
         updateUser: updateUserSlice.reducer,
         userCurrents: userCurrents.reducer,
         friends: friendsSlice.reducer,
+        listGroupUser: listGroupUsers.reducer,
     },
 });
 

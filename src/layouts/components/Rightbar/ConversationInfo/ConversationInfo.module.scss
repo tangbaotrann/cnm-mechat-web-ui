@@ -214,6 +214,8 @@
 }
 .model-preview {
     position: relative;
+
+    opacity: 0.2;
 }
 .preview-image-send-user {
     width: 420px;
@@ -223,5 +225,6 @@
     left: 0;
     right: 0;
     top: 0;
+
     bottom: 0;
 }

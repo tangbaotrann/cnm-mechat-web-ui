@@ -33,6 +33,7 @@ function ConversationInfo() {
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
     const dispatch = useDispatch();
+    console.log(listMessage);
     useEffect(() => {
         dispatch(
             infoUserConversation({
@@ -57,7 +58,6 @@ function ConversationInfo() {
     };
     const handleShowPreviewImageAndVideo = (e) => {
         setShowPreview(!showPreview);
-        console.log(e.target);
         setShowImg(e.target.src);
     };
 
@@ -119,29 +119,57 @@ function ConversationInfo() {
                                                             />
                                                         ) : (
                                                             <>
-                                                                <button
-                                                                    className={cx('button-image')}
-                                                                    onClick={handleShowPreviewImageAndVideo}
-                                                                >
-                                                                    <img
-                                                                        className={cx('item-image')}
-                                                                        src={message.imageLink}
-                                                                        alt="avatar"
-                                                                        id="file-upload"
-                                                                    />
-                                                                </button>
+                                                                {message.imageLink.length === 1 ? (
+                                                                    <>
+                                                                        <button
+                                                                            className={cx('button-image')}
+                                                                            onClick={handleShowPreviewImageAndVideo}
+                                                                        >
+                                                                            <img
+                                                                                className={cx('item-image')}
+                                                                                src={message.imageLink}
+                                                                                alt="avatar"
+                                                                                id="file-upload"
+                                                                            />
+                                                                        </button>
 
-                                                                <ModelWrapper
-                                                                    className={cx('model-preview')}
-                                                                    open={showPreview}
-                                                                    onClose={handleHidePreviewImageAndVideo}
-                                                                >
-                                                                    <img
-                                                                        className={cx('preview-image-send-user')}
-                                                                        src={showImg}
-                                                                        alt="img"
-                                                                    />
-                                                                </ModelWrapper>
+                                                                        <ModelWrapper
+                                                                            className={cx('model-preview')}
+                                                                            open={showPreview}
+                                                                            onClose={handleHidePreviewImageAndVideo}
+                                                                        >
+                                                                            <img
+                                                                                className={cx(
+                                                                                    'preview-image-send-user',
+                                                                                )}
+                                                                                src={showImg}
+                                                                                alt="img"
+                                                                            />
+                                                                        </ModelWrapper>
+                                                                    </>
+                                                                ) : (
+                                                                    message.imageLink.map((mess, index) => {
+                                                                        return (
+                                                                            <div
+                                                                                key={index}
+                                                                                className={cx('button-image')}
+                                                                            >
+                                                                                <button
+                                                                                    className={cx('button-image')}
+                                                                                    onClick={
+                                                                                        handleShowPreviewImageAndVideo
+                                                                                    }
+                                                                                >
+                                                                                    <img
+                                                                                        className={cx('item-image')}
+                                                                                        src={mess}
+                                                                                        alt="img"
+                                                                                    />
+                                                                                </button>
+                                                                            </div>
+                                                                        );
+                                                                    })
+                                                                )}
                                                             </>
                                                         )}
                                                     </>
@@ -221,10 +249,10 @@ function ConversationInfo() {
                                         {listMessage.map((message) => {
                                             return (
                                                 <div key={message._id}>
-                                                    {message.imageLink ? (
+                                                    {message.imageLink && message.imageLink.length > 0 ? (
                                                         <>
-                                                            {message.imageLink.split('.')[
-                                                                message.imageLink.split('.').length - 1
+                                                            {message.imageLink[0].split('.')[
+                                                                message.imageLink[0].split('.').length - 1
                                                             ] === 'mp4' ? (
                                                                 <video
                                                                     controls
@@ -234,29 +262,59 @@ function ConversationInfo() {
                                                                 />
                                                             ) : (
                                                                 <>
-                                                                    <button
-                                                                        className={cx('button-image')}
-                                                                        onClick={handleShowPreviewImageAndVideo}
-                                                                    >
-                                                                        <img
-                                                                            className={cx('item-image-show')}
-                                                                            src={message.imageLink}
-                                                                            alt="avatar"
-                                                                            id="file-upload"
-                                                                        />
-                                                                    </button>
+                                                                    {message.imageLink.length === 1 ? (
+                                                                        <>
+                                                                            <button
+                                                                                className={cx('button-image')}
+                                                                                onClick={handleShowPreviewImageAndVideo}
+                                                                            >
+                                                                                <img
+                                                                                    className={cx('item-image-show')}
+                                                                                    src={message.imageLink}
+                                                                                    alt="avatar"
+                                                                                    id="file-upload"
+                                                                                />
+                                                                            </button>
 
-                                                                    <ModelWrapper
-                                                                        className={cx('model-preview')}
-                                                                        open={showPreview}
-                                                                        onClose={handleHidePreviewImageAndVideo}
-                                                                    >
-                                                                        <img
-                                                                            className={cx('preview-image-send-user')}
-                                                                            src={showImg}
-                                                                            alt="img"
-                                                                        />
-                                                                    </ModelWrapper>
+                                                                            <ModelWrapper
+                                                                                className={cx('model-preview')}
+                                                                                open={showPreview}
+                                                                                onClose={handleHidePreviewImageAndVideo}
+                                                                            >
+                                                                                <img
+                                                                                    className={cx(
+                                                                                        'preview-image-send-user',
+                                                                                    )}
+                                                                                    src={showImg}
+                                                                                    alt="img"
+                                                                                />
+                                                                            </ModelWrapper>
+                                                                        </>
+                                                                    ) : (
+                                                                        message.imageLink.map((mess, index) => {
+                                                                            return (
+                                                                                <div
+                                                                                    key={index}
+                                                                                    className={cx('button-image')}
+                                                                                >
+                                                                                    <button
+                                                                                        className={cx('button-image')}
+                                                                                        onClick={
+                                                                                            handleShowPreviewImageAndVideo
+                                                                                        }
+                                                                                    >
+                                                                                        <img
+                                                                                            className={cx(
+                                                                                                'item-image-show',
+                                                                                            )}
+                                                                                            src={mess}
+                                                                                            alt="img"
+                                                                                        />
+                                                                                    </button>
+                                                                                </div>
+                                                                            );
+                                                                        })
+                                                                    )}
                                                                 </>
                                                             )}{' '}
                                                         </>

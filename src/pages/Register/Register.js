@@ -1,7 +1,7 @@
 //lib
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { PhoneIphone, Lock, Person, ArrowLeft, Check } from '@material-ui/icons';
+import { PhoneIphone, Lock, Person, ArrowLeft } from '@material-ui/icons';
 import classNames from 'classnames/bind';
 //me
 import styles from './Register.module.scss';

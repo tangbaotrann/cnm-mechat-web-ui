@@ -91,7 +91,7 @@ function ConFirmOTP() {
                                         alert('Đăng ký thành công');
                                         console.log('hoan thanh');
                                         localStorage.setItem('user_login', JSON.stringify(token));
-                                        navigate('/me.chat');
+                                        navigate('/addInfoUser');
                                     }
                                 });
                             } else {

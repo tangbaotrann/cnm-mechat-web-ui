@@ -30,7 +30,6 @@ import socket from '~/util/socket';
 import messagesSlice, {
     fetchApiSendMessage,
     fetchApiMessagesByConversationId,
-    fetchApiMessageLastByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
 
@@ -55,7 +54,7 @@ function Messenger() {
     const scrollMessenger = useRef();
 
     //console.log('[LIST MESSAGES] - ', listMessage);
-    console.log('[newImageMessage] - ', newImageMessage);
+    // console.log('[newImageMessage] - ', newImageMessage);
     // console.log('[FILE] - ', newFileMessage);
     // console.log('EMOJI - ', chosenEmoji);
 

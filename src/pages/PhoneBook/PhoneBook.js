@@ -2,7 +2,7 @@
 import classNames from 'classnames/bind';
 import { NavLink } from 'react-router-dom';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -14,24 +14,24 @@ import Search from '~/components/Search';
 import Conversation from '~/components/Conversation';
 import Sidebar from '~/layouts/components/Sidebar';
 import BoxChat from '~/components/BoxChat';
-import { c, listFriend, listFriendAccept, listMeRequests } from '~/redux/selector';
+import { listFriend, listFriendAccept, listGroupUser, listMeRequests } from '~/redux/selector';
 import ModelWrapper from '~/components/ModelWrapper';
 import AddFriend from '~/components/AddFriend';
 import FriendRequestList from './FriendRequest_list/FriendRequestList';
+
+import Messenger from '~/layouts/components/Rightbar/Messenger';
+import ConversationInfo from '~/layouts/components/Rightbar/ConversationInfo';
 
 const cx = classNames.bind(styles);
 
 function PhoneBook() {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const [changeLayout, setChangeLayout] = useState(false);
+    const [showConversation, setShowConversation] = useState('');
 
     const listFriends = useSelector(listFriend);
-
-    //de lại lam chuyen man
-    // const user = useSelector((state) => state.user.data);
-    // const cc = useSelector(c);
-    // console.log(user);
-    // console.log(cc);
+    const conversation = useSelector((state) => state.conversations.conversationClick);
+    const listGroup = useSelector(listGroupUser);
     // const conversation = useSelector((state) => state.conversations.conversationClick);
     // const message = useSelector((state) => state.messages.clickSendMessage);
 
@@ -49,12 +49,17 @@ function PhoneBook() {
         setOpenInfoAccount(false);
     };
     const handleRequesfriend = () => {
+        setShowConversation('');
         setChangeLayout(false);
     };
     const handleGroupChat = () => {
+        setShowConversation('');
         setChangeLayout(true);
     };
-
+    const tam = () => {
+        console.log('60---', conversation);
+        setShowConversation(conversation);
+    };
     return (
         <div className={cx('wrapper')}>
             <Sidebar />
@@ -80,61 +85,65 @@ function PhoneBook() {
                     <h1>Bạn bè ({listFriends?.length})</h1>
 
                     {/* Conversation or MiddleDirectory */}
-                    <div className={cx('conversations')}>
+                    <div className={cx('conversations')} onClick={tam}>
                         {listFriends?.map((user) => {
-                            return <Conversation key={user?._id} conversation={user} isPhoneBook />;
+                            return (
+                                <div key={user?._id}>
+                                    <Conversation conversation={user} isPhoneBook />;
+                                </div>
+                            );
                         })}
                     </div>
                 </div>
             </div>
-            <div className={cx('wrapper-rightBar')}>
-                <div className={cx('header')}>
-                    {!changeLayout ? (
-                        <div className={cx('list-add-friend')}>
-                            <img className={cx('list-add-friend-image')} src={images.listfriend} alt="" />
-                            <h2 className={cx('list-add-friend-title2')}>Danh sách kết bạn</h2>
-                        </div>
-                    ) : (
-                        <div className={cx('list-add-friend')}>
-                            <img className={cx('list-add-friend-image')} src={images.groupchat} alt="" />
-                            <h2 className={cx('list-add-friend-title2')}>Danh sách nhóm</h2>
-                        </div>
-                    )}
-                    {!changeLayout ? (
-                        <div className={cx('list-FriendRequest')}>
-                            <div className={cx('friendRequest')}>
-                                {listAccept?.length === 0 ? null : <h1>Lời mời kết bạn ({listAccept?.length})</h1>}
-                                {listAccept?.map((user) => {
-                                    return <FriendRequestList key={user.idFriendRequest} user={user} isPhoneBook />;
-                                })}
-                            </div>
-                            <div className={cx('meRequestFriend')}>
-                                {listMeRequest?.length === 0 ? null : (
-                                    <h1>Yêu cầu kết bạn ({listMeRequest?.length})</h1>
-                                )}
-                                {listMeRequest?.map((user) => {
-                                    return <FriendRequestList key={user.idFriendRequest} user={user} />;
-                                })}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className={cx('list-BoxChat')}>
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                            <BoxChat />
-                        </div>
-                    )}
+            {showConversation ? (
+                <div className={cx('container')}>
+                    <Messenger />
+                    <ConversationInfo />
                 </div>
-            </div>
+            ) : (
+                <div className={cx('wrapper-rightBar')}>
+                    <div className={cx('header')}>
+                        {!changeLayout ? (
+                            <div className={cx('list-add-friend')}>
+                                <img className={cx('list-add-friend-image')} src={images.listfriend} alt="" />
+                                <h2 className={cx('list-add-friend-title2')}>Danh sách kết bạn</h2>
+                            </div>
+                        ) : (
+                            <div className={cx('list-add-friend')}>
+                                <img className={cx('list-add-friend-image')} src={images.groupchat} alt="" />
+                                <h2 className={cx('list-add-friend-title2')}>Danh sách nhóm</h2>
+                            </div>
+                        )}
+                        {!changeLayout ? (
+                            <div className={cx('list-FriendRequest')}>
+                                <div className={cx('friendRequest')}>
+                                    {listAccept?.length === 0 ? null : <h1>Lời mời kết bạn ({listAccept?.length})</h1>}
+                                    {listAccept?.map((user) => {
+                                        return <FriendRequestList key={user.idFriendRequest} user={user} isPhoneBook />;
+                                    })}
+                                </div>
+                                <div className={cx('meRequestFriend')}>
+                                    {listMeRequest?.length === 0 ? null : (
+                                        <h1>Yêu cầu kết bạn ({listMeRequest?.length})</h1>
+                                    )}
+                                    {listMeRequest?.map((user) => {
+                                        return <FriendRequestList key={user.idFriendRequest} user={user} />;
+                                    })}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={cx('list-BoxChat')}>
+                                {listGroup?.map((group) => {
+                                    if (group.isGroup === true) {
+                                        return <BoxChat key={group.id} group={group} />;
+                                    }
+                                })}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
             <ModelWrapper
                 className={cx('model-add-friend')}
                 open={openInfoAccount}

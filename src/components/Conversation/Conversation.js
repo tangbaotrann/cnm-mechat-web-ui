@@ -13,16 +13,32 @@ import { userLogin } from '~/redux/selector';
 import Popper from '../Popper';
 import { friendDelete } from '~/redux/features/friend/friendAcceptSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import conversationSlice from '~/redux/features/conversation/conversationSlice';
 
 const cx = classNames.bind(styles);
 
 function Conversation({ conversation, isPhoneBook, Group }) {
-    const message = useSelector((state) => state.messages.clickSendMessage);
+    // const message = useSelector((state) => state.messages.clickSendMessage);
     const infoUser = useSelector(userLogin);
 
+    const user = useSelector((state) => state.user.data);
     const dispatch = useDispatch();
+    //  tam
+    const [conversations, setConversation] = useState([]);
+    useEffect(() => {
+        const fetchApi = async () => {
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);
+                setConversation(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
 
-    // console.log('MESSAGE - CONVERSATION - ', message);
+        fetchApi();
+    }, [user?._id]);
     // console.log('CONVERSATION - CONVERSATION - ', conversation);
 
     const handleCancel = () => {
@@ -39,11 +55,20 @@ function Conversation({ conversation, isPhoneBook, Group }) {
             alert('bạn đã hủy yêu cầu xóa bạn');
         }
     };
-    const handleSeenInfor = () => {
-        console.log('----40 id', conversation);
+
+    //
+    const tam = () => {
+        conversations.map((c) => {
+            if (c.members.includes(conversation._id)) {
+                if (c.isGroup === false) {
+                    return dispatch(conversationSlice.actions.clickConversation(c));
+                }
+            }
+        });
     };
+
     return (
-        <div className={cx('list-conversation')}>
+        <div className={cx('list-conversation')} onClick={tam}>
             <img
                 className={cx('avatar-img')}
                 src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
@@ -62,7 +87,7 @@ function Conversation({ conversation, isPhoneBook, Group }) {
                     render={(attrs) => (
                         <div tabIndex="-1" {...attrs}>
                             <Popper className={cx('own-menu-list-children')}>
-                                <p className={cx('deleteFriend')} onClick={handleSeenInfor}>
+                                <p className={cx('deleteFriend')}>
                                     <ModelInfoAccount yourProfile friend user={conversation} />
                                 </p>
                                 <p className={cx('deleteFriend')} onClick={handleCancel}>

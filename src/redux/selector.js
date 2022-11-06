@@ -5,13 +5,32 @@ export const userInfoSelector = (state) => state.user.data;
 export const listFriendAccept = (state) => state.listAccept.data;
 export const conversationSlice = (state) => state.conversations.conversationClick;
 export const listMeRequests = (state) => state.listMeRequest.data;
-
+export const listGroupUser = (state) => state.listGroupUser.data;
+export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
+    if (users) {
+        const friends = users.filter((_user) => user.friends.includes(_user._id));
+        return friends.map((user) => ({
+            _id: user._id,
+            name: user.fullName,
+            fullName: user.fullName,
+            backgroundLink: user.backgroundLink,
+            imageLinkOfConver: user.avatarLink,
+            avatarLink: user.avatarLink,
+            gender: user.gender,
+            status: user.status,
+            phoneNumber: user.phoneNumber,
+            birthday: user.birthday,
+        }));
+    }
+    return null;
+});
 //Load data
 export const usersRemainingSelector = createSelector(
     userListSelector,
     userInfoSelector,
     searchTextSelector,
-    (users, user, search) => {
+    listFriend,
+    (users, user, search, friends) => {
         console.log(search);
         if (search) {
             if (search.startsWith('0')) {
@@ -27,6 +46,26 @@ export const usersRemainingSelector = createSelector(
                     avatar: user.avatarLink,
                     phoneNumber: user.phoneNumber,
                     isFriend: false,
+                }));
+
+                ///tim theo ten nguoi da kp
+
+                //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
+            } else if (search.match('^[A-Z]')) {
+                const friendFilter = friends.filter((friend) => friend.fullName.includes(search));
+                //don't find
+                if (!friendFilter.length) {
+                    return 1;
+                }
+                console.log(friendFilter);
+                return friendFilter.map((user) => ({
+                    _id: user._id,
+                    fullName: user.fullName,
+                    avatar: user.avatarLink,
+                    backgroundLink: user.backgroundLink,
+                    phoneNumber: user.phoneNumber,
+                    gender: user.gender,
+                    isFriend: true,
                 }));
             } else {
                 return 1;
@@ -57,26 +96,7 @@ export const accountExists = createSelector(userListSelector, searchTextSelector
 export const userLogin = createSelector(userInfoSelector, (user) => {
     return user;
 });
-export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
-    console.log('USER', user);
-    console.log('USERs', users);
-    if (users) {
-        const friends = users.filter((_user) => user.friends.includes(_user._id));
-        return friends.map((user) => ({
-            _id: user._id,
-            name: user.fullName,
-            fullName: user.fullName,
-            backgroundLink: user.backgroundLink,
-            imageLinkOfConver: user.avatarLink,
-            avatarLink: user.avatarLink,
-            gender: user.gender,
-            status: user.status,
-            phoneNumber: user.phoneNumber,
-            birthday: user.birthday,
-        }));
-    }
-    return null;
-});
+
 // yeu cau ket ban
 export const searchFilterFriend = createSelector(
     userListSelector,
@@ -101,7 +121,7 @@ export const searchFilterFriend = createSelector(
     },
 );
 export const c = createSelector(conversationSlice, (c) => {
-    console.log(c);
+    console.log('------', c);
     return c;
 });
 export const allSearch = createSelector(
@@ -114,10 +134,17 @@ export const allSearch = createSelector(
             if (search.startsWith('0')) {
                 const usersFilter = users.filter((_user) => _user.phoneNumber === search);
                 //don't find
+
                 if (!usersFilter.length) {
                     return 1;
                 }
-                return usersFilter;
+                return usersFilter.map((user) => ({
+                    _id: user._id,
+                    fullName: user.fullName,
+                    avatar: user.avatarLink,
+                    phoneNumber: user.phoneNumber,
+                    isFriend: false,
+                }));
             } else {
                 return 1;
             }
