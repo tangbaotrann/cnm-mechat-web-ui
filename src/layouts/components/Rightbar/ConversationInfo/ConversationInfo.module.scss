@@ -239,17 +239,19 @@ image .info-show .info-show-3 {
     float: left;
 }
 ////NHOM
-.members-group {
-    background-color: aqua;
-    // &:hover {
-    //     opacity: 0.6;
-    // }
-    // cursor: pointer;
-}
+
 .members-group .members-group-title {
     font-weight: bold;
     font-size: 16px;
+    position: relative;
     font-family: var(--font-family);
+    &:hover {
+        opacity: 0.6;
+    }
+    cursor: pointer;
+}
+.members-group-title .icon {
+    margin-right: 10px;
 }
 .btn-click-icon {
     border: none;
@@ -257,12 +259,60 @@ image .info-show .info-show-3 {
     margin-right: 16px;
     background-color: transparent;
     cursor: pointer;
+    &:hover {
+        opacity: 0.6;
+    }
+}
+.btn-click-footer {
+    border: none;
+    outline: none;
+    margin-right: 16px;
+    background-color: transparent;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.6;
+    }
+    color: red;
+}
+
+.btn-click-footer .item {
+    width: 20px;
+    height: 20px;
+    margin-top: 10px;
 }
 .btn-click-icon .item {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
+    margin-top: 10px;
+}
+.btn-click-footer label {
+    margin-left: 10px;
+    font-size: 17px;
+    font-family: var(--font-family);
 }
 .btn-click-icon label {
+    margin-left: 10px;
+    font-size: 17px;
+    font-family: var(--font-family);
+}
+//them thanh vien
+.button-addMembers button {
+    border: 0;
+    border-radius: 10px;
+    width: 310px;
+    height: 40px;
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+    font-family: var(--font-family);
+    background-color: #d3d3d3;
+}
+.button-addMembers .item {
+    margin-right: 10px;
+}
+.list-members label {
+    font-size: 17px;
     font-weight: bold;
     color: black;
     font-family: var(--font-family);
