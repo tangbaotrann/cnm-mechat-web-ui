@@ -21,8 +21,8 @@ const cx = classNames.bind(styles);
 function Message({ message, own, conversation, user }) {
     const dispatch = useDispatch();
 
-    // console.log('[USER - 25] - ', user);
-    // console.log('[message] - ', message);
+    //console.log('[USER - 25] - ', user);
+    // console.log('[message] - 25 -', message);
     // console.log('[conversation] - ', conversation);
 
     // handle delete message
@@ -138,11 +138,13 @@ function Message({ message, own, conversation, user }) {
                             appendTo={() => document.body}
                         >
                             {/* render message (sender) */}
-                            <div>
-                                <MessageItem message={message} own={own} />
-                            </div>
+                            {message.deleteBy.length === 0 && (
+                                <div className={cx('display-group-preview-image')}>
+                                    <MessageItem message={message} own={own} />
+                                </div>
+                            )}
                         </TippyHeadless>
-                        {!message.deleteBy && (
+                        {message.deleteBy.length === 0 && (
                             <img
                                 className={cx('message-top-img')}
                                 src={user.avatarLink ? user.avatarLink : images.noImg}
@@ -150,18 +152,20 @@ function Message({ message, own, conversation, user }) {
                             />
                         )}
                     </div>
-                    {!message.deleteBy && (
+                    {message.deleteBy.length === 0 && (
                         <span className={cx('message-bottom')}>{moment(message.createdAt).format('h:mm a')}</span>
                     )}
                 </div>
             ) : (
                 <div className={cx('wrapper')}>
                     <div className={cx('message-top')}>
-                        <img
-                            className={cx('message-top-img')}
-                            src={conversation.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
-                            alt="avatar"
-                        />
+                        {message.deleteBy.length === 0 && (
+                            <img
+                                className={cx('message-top-img')}
+                                src={conversation.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
+                                alt="avatar"
+                            />
+                        )}
                         {/* Menu parent */}
                         <TippyHeadless
                             render={(attrs) => (
@@ -243,12 +247,16 @@ function Message({ message, own, conversation, user }) {
                             appendTo={() => document.body}
                         >
                             {/* render message (sender) */}
-                            <div>
-                                <MessageItem message={message} own={own} />
-                            </div>
+                            {message.deleteBy.length === 0 && (
+                                <div className={cx('display-group-preview-image-receiver')}>
+                                    <MessageItem message={message} own={own} />
+                                </div>
+                            )}
                         </TippyHeadless>
                     </div>
-                    <span className={cx('message-bottom-left')}>{moment(message.createdAt).format('h:mm a')}</span>
+                    {message.deleteBy.length === 0 && (
+                        <span className={cx('message-bottom-left')}>{moment(message.createdAt).format('h:mm a')}</span>
+                    )}
                 </div>
             )}
         </>

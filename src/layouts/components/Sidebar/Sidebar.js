@@ -14,7 +14,7 @@ import {
     faToolbox,
     faCloud,
 } from '@fortawesome/free-solid-svg-icons';
-import { UserIcon } from 'outline-icons';
+// import { UserIcon } from 'outline-icons';
 
 // me
 import styles from './Sidebar.module.scss';
@@ -72,7 +72,7 @@ function Sidebar() {
                         placement="bottom-end"
                         offset={[40, -6]}
                     >
-                        <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="#">
+                        <NavLink className={cx('option-item')} to="#">
                             <FontAwesomeIcon icon={faSquareCheck} />
                         </NavLink>
                     </Tippy>
@@ -83,7 +83,7 @@ function Sidebar() {
                         placement="bottom-end"
                         offset={[40, -6]}
                     >
-                        <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="#">
+                        <NavLink className={cx('option-item')} to="#">
                             <FontAwesomeIcon icon={faVideo} />
                         </NavLink>
                     </Tippy>
@@ -99,7 +99,7 @@ function Sidebar() {
                     placement="bottom-end"
                     offset={[40, -6]}
                 >
-                    <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="#">
+                    <NavLink className={cx('option-item')} to="#">
                         <FontAwesomeIcon icon={faCloud} />
                     </NavLink>
                 </Tippy>
@@ -110,12 +110,12 @@ function Sidebar() {
                     placement="bottom-end"
                     offset={[40, -6]}
                 >
-                    <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="#">
+                    <NavLink className={cx('option-item')} to="#">
                         <FontAwesomeIcon icon={faToolbox} />
                     </NavLink>
                 </Tippy>
                 <MenuSetting user={user}>
-                    <Tippy className={cx('tool-tip')} content="Cài đặt" delay={[200, 0]}>
+                    <Tippy className={cx('tool-tip')} content="Cài đặt" delay={[200, 0]} placement="right-end">
                         {/* Add div fix warning of Tippy */}
                         <div>
                             <FontAwesomeIcon className={cx('option-item')} icon={faGear} />

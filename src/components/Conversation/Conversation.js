@@ -31,7 +31,6 @@ function Conversation({ conversation, isPhoneBook, Group }) {
         const fetchApi = async () => {
             try {
                 const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);
-
                 setConversation(res.data.data);
             } catch (err) {
                 console.log(err);
@@ -61,7 +60,9 @@ function Conversation({ conversation, isPhoneBook, Group }) {
     const tam = () => {
         conversations.map((c) => {
             if (c.members.includes(conversation._id)) {
-                return dispatch(conversationSlice.actions.clickConversation(c));
+                if (c.isGroup === false) {
+                    return dispatch(conversationSlice.actions.clickConversation(c));
+                }
             }
         });
     };

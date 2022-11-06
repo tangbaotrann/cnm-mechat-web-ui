@@ -129,7 +129,7 @@ export const allSearch = createSelector(
     userInfoSelector,
     searchTextSelector,
     (users, user, search) => {
-        console.log(search);
+        //console.log(search);
         if (search) {
             if (search.startsWith('0')) {
                 const usersFilter = users.filter((_user) => _user.phoneNumber === search);

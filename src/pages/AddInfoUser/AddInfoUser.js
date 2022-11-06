@@ -16,7 +16,7 @@ function AddInfoUser() {
     const infoUser = useSelector((state) => state.user.data);
 
     const navigate = useNavigate();
-    const [fullName, setFullName] = useState(userName);
+    const [fullName, setFullName] = useState(infoUser.fullName);
     const [optionSex, setOptionSex] = useState(infoUser?.gender);
     const [birthday, setBirthday] = useState(moment(infoUser?.birthday).format('YYYY-MM-DD'));
     const [avatar, setAvatar] = useState(infoUser?.avatarLink);

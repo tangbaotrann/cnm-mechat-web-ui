@@ -23,7 +23,7 @@ import ModelWrapper from '../ModelWrapper';
 import AddFriend from '../AddFriend';
 import AddGroup from '../AddGroup';
 import filterSlice from '~/redux/features/filter/filterSlice';
-
+// import { useDispatch, useSelector } from 'react-redux';
 import { allSearch } from '~/redux/selector';
 const cx = classNames.bind(styles);
 
@@ -85,9 +85,9 @@ function Search() {
                         <Popper className={cx('menu-list-search')}>
                             <div className={cx('menu-search-title')}>Trò chuyện</div>
                             {/* Render result search */}
-                            {searchResult.map((result) => {
+                            {searchResult.map((result, index) => {
                                 console.log('----', result);
-                                return <Conversation key={result._id} user={result} />;
+                                return <Conversation key={index} user={result} />;
                             })}
                         </Popper>
                     </div>
