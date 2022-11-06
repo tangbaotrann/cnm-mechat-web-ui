@@ -20,7 +20,6 @@ import conversationSlice from '~/redux/features/conversation/conversationSlice';
 const cx = classNames.bind(styles);
 
 function Conversation({ conversation, isPhoneBook, Group }) {
-    // const message = useSelector((state) => state.messages.clickSendMessage);
     const infoUser = useSelector(userLogin);
 
     const user = useSelector((state) => state.user.data);
@@ -39,7 +38,6 @@ function Conversation({ conversation, isPhoneBook, Group }) {
 
         fetchApi();
     }, [user?._id]);
-    // console.log('CONVERSATION - CONVERSATION - ', conversation);
 
     const handleCancel = () => {
         let deletes = window.confirm('Bạn có chắc chắn muốn sửa không?');

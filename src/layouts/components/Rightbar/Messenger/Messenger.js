@@ -54,9 +54,10 @@ function Messenger() {
     const scrollMessenger = useRef();
 
     //console.log('[LIST MESSAGES] - ', listMessage);
+    // console.log('[USER] - ', user);
+    // console.log('[CONVERSATION] - ', conversation);
+    // console.log('[CONVERSATION.MEMBERS] - ', conversation.members);
     // console.log('[newImageMessage] - ', newImageMessage);
-    // console.log('[FILE] - ', newFileMessage);
-    // console.log('EMOJI - ', chosenEmoji);
 
     // fetch message from conversationId
     useEffect(() => {
@@ -69,7 +70,7 @@ function Messenger() {
         socket.emit('status_user', user._id);
 
         socket.on('get_users', (users) => {
-            //  console.log('USER - ONLINE -', users);
+            // console.log('USER - ONLINE -', users);
             setOnlineUsers(conversation?.members.filter((member) => users.some((us) => us.userId === member)));
         });
     }, [user._id, conversation]);
