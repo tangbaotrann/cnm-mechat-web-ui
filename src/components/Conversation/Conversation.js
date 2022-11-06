@@ -19,7 +19,7 @@ import conversationSlice from '~/redux/features/conversation/conversationSlice';
 
 const cx = classNames.bind(styles);
 
-function Conversation({ conversation, isPhoneBook, Group }) {
+function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const infoUser = useSelector(userLogin);
 
     const user = useSelector((state) => state.user.data);
@@ -66,53 +66,91 @@ function Conversation({ conversation, isPhoneBook, Group }) {
     };
 
     return (
-        <div className={cx('list-conversation')} onClick={tam}>
-            <img
-                className={cx('avatar-img')}
-                src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
-                alt="avatar"
-            />
+        <>
+            {conversationInfo ? (
+                <div className={cx('list-conversation')}>
+                    <img
+                        className={cx('avatar-img')}
+                        src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
+                        alt="avatar"
+                    />
 
-            <div className={cx('content')}>
-                <h4 className={cx('username')}>{conversation?.name} </h4>
-                {isPhoneBook ? null : (
-                    <p className={cx('message')}>{conversation?.content || conversation?.lastMessage}</p>
-                )}
-            </div>
+                    <div className={cx('content')}>
+                        <h4 className={cx('username')}>{conversation?.name} </h4>
+                    </div>
 
-            {isPhoneBook && !Group ? (
-                <TippyHeadless
-                    render={(attrs) => (
-                        <div tabIndex="-1" {...attrs}>
-                            <Popper className={cx('own-menu-list-children')}>
-                                <p className={cx('deleteFriend')}>
-                                    <ModelInfoAccount yourProfile friend user={conversation} />
-                                </p>
-                                <p className={cx('deleteFriend')} onClick={handleCancel}>
-                                    <button className={cx('item-btn')}> Xóa Bạn</button>
-                                </p>
-                            </Popper>
+                    <TippyHeadless
+                        render={(attrs) => (
+                            <div tabIndex="-1" {...attrs}>
+                                <Popper className={cx('own-menu-list-children')}>
+                                    <p className={cx('deleteFriend')} onClick={handleCancel}>
+                                        <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
+                                    </p>
+                                </Popper>
+                            </div>
+                        )}
+                        interactive
+                        trigger="click"
+                        placement="bottom-start"
+                        offset={[4, 4]}
+                    >
+                        <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                            <div>
+                                <MoreHoriz className={cx('item')} />
+                            </div>
+                        </Tippy>
+                    </TippyHeadless>
+                </div>
+            ) : (
+                <div className={cx('list-conversation')} onClick={tam}>
+                    <img
+                        className={cx('avatar-img')}
+                        src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
+                        alt="avatar"
+                    />
+
+                    <div className={cx('content')}>
+                        <h4 className={cx('username')}>{conversation?.name} </h4>
+                        {isPhoneBook ? null : (
+                            <p className={cx('message')}>{conversation?.content || conversation?.lastMessage}</p>
+                        )}
+                    </div>
+
+                    {isPhoneBook && !Group ? (
+                        <TippyHeadless
+                            render={(attrs) => (
+                                <div tabIndex="-1" {...attrs}>
+                                    <Popper className={cx('own-menu-list-children')}>
+                                        <p className={cx('deleteFriend')}>
+                                            <ModelInfoAccount yourProfile friend user={conversation} />
+                                        </p>
+                                        <p className={cx('deleteFriend')} onClick={handleCancel}>
+                                            <button className={cx('item-btn')}> Xóa Bạn</button>
+                                        </p>
+                                    </Popper>
+                                </div>
+                            )}
+                            interactive
+                            trigger="click"
+                            placement="bottom-start"
+                            offset={[4, 4]}
+                        >
+                            <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                                <div>
+                                    <MoreHoriz className={cx('item')} />
+                                </div>
+                            </Tippy>
+                        </TippyHeadless>
+                    ) : null}
+                    {isPhoneBook ? null : (
+                        <div className={cx('notification')}>
+                            <span className={cx('time')}>{format(conversation?.time)}</span>
+                            {/* <span className={cx('badge')}>5+</span> */}
                         </div>
                     )}
-                    interactive
-                    trigger="click"
-                    placement="bottom-start"
-                    offset={[4, 4]}
-                >
-                    <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
-                        <div>
-                            <MoreHoriz className={cx('item')} />
-                        </div>
-                    </Tippy>
-                </TippyHeadless>
-            ) : null}
-            {isPhoneBook ? null : (
-                <div className={cx('notification')}>
-                    <span className={cx('time')}>{format(conversation?.time)}</span>
-                    {/* <span className={cx('badge')}>5+</span> */}
                 </div>
             )}
-        </div>
+        </>
     );
 }
 

@@ -120,9 +120,21 @@ export const searchFilterFriend = createSelector(
         return false;
     },
 );
-export const c = createSelector(conversationSlice, (c) => {
-    console.log('------', c);
-    return c;
+//lọc user theo member
+export const filterUserGroup = createSelector(conversationSlice, userListSelector, (c, users) => {
+    const usersFilter1 = users.filter((_user) => c.members.includes(_user._id));
+
+    if (!usersFilter1.length) {
+        return 1;
+    }
+
+    return usersFilter1.map((user) => ({
+        _id: user._id,
+        name: user.fullName,
+        imageLinkOfConver: user.avatarLink,
+        phoneNumber: user.phoneNumber,
+        isFriend: false,
+    }));
 });
 export const allSearch = createSelector(
     userListSelector,
