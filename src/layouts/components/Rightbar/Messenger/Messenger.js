@@ -62,7 +62,8 @@ function Messenger() {
     // fetch message from conversationId
     useEffect(() => {
         dispatch(fetchApiMessagesByConversationId(conversation.id));
-    }, [conversation.id, dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [conversation.id]);
 
     // user join room
     useEffect(() => {
@@ -80,14 +81,16 @@ function Messenger() {
         socket.on('receiver_message', (message) => {
             dispatch(messagesSlice.actions.arrivalMessageFromSocket(message));
         });
-    }, [dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // realtime re-call message of receiver
     useEffect(() => {
         socket.on('receiver_recall_message', (message) => {
             dispatch(messagesSlice.actions.recallMessageFromSocket(message));
         });
-    }, [dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // handle change message
     const handleChangeMessage = (e) => {

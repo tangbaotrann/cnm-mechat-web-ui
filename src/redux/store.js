@@ -29,7 +29,7 @@ const store = configureStore({
         userCurrents: userCurrents.reducer,
         friends: friendsSlice.reducer,
         listGroupUser: listGroupUsers.reducer,
-        groupUserSlice: groupUserSlice.reducer,
+        groupUserSlices: groupUserSlice.reducer,
     },
 });
 

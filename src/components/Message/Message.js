@@ -23,18 +23,18 @@ const cx = classNames.bind(styles);
 function Message({ message, own, conversation, user }) {
     const dispatch = useDispatch();
 
-    const member = useSelector((state) => state.groupUserSlice.data);
+    const member = useSelector((state) => state.groupUserSlices.data);
 
     // console.log('member - 29 -', member);
     //console.log('[USER - 25] - ', user);
     // console.log('[message] - 25 -', message);
     // console.log('[conversation] - 26 ', conversation);
-    // console.log('membersGroup ', membersGroup);
+    // console.log('member ', member._id);
 
     // find member in group
     useEffect(() => {
         dispatch(fetchApiGroupUserChat(conversation.members.find((member) => member)));
-    }, [dispatch, conversation]);
+    }, [conversation, dispatch, message.senderID]);
 
     // handle delete message
     const handleDeleteMessage = async () => {
@@ -173,7 +173,7 @@ function Message({ message, own, conversation, user }) {
                         {message.deleteBy.length === 0 && (
                             <img
                                 className={cx('message-top-img')}
-                                src={member?.avatarLink || images.noImg}
+                                src={member._id === message?.senderID ? member.avatarLink : images.noImg}
                                 alt="avatar"
                             />
                         )}

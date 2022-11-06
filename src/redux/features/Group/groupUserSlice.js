@@ -22,6 +22,8 @@ export const fetchApiGroupUserChat = createAsyncThunk('groupUserChat/fetchApiGro
     try {
         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${memberId}`);
 
+        console.log('25 - res -', res.data.data);
+
         return res.data.data;
     } catch (err) {
         console.log(err);

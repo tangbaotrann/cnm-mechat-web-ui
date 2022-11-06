@@ -25,12 +25,9 @@ function Home() {
     }, []);
 
     useEffect(() => {
-        dispatch(fetchUsers());
         dispatch(fetchApiUser());
-        dispatch(friendAccept());
-        dispatch(meRequestFriend());
-        dispatch(listGroupUser());
-    });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
