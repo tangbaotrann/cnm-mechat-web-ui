@@ -11,6 +11,8 @@ import { useEffect } from 'react';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
 import { meRequestFriend } from '~/redux/features/friend/meFriendRequestSlice';
 import { friendAccept } from '~/redux/features/friend/friendAcceptSlice';
+import { fetchUsers } from '~/redux/features/user/usersSlice';
+import { listGroupUser } from '~/redux/features/Group/GroupSlice';
 
 const cx = classNames.bind(styles);
 
@@ -23,10 +25,11 @@ function Home() {
     }, []);
 
     useEffect(() => {
-        // dispatch(fetchUsers());
+        dispatch(fetchUsers());
         dispatch(fetchApiUser());
-        // dispatch(friendAccept());
-        // dispatch(meRequestFriend());
+        dispatch(friendAccept());
+        dispatch(meRequestFriend());
+        dispatch(listGroupUser());
     });
 
     return (

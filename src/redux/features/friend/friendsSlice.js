@@ -22,7 +22,6 @@ export const fetchApiFriendsById = createAsyncThunk('friends/fetchApiFriendsById
     try {
         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/get-friends-user/${userId}`);
 
-        console.log('RES - DATA', res.data.data);
         return res.data.data;
     } catch (err) {
         console.log(err);

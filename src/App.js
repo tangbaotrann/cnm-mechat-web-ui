@@ -14,6 +14,8 @@ import { fetchApiUser } from './redux/features/user/userSlice';
 import { friendAccept } from './redux/features/friend/friendAcceptSlice';
 import { meRequestFriend } from './redux/features/friend/meFriendRequestSlice';
 import ForgetPassWord from './pages/Login/ForgetPassWord';
+import { listGroupUser } from './redux/features/Group/GroupSlice';
+import AddInfoUser from './pages/AddInfoUser';
 
 function App() {
     const dispatch = useDispatch();
@@ -23,19 +25,14 @@ function App() {
         dispatch(fetchApiUser());
         dispatch(friendAccept());
         dispatch(meRequestFriend());
+        dispatch(listGroupUser());
     });
-
-    // useEffect(() => {
-    //     let tam = localStorage.getItem('user_login');
-    //     if (tam === null) {
-    //         return redirect('/');
-    //     }
-    // });
     return (
         <Router>
             <Routes>
                 {/* Register */}
                 <Route path="/register" element={<Register />} />
+                <Route path="/addInfoUser" element={<AddInfoUser />} />
 
                 {/* Login */}
                 <Route path="/login" element={<Login />} />

@@ -34,7 +34,7 @@
 .clear-btn1 {
     position: absolute;
     font-size: 1.2rem;
-    right: 10%;
+    left: 130%;
     border: none;
     outline: none;
     color: var(--text-opacity);
@@ -51,10 +51,9 @@
     display: flex;
     align-items: center;
     flex: 2.7; //1
-    margin-right: 2px;
+    margin-right: 3px;
     position: relative;
-    margin-left: 3%;
-    border-bottom: solid 0.5px #d3d3d3;
+    margin-left: 4%;
 }
 
 // icon search
@@ -64,7 +63,7 @@
     padding: 6px;
     font-size: 1.2rem;
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     &:hover {
         opacity: 0.6;
     }
@@ -81,7 +80,7 @@
     font-weight: 400;
     border: 1px solid var(--grey-400);
     background-color: var(--grey-400);
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     &:focus {
         border: 1px solid var(--primary);
         outline: none;
@@ -89,7 +88,7 @@
     }
 }
 .title-add-Group {
-    margin-top: 30px;
+    margin-top: 15px;
     margin-left: 2%;
     margin-bottom: 10px;
 }
@@ -100,7 +99,8 @@
     margin-left: 10px;
 }
 .list-friend {
-    margin-top: 10px;
+    margin-top: 20px;
+    height: 408px;
 }
 .list-friend label {
     font-weight: bold;
@@ -118,7 +118,7 @@
 }
 //@at-root
 .add-friend-bottom {
-    height: 60px;
+    height: 70px;
 }
 .bottom-button {
     margin-left: 70%;
@@ -126,7 +126,7 @@
     display: flex;
 }
 .add-friend-bottom button {
-    margin-top: 10px;
+    margin-top: 15px;
     border: 0;
     cursor: pointer;
 }
@@ -138,7 +138,6 @@
 }
 .add-friend-bottom .search {
     height: 40px;
-
     padding-left: 20px;
     margin-right: 10px;
     border-radius: 5px;
@@ -185,4 +184,43 @@
     width: 1.3em;
     height: 1.3em;
     cursor: pointer;
+}
+.result-add-friend button {
+    font-size: 18px;
+    height: 30px;
+    width: 80px;
+    border: 0;
+    border-radius: 5px;
+    background-color: #5757e8;
+    &:hover {
+        cursor: pointer;
+    }
+}
+.result-friend p {
+    font-size: 14px;
+    height: 30px;
+    width: 80px;
+    font-weight: bold;
+    margin-top: 10px;
+    font-family: var(--font-family);
+}
+.error {
+    display: block;
+    color: red;
+    font-size: 1.5rem;
+    padding-left: 5%;
+    margin-top: 5px;
+    font-family: var(--font-family);
+    border-bottom: solid 0.5px #d3d3d3;
+}
+.numberCheck {
+    display: block;
+    font-family: var(--font-family);
+    font-size: 1.5rem;
+    font-weight: bold;
+
+    padding-left: 3%;
+}
+.validate {
+    height: 20px;
 }

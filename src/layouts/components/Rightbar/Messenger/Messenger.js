@@ -55,7 +55,6 @@ function Messenger() {
 
     const scrollMessenger = useRef();
 
-    console.log('[LIST MESSAGES] - ', listMessage);
     // console.log('[FILE] - ', newFileMessage);
     // console.log('EMOJI - ', chosenEmoji);
 

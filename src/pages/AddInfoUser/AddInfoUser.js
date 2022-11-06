@@ -1,29 +1,25 @@
-// libs
 import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
-// import moment from 'moment';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faPenToSquare, faCamera } from '@fortawesome/free-solid-svg-icons';
-
-// me
-import styles from './ModelInfoAccount.module.scss';
+//me
+import styles from './AddInfoUser.module.scss';
 import images from '~/assets/images';
-import ModelWrapper from '../ModelWrapper';
-import moment from 'moment';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Radio } from '@mui/material';
-import { userLogin } from '~/redux/selector';
 import { useDispatch, useSelector } from 'react-redux';
+import { userLogin } from '~/redux/selector';
+import { useEffect, useState } from 'react';
+import moment from 'moment';
 import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
-
+import { useLocation, useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
+function AddInfoUser() {
+    const infoUser = useSelector((state) => state.user.data);
 
-function SubModelInfoAccount({ user }) {
-    const [openUpdateInfoAccount, setOpenUpdateInfoAccount] = useState(false);
-    const [optionSex, setOptionSex] = useState(user.gender);
-    const [birthday, setBirthday] = useState(moment(user.birthday).format('YYYY-MM-DD'));
-    const [fullName, setFullName] = useState(user.fullName);
-    const infoUser = useSelector(userLogin);
-    const [avatar, setAvatar] = useState(user?.avatarLink); //
+    const navigate = useNavigate();
+    const [fullName, setFullName] = useState(userName);
+    const [optionSex, setOptionSex] = useState(infoUser?.gender);
+    const [birthday, setBirthday] = useState(moment(infoUser?.birthday).format('YYYY-MM-DD'));
+    const [avatar, setAvatar] = useState(infoUser?.avatarLink);
 
     useEffect(() => {
         return () => {
@@ -31,18 +27,10 @@ function SubModelInfoAccount({ user }) {
         };
     }, [avatar]);
     const dispatch = useDispatch();
-    // Handle open/ close model update info account
-    const handleModelOpenUpdateInfoAccount = () => {
-        setOpenUpdateInfoAccount(true);
-    };
-    const handleModelCloseUpdateInfoAccount = () => {
-        setOpenUpdateInfoAccount(false);
-    };
-
-    // Handle change input full name
     const handleChangeFullName = (e) => {
         setFullName(e.target.value);
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
@@ -59,7 +47,8 @@ function SubModelInfoAccount({ user }) {
             }),
         );
         if (userUpdate() || updateAvatar()) {
-            alert('Cập nhật thông tin thành công');
+            navigate('/me.chat');
+            console.log('ok');
         }
     };
     const handleChange1 = (e) => {
@@ -73,66 +62,47 @@ function SubModelInfoAccount({ user }) {
             setOptionSex(1);
         }
     };
-
-    //doi avatar
     const handleChangeAvatar = (e) => {
         const file = e.target.files[0];
         file.previews = URL.createObjectURL(file);
         setAvatar(file);
         console.log(file);
     };
+    const handlecancel = () => {
+        navigate('/me.chat');
+    };
     return (
-        <>
-            <button className={cx('footer-update-btn')} onClick={handleModelOpenUpdateInfoAccount}>
-                <FontAwesomeIcon className={cx('footer-update-ic')} icon={faPenToSquare} />
-                Cập nhật thông tin
-            </button>
-            {/* Show model update info account */}
-            <ModelWrapper
-                className={cx('model-update-info-acc')}
-                open={openUpdateInfoAccount}
-                onClose={handleModelCloseUpdateInfoAccount}
-            >
-                <div className={cx('model-info-acc-bg')}>
-                    <div className={cx('model-info-acc-header')}>
-                        <div className={cx('info-acc-title')}>
-                            <span className={cx('acc-title')}>Cập nhật thông tin</span>
-                            <button className={cx('close-btn')}>
-                                <FontAwesomeIcon
-                                    className={cx('acc-close-ic')}
-                                    icon={faXmark}
-                                    onClick={handleModelCloseUpdateInfoAccount}
-                                />
-                            </button>
-                        </div>
-                        <div className={cx('info-acc')}>
-                            <div className={cx('sub-info-image')}>
-                                <img
-                                    className={cx('img-cover')}
-                                    src={user?.backgroundLink ? user?.backgroundLink : images.noImg}
-                                    alt=""
-                                />
-                                <img
-                                    className={cx('sub-img-avatar')}
-                                    src={avatar?.previews ? avatar?.previews : avatar}
-                                    alt=""
-                                />
+        <div className={cx('body-info')}>
+            <div className={cx('wrapper')}>
+                <div className={cx('logo')}>
+                    <img className={cx('logo-image')} src={images.logo} alt="" />
+                </div>
+                <div className={cx('login-title')}>
+                    <h1>Thông tin cái nhân</h1>
+                </div>
 
-                                {/* Option change avatar update */}
-                                <label htmlFor="file-info" className={cx('option-avatar')}>
-                                    <FontAwesomeIcon className={cx('icon-camera')} icon={faCamera} />
-                                    <input
-                                        className={cx('hide')}
-                                        type="file"
-                                        id="file-info"
-                                        accept=".png, .jpg, .jpeg"
-                                        onChange={handleChangeAvatar}
-                                    />
-                                </label>
-                            </div>
+                <div className={cx('info-form')}>
+                    <div className={cx('info-acc')}>
+                        <div className={cx('sub-info-image')}>
+                            <img className={cx('img-cover')} src={images.noImg} alt="" />
+                            <img
+                                className={cx('sub-img-avatar')}
+                                src={avatar?.previews ? avatar?.previews : avatar}
+                                alt=""
+                            />
+                            {/* Option change avatar update */}
+                            <label htmlFor="file-info-users" className={cx('option-avatar')}>
+                                <FontAwesomeIcon className={cx('icon-camera')} icon={faCamera} />
+                                <input
+                                    className={cx('hide')}
+                                    type="file"
+                                    id="file-info-users"
+                                    accept=".png, .jpg, .jpeg"
+                                    onChange={handleChangeAvatar}
+                                />
+                            </label>
                         </div>
                     </div>
-                    {/* render (map) after */}
                     <div className={cx('model-sub-info-acc-body')}>
                         <div className={cx('model-sub-info-acc')}>
                             <span className={cx('sub-title-desc')}>Tên hiển thị:</span>
@@ -190,15 +160,16 @@ function SubModelInfoAccount({ user }) {
                         </div>
                     </div>
                     <div className={cx('model-update-info-acc-footer')}>
-                        <button className={cx('footer-sub-close-btn')}>Hủy</button>
+                        <button className={cx('footer-sub-close-btn')} onClick={handlecancel}>
+                            Bỏ qua
+                        </button>
                         <button className={cx('footer-sub-update-btn')} onClick={handleSubmit}>
-                            Cập nhật
+                            Lưu
                         </button>
                     </div>
                 </div>
-            </ModelWrapper>
-        </>
+            </div>
+        </div>
     );
 }
-
-export default SubModelInfoAccount;
+export default AddInfoUser;

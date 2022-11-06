@@ -4,18 +4,20 @@ import classNames from 'classnames/bind';
 import styles from './Boxchat.module.scss';
 import images from '~/assets/images';
 const cx = classNames.bind(styles);
-function BoxChat()
-{
-    return(
+function BoxChat(group) {
+    return (
         <div className={cx('list-boxchat')}>
-            <img className={cx('avatar-img')} src={images.tuan} alt="avatar" />   
+            <img
+                className={cx('avatar-img')}
+                src={group.group.imageLinkOfConver ? group.group.imageLinkOfConver : images.noImg}
+                alt="avatar"
+            />
             <div className={cx('box-name')}>
-                     <h1>CNM</h1>                  
+                <h1>{group.group.name}</h1>
             </div>
             <div className={cx('box-number')}>
-                     <h1>5 thành viên</h1>                  
+                <h1>{group.group.members.length} thành viên</h1>
             </div>
-    
         </div>
     );
 }
