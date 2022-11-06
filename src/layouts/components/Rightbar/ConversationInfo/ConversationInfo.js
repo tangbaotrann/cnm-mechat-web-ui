@@ -1,7 +1,16 @@
 // libs
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import {
+    faAnchorLock,
+    faCaretDown,
+    faClock,
+    faNoteSticky,
+    faRightFromBracket,
+    faTrash,
+    faUserGroup,
+    faUserPlus,
+} from '@fortawesome/free-solid-svg-icons';
 
 // me
 import styles from './ConversationInfo.module.scss';
@@ -12,11 +21,12 @@ import { useEffect, useState } from 'react';
 
 import { ArrowBackIos } from '@material-ui/icons';
 import FileMessage from '~/components/FileMessage';
-import { userLogin } from '~/redux/selector';
+import { filterUserGroup, userLogin } from '~/redux/selector';
 import useDebounce from '~/components/hooks/useDebounce';
 import ModelInfoAccount from '~/components/ModelWrapper/ModelInfoAccount';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
 import ModelWrapper from '~/components/ModelWrapper';
+import Conversation from '~/components/Conversation';
 
 const cx = classNames.bind(styles);
 
@@ -24,8 +34,10 @@ function ConversationInfo() {
     const conversation = useSelector((state) => state.conversations.conversationClick);
     const listMessage = useSelector((state) => state.messages.data);
     const [show, setShow] = useState(true);
+    const [showAddMembers, setShowAddMembers] = useState(true);
     const [showFile, setShowFile] = useState(true);
     const infoUser = useSelector(userLogin);
+    const filterUser = useSelector(filterUserGroup);
     const userCurrent = useSelector((state) => state.userCurrents.data);
     const [showPreview, setShowPreview] = useState(false);
     const [showImg, setShowImg] = useState();
@@ -33,6 +45,8 @@ function ConversationInfo() {
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
     const dispatch = useDispatch();
+
+    console.log(filterUser);
 
     useEffect(() => {
         dispatch(
@@ -48,6 +62,8 @@ function ConversationInfo() {
     };
     const handleClose = () => {
         setShow(true);
+        setShowAddMembers(true);
+        setShowAddMembers(true);
     };
 
     //file
@@ -63,6 +79,11 @@ function ConversationInfo() {
     // hide preview
     const handleHidePreviewImageAndVideo = () => {
         setShowPreview(false);
+    };
+    const handleAddMemberGroup = () => {
+        setShow(false);
+        setShowAddMembers(false);
+        console.log(showAddMembers);
     };
 
     return (
@@ -96,20 +117,54 @@ function ConversationInfo() {
                         </div>
 
                         <div className={cx('separator')}></div>
-                        <div className={cx('members-group')}>
-                            <div className={cx('members-group-title')}>
-                                <label>Thành viên nhóm</label>
-                            </div>
+                        {conversation.createdBy !== null ? (
+                            <>
+                                <div className={cx('members-group')}>
+                                    <div className={cx('members-group-title')}>
+                                        <label>Thành viên nhóm</label>
+                                        <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
+                                    </div>
 
-                            <button className={cx('btn-click-icon')}>
-                                <FontAwesomeIcon
-                                    className={cx('item')}
-                                    icon={faUserGroup}
-                                    // onClick={handleModelOpenAddGroup}
-                                />
-                                <label>Thành viên nhóm</label>
-                            </button>
-                        </div>
+                                    <button className={cx('btn-click-icon')} onClick={handleAddMemberGroup}>
+                                        <FontAwesomeIcon
+                                            className={cx('item')}
+                                            icon={faUserGroup}
+                                            // onClick={handleModelOpenAddGroup}
+                                        />
+                                        <label>{conversation.members.length} Thành Viên</label>
+                                    </button>
+                                </div>
+                                <div className={cx('separator')}></div>
+                                <div className={cx('members-group')}>
+                                    <div className={cx('members-group-title')}>
+                                        <label>Bảng tin nhóm</label>
+                                        <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
+                                    </div>
+
+                                    <button className={cx('btn-click-icon')}>
+                                        <FontAwesomeIcon
+                                            className={cx('item')}
+                                            icon={faClock}
+                                            // onClick={handleModelOpenAddGroup}
+                                        />
+                                        <label>Danh sách nhắc hẹn</label>
+                                    </button>
+
+                                    <button className={cx('btn-click-icon')}>
+                                        <FontAwesomeIcon
+                                            className={cx('item')}
+                                            icon={faNoteSticky}
+                                            // onClick={handleModelOpenAddGroup}
+                                        />
+                                        <label>Ghi chú, ghim, bình chọn</label>
+                                    </button>
+                                </div>
+                                <div className={cx('separator')}></div>
+                            </>
+                        ) : null}
+
+                        {/* bản tin nhom */}
+
                         {/* Image and Video */}
                         <div className={cx('list-image')}>
                             <div className={cx('header')}>
@@ -237,82 +292,80 @@ function ConversationInfo() {
                         <div className={cx('separator')}></div>
                         {/* Link */}
                         <ItemStored isLink />
+                        <div className={cx('separator')}></div>
+                        <div className={cx('members-group')}>
+                            <div className={cx('members-group-title')}>
+                                <label>Thiết lập bảo mật</label>
+                                <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
+                            </div>
+
+                            <button className={cx('btn-click-footer')}>
+                                <FontAwesomeIcon
+                                    className={cx('item')}
+                                    icon={faTrash}
+                                    // onClick={handleModelOpenAddGroup}
+                                />
+                                <label>Xóa lịch sử cuộc trò chuyện</label>
+                            </button>
+                            <button className={cx('btn-click-footer')}>
+                                <FontAwesomeIcon
+                                    className={cx('item')}
+                                    icon={faRightFromBracket}
+                                    // onClick={handleModelOpenAddGroup}
+                                />
+                                <label>Rời nhóm</label>
+                            </button>
+                        </div>
                     </div>
                 </>
             ) : (
-                <div className={cx('container')}>
-                    <h2 className={cx('title-name-show')}>
-                        <ArrowBackIos className={cx('item-back')} onClick={handleClose} />
-                        <p>Kho lưu trữ</p>
-                    </h2>
-                    <div className={cx('separator')}></div>
-                    {showFile ? (
-                        <>
-                            <div className={cx('info-show')}>
-                                <label className={cx('info-show-1')} onClick={handleOpen} style={{ color: 'blue' }}>
-                                    Ảnh/ Video{' '}
-                                </label>
-                                <label className={cx('info-show-2')} onClick={handleOpenFile}>
-                                    Files
-                                </label>
-                                <label className={cx('info-show-3')}>Links</label>
-                            </div>
+                ///
+                <>
+                    {showAddMembers ? (
+                        <div className={cx('container')}>
+                            <h2 className={cx('title-name-show')}>
+                                <ArrowBackIos className={cx('item-back')} onClick={handleClose} />
+                                <p>Kho lưu trữ</p>
+                            </h2>
                             <div className={cx('separator')}></div>
-                            <div className={cx('list-image')}>
-                                <div className={cx('body-show')}>
-                                    {/* render image (map) after */}
-                                    <div className={cx('body-list-image-show')}>
-                                        {listMessage.map((message) => {
-                                            return (
-                                                <div key={message._id}>
-                                                    {message.imageLink && message.imageLink.length > 0 ? (
-                                                        <>
-                                                            {message.imageLink[0].split('.')[
-                                                                message.imageLink[0].split('.').length - 1
-                                                            ] === 'mp4' ? (
-                                                                <video
-                                                                    controls
-                                                                    className={cx('item-image-show')}
-                                                                    src={message.imageLink}
-                                                                    alt="img"
-                                                                />
-                                                            ) : (
+                            {showFile ? (
+                                <>
+                                    <div className={cx('info-show')}>
+                                        <label
+                                            className={cx('info-show-1')}
+                                            onClick={handleOpen}
+                                            style={{ color: 'blue' }}
+                                        >
+                                            Ảnh/ Video{' '}
+                                        </label>
+                                        <label className={cx('info-show-2')} onClick={handleOpenFile}>
+                                            Files
+                                        </label>
+                                        <label className={cx('info-show-3')}>Links</label>
+                                    </div>
+                                    <div className={cx('separator')}></div>
+                                    <div className={cx('list-image')}>
+                                        <div className={cx('body-show')}>
+                                            {/* render image (map) after */}
+                                            <div className={cx('body-list-image-show')}>
+                                                {listMessage.map((message) => {
+                                                    return (
+                                                        <div key={message._id}>
+                                                            {message.imageLink && message.imageLink.length > 0 ? (
                                                                 <>
-                                                                    {message.imageLink.length === 1 ? (
-                                                                        <>
-                                                                            <button
-                                                                                className={cx('button-image')}
-                                                                                onClick={handleShowPreviewImageAndVideo}
-                                                                            >
-                                                                                <img
-                                                                                    className={cx('item-image-show')}
-                                                                                    src={message.imageLink}
-                                                                                    alt="avatar"
-                                                                                    id="file-upload"
-                                                                                />
-                                                                            </button>
-
-                                                                            <ModelWrapper
-                                                                                className={cx('model-preview')}
-                                                                                open={showPreview}
-                                                                                onClose={handleHidePreviewImageAndVideo}
-                                                                            >
-                                                                                <img
-                                                                                    className={cx(
-                                                                                        'preview-image-send-user',
-                                                                                    )}
-                                                                                    src={showImg}
-                                                                                    alt="img"
-                                                                                />
-                                                                            </ModelWrapper>
-                                                                        </>
+                                                                    {message.imageLink[0].split('.')[
+                                                                        message.imageLink[0].split('.').length - 1
+                                                                    ] === 'mp4' ? (
+                                                                        <video
+                                                                            controls
+                                                                            className={cx('item-image-show')}
+                                                                            src={message.imageLink}
+                                                                            alt="img"
+                                                                        />
                                                                     ) : (
-                                                                        message.imageLink.map((mess, index) => {
-                                                                            return (
-                                                                                <div
-                                                                                    key={index}
-                                                                                    className={cx('key-image-show')}
-                                                                                >
+                                                                        <>
+                                                                            {message.imageLink.length === 1 ? (
+                                                                                <>
                                                                                     <button
                                                                                         className={cx('button-image')}
                                                                                         onClick={
@@ -323,63 +376,142 @@ function ConversationInfo() {
                                                                                             className={cx(
                                                                                                 'item-image-show',
                                                                                             )}
-                                                                                            src={mess}
-                                                                                            alt="img"
+                                                                                            src={message.imageLink}
+                                                                                            alt="avatar"
+                                                                                            id="file-upload"
                                                                                         />
                                                                                     </button>
-                                                                                </div>
-                                                                            );
-                                                                        })
-                                                                    )}
+
+                                                                                    <ModelWrapper
+                                                                                        className={cx('model-preview')}
+                                                                                        open={showPreview}
+                                                                                        onClose={
+                                                                                            handleHidePreviewImageAndVideo
+                                                                                        }
+                                                                                    >
+                                                                                        <img
+                                                                                            className={cx(
+                                                                                                'preview-image-send-user',
+                                                                                            )}
+                                                                                            src={showImg}
+                                                                                            alt="img"
+                                                                                        />
+                                                                                    </ModelWrapper>
+                                                                                </>
+                                                                            ) : (
+                                                                                message.imageLink.map((mess, index) => {
+                                                                                    return (
+                                                                                        <div
+                                                                                            key={index}
+                                                                                            className={cx(
+                                                                                                'key-image-show',
+                                                                                            )}
+                                                                                        >
+                                                                                            <button
+                                                                                                className={cx(
+                                                                                                    'button-image',
+                                                                                                )}
+                                                                                                onClick={
+                                                                                                    handleShowPreviewImageAndVideo
+                                                                                                }
+                                                                                            >
+                                                                                                <img
+                                                                                                    className={cx(
+                                                                                                        'item-image-show',
+                                                                                                    )}
+                                                                                                    src={mess}
+                                                                                                    alt="img"
+                                                                                                />
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    );
+                                                                                })
+                                                                            )}
+                                                                        </>
+                                                                    )}{' '}
                                                                 </>
-                                                            )}{' '}
-                                                        </>
-                                                    ) : null}
-                                                </div>
-                                            );
-                                        })}
+                                                            ) : null}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className={cx('footer')}>
+                                            <button className={cx('footer-btn-all')} onClick={handleClose}>
+                                                Thu gọn
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className={cx('footer')}>
-                                    <button className={cx('footer-btn-all')} onClick={handleClose}>
-                                        Thu gọn
-                                    </button>
-                                </div>
-                            </div>
-                        </>
+                                </>
+                            ) : (
+                                <>
+                                    {' '}
+                                    <div className={cx('info-show')}>
+                                        <label className={cx('info-show-1')} onClick={handleOpen}>
+                                            Ảnh/ Video{' '}
+                                        </label>
+                                        <label
+                                            className={cx('info-show-2')}
+                                            style={{ color: 'blue' }}
+                                            onClick={handleOpenFile}
+                                        >
+                                            Files
+                                        </label>
+                                        <label className={cx('info-show-3')}>Links</label>
+                                    </div>
+                                    <div className={cx('separator')}></div>
+                                    <div className={cx('body')}>
+                                        {/* render image (map) after */}
+                                        <div className={cx('body-list-item-stored')}>
+                                            <div className={cx('right-container')}>
+                                                {listMessage.map((message) => {
+                                                    return (
+                                                        <div key={message._id}>
+                                                            {message.fileLink ? (
+                                                                <FileMessage message={message} className={cx('file')} />
+                                                            ) : null}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                            {/* </div> */}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     ) : (
-                        <>
-                            {' '}
-                            <div className={cx('info-show')}>
-                                <label className={cx('info-show-1')} onClick={handleOpen}>
-                                    Ảnh/ Video{' '}
-                                </label>
-                                <label className={cx('info-show-2')} style={{ color: 'blue' }} onClick={handleOpenFile}>
-                                    Files
-                                </label>
-                                <label className={cx('info-show-3')}>Links</label>
+                        <div className={cx('container')}>
+                            <h2 className={cx('title-name-show')}>
+                                <ArrowBackIos className={cx('item-back')} onClick={handleClose} />
+                                <p>Thành viên</p>
+                            </h2>
+                            <div className={cx('separator')}></div>
+                            <div className={cx('button-addMembers')}>
+                                <button>
+                                    <FontAwesomeIcon
+                                        className={cx('item')}
+                                        icon={faUserPlus}
+                                        // onClick={handleModelOpenInfoAccount}
+                                    />
+                                    Thêm thành viên
+                                </button>
                             </div>
                             <div className={cx('separator')}></div>
-                            <div className={cx('body')}>
-                                {/* render image (map) after */}
-                                <div className={cx('body-list-item-stored')}>
-                                    <div className={cx('right-container')}>
-                                        {listMessage.map((message) => {
-                                            return (
-                                                <div key={message._id}>
-                                                    {message.fileLink ? (
-                                                        <FileMessage message={message} className={cx('file')} />
-                                                    ) : null}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                    {/* </div> */}
-                                </div>
+                            <div className={cx('list-members')}>
+                                <label>Danh sách thành viên ({conversation.members.length})</label>
+                                {filterUser?.map((user) => {
+                                    return (
+                                        <div key={user?._id}>
+                                            <Conversation conversation={user} conversationInfo isPhoneBook />
+                                        </div>
+                                    );
+                                })}
                             </div>
-                        </>
+                        </div>
                     )}
-                </div>
+                </>
+                ////
             )}
         </div>
     );
