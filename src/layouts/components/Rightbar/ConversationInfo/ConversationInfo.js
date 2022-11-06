@@ -1,7 +1,7 @@
 // libs
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 
 // me
 import styles from './ConversationInfo.module.scss';
@@ -33,7 +33,7 @@ function ConversationInfo() {
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
     const dispatch = useDispatch();
-    console.log(listMessage);
+
     useEffect(() => {
         dispatch(
             infoUserConversation({
@@ -48,7 +48,6 @@ function ConversationInfo() {
     };
     const handleClose = () => {
         setShow(true);
-        console.log(show);
     };
 
     //file
@@ -73,19 +72,23 @@ function ConversationInfo() {
                     <div className={cx('container')}>
                         <h2 className={cx('title-name')}>Thông tin hội thoại</h2>
                         <div className={cx('separator')}></div>
-
                         <div className={cx('info')}>
                             <div className={cx('info-avatar')}>
-                                {/* <img
-                                    className={cx('avatar')}
-                                    src={
-                                        conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg
-                                    }
-                                    alt="avatar"
-                                /> */}
-                                <div className={cx('avatar')}>
-                                    <ModelInfoAccount ConversationInfo user={userCurrent} />
-                                </div>
+                                {conversation.createdBy !== null ? (
+                                    <img
+                                        className={cx('avatar')}
+                                        src={
+                                            conversation?.imageLinkOfConver
+                                                ? conversation.imageLinkOfConver
+                                                : images.noImg
+                                        }
+                                        alt="avatar"
+                                    />
+                                ) : (
+                                    <div className={cx('avatar')}>
+                                        <ModelInfoAccount ConversationInfo user={userCurrent} />
+                                    </div>
+                                )}
                             </div>
                             <div className={cx('info-name')}>
                                 <h3 className={cx('name')}>{conversation?.name}</h3>
@@ -93,7 +96,20 @@ function ConversationInfo() {
                         </div>
 
                         <div className={cx('separator')}></div>
+                        <div className={cx('members-group')}>
+                            <div className={cx('members-group-title')}>
+                                <label>Thành viên nhóm</label>
+                            </div>
 
+                            <button className={cx('btn-click-icon')}>
+                                <FontAwesomeIcon
+                                    className={cx('item')}
+                                    icon={faUserGroup}
+                                    // onClick={handleModelOpenAddGroup}
+                                />
+                                <label>Thành viên nhóm</label>
+                            </button>
+                        </div>
                         {/* Image and Video */}
                         <div className={cx('list-image')}>
                             <div className={cx('header')}>
@@ -152,7 +168,7 @@ function ConversationInfo() {
                                                                         return (
                                                                             <div
                                                                                 key={index}
-                                                                                className={cx('button-image')}
+                                                                                className={cx('key-image')}
                                                                             >
                                                                                 <button
                                                                                     className={cx('button-image')}
@@ -295,7 +311,7 @@ function ConversationInfo() {
                                                                             return (
                                                                                 <div
                                                                                     key={index}
-                                                                                    className={cx('button-image')}
+                                                                                    className={cx('key-image-show')}
                                                                                 >
                                                                                     <button
                                                                                         className={cx('button-image')}

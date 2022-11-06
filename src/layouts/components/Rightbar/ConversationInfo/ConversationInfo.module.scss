@@ -93,6 +93,7 @@
     flex-wrap: wrap;
     // margin-right: 12px;
     margin-bottom: 10px;
+    float: left;
 }
 
 .item-image {
@@ -194,7 +195,7 @@
         border-bottom: solid 3px blue;
     }
 }
-.info-show .info-show-3 {
+image .info-show .info-show-3 {
     border-bottom: solid 3px #d3d3d3;
     &:hover {
         opacity: 0.6;
@@ -227,4 +228,42 @@
     top: 0;
 
     bottom: 0;
+}
+
+.key-image {
+    display: grid;
+    float: left;
+}
+.key-image-show {
+    display: grid;
+    float: left;
+}
+////NHOM
+.members-group {
+    background-color: aqua;
+    // &:hover {
+    //     opacity: 0.6;
+    // }
+    // cursor: pointer;
+}
+.members-group .members-group-title {
+    font-weight: bold;
+    font-size: 16px;
+    font-family: var(--font-family);
+}
+.btn-click-icon {
+    border: none;
+    outline: none;
+    margin-right: 16px;
+    background-color: transparent;
+    cursor: pointer;
+}
+.btn-click-icon .item {
+    width: 25px;
+    height: 25px;
+}
+.btn-click-icon label {
+    font-weight: bold;
+    color: black;
+    font-family: var(--font-family);
 }

@@ -23,7 +23,6 @@ const userCurrents = createSlice({
     initialState: { data: [] },
     extraReducers: (builder) => {
         builder.addCase(infoUserConversation.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.data = action.payload;
         });
     },
