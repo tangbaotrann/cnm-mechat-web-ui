@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import images from '~/assets/images';
 import filterSlice from '~/redux/features/filter/filterSlice';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
+import { createGroup } from '~/redux/features/Group/GroupSlice';
 import { listFriend, searchFilterFriend, userLogin, usersRemainingSelector } from '~/redux/selector';
 import useDebounce from '../hooks/useDebounce';
 import styles from './AddGroup.module.scss';
@@ -31,7 +32,15 @@ function AddGroup() {
     }, [debouncedValue]);
     const userSearching = useSelector(usersRemainingSelector);
     const handleSummit = () => {
+        console.log(nameGroup);
         console.log(checked);
+        console.log(infoUser._id);
+        const data = { members: checked, createdBy: infoUser._id, name: nameGroup };
+        dispatch(createGroup(data));
+        if (createGroup()) {
+            alert('Nhóm thành công');
+            window.location.reload(true);
+        }
     };
     const handleCheck = (e) => {
         console.log(e.target.value);
