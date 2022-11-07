@@ -36,6 +36,19 @@ export const createGroup = createAsyncThunk(
         return jsonData;
     },
 );
+
+// add member to group
+export const fetchApiAddMemberToGroup = createAsyncThunk('listGroupUser/fetchApiAddMemberToGroup', async (memberId) => {
+    try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_BASE_URL}conversations/add-member-conversation/${memberId}`,
+        );
+        console.log('44 - res -', res.data);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 //xoa
 export const deleteMember = createAsyncThunk(
     // Tên action

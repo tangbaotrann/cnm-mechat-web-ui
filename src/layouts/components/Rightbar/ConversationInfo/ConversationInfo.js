@@ -53,6 +53,8 @@ function ConversationInfo() {
     const debouncedValue = useDebounce(infoConversation, 500);
     const dispatch = useDispatch();
 
+    // console.log(filterUser);
+
     useEffect(() => {
         dispatch(
             infoUserConversation({
@@ -88,7 +90,7 @@ function ConversationInfo() {
     const handleAddMemberGroup = () => {
         setShow(false);
         setShowAddMembers(false);
-        console.log(showAddMembers);
+        // console.log(showAddMembers);
     };
     //them thanh vien
     const handleModelOpenAddGroup = () => {
