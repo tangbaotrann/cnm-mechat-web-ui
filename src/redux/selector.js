@@ -136,6 +136,37 @@ export const filterUserGroup = createSelector(conversationSlice, userListSelecto
         isFriend: false,
     }));
 });
+///tim ban trong membergrood
+export const filterFriendGroup = createSelector(conversationSlice, listFriend, (c, lf) => {
+    const listFriendFilter = lf.filter((_lf) => c?.members.includes(_lf._id));
+
+    if (!listFriendFilter.length) {
+        return [];
+    }
+    return listFriendFilter.map((user) => ({
+        _id: user._id,
+        name: user.fullName,
+        imageLinkOfConver: user.avatarLink,
+        phoneNumber: user.phoneNumber,
+        isFriend: true,
+    }));
+});
+//tim nhom truong
+export const filterLeader = createSelector(conversationSlice, userListSelector, (c, users) => {
+    const usersFilter1 = users.filter((_user) => _user._id.includes(c?.createdBy));
+
+    if (!usersFilter1.length) {
+        return 1;
+    }
+
+    return usersFilter1.map((user) => ({
+        _id: user._id,
+        name: user.fullName,
+        imageLinkOfConver: user.avatarLink,
+        phoneNumber: user.phoneNumber,
+        isFriend: false,
+    }));
+});
 export const allSearch = createSelector(
     userListSelector,
     userInfoSelector,

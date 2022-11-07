@@ -12,7 +12,7 @@ import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
-function ModelInfoAccount({ yourProfile, user, friend, ConversationInfo }) {
+function ModelInfoAccount({ yourProfile, user, friend, ConversationInfo, seenInfoInGroup }) {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
 
     // Handle open/ close model info account
@@ -25,25 +25,31 @@ function ModelInfoAccount({ yourProfile, user, friend, ConversationInfo }) {
 
     return (
         <>
-            {ConversationInfo ? (
-                <img
-                    className={cx('img-avatar-ConversationInfo')}
-                    src={user?.avatarLink ? user?.avatarLink : images.noImg}
-                    alt="img-avatar"
-                    onClick={handleModelOpenInfoAccount}
-                />
+            {seenInfoInGroup ? (
+                <>{/* <button onClick={handleModelOpenInfoAccount} className={cx('tam')}></button> */}</>
             ) : (
                 <>
-                    {yourProfile ? (
-                        <button className={cx('item-btn')} onClick={handleModelOpenInfoAccount}>
-                            {friend ? 'Xem thông tin' : ' Hồ sơ của bạn'}
-                        </button>
+                    {ConversationInfo ? (
+                        <img
+                            className={cx('img-avatar-ConversationInfo')}
+                            src={user?.avatarLink ? user?.avatarLink : images.noImg}
+                            alt="img-avatar"
+                            onClick={handleModelOpenInfoAccount}
+                        />
                     ) : (
                         <>
-                            <FontAwesomeIcon className={cx('setting-icon')} icon={faUser} />
-                            <button className={cx('setting-item-btn')} onClick={handleModelOpenInfoAccount}>
-                                Thông tin tài khoản
-                            </button>
+                            {yourProfile ? (
+                                <button className={cx('item-btn')} onClick={handleModelOpenInfoAccount}>
+                                    {friend ? 'Xem thông tin' : ' Hồ sơ của bạn'}
+                                </button>
+                            ) : (
+                                <>
+                                    <FontAwesomeIcon className={cx('setting-icon')} icon={faUser} />
+                                    <button className={cx('setting-item-btn')} onClick={handleModelOpenInfoAccount}>
+                                        Thông tin tài khoản
+                                    </button>
+                                </>
+                            )}
                         </>
                     )}
                 </>

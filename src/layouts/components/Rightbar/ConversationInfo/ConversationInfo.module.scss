@@ -34,6 +34,16 @@
     display: flex;
     justify-content: center;
 }
+.info-name .icon-changeName {
+    font-size: 16px;
+    margin-left: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
 
 .avatar {
     width: 62px;
@@ -307,6 +317,10 @@ image .info-show .info-show-3 {
     color: black;
     font-family: var(--font-family);
     background-color: #d3d3d3;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.6;
+    }
 }
 .button-addMembers .item {
     margin-right: 10px;
@@ -317,3 +331,135 @@ image .info-show .info-show-3 {
     color: black;
     font-family: var(--font-family);
 }
+//them thanh vien nhom
+.model-add-friend {
+    width: 352px;
+    height: 440px;
+}
+.model-add-friend-bg {
+    background-color: var(--white);
+    border-radius: 6px;
+    height: 420px;
+}
+.model-add-group-bg {
+    background-color: var(--white);
+    border-radius: 6px;
+    height: 700px;
+    width: 500px;
+    margin-top: -130px;
+}
+.add-friend-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    height: 50px;
+    border-bottom: solid 0.5px #d3d3d3;
+}
+
+.friend-title {
+    color: var(--text);
+    font-size: 1.8rem;
+    font-weight: 500;
+    font-family: var(--font-family);
+}
+.close-btn {
+    background-color: transparent;
+    border: none;
+}
+.friend-close-ic {
+    font-size: 2rem;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.6;
+    }
+}
+//model change name
+.model-change-name {
+    width: 352px;
+    height: 440px;
+}
+.model-change-name-bg {
+    background-color: var(--white);
+    border-radius: 6px;
+    height: 280px;
+}
+.model-change-name-avatar {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+
+.model-change-name-content p {
+    color: black;
+    font-size: 1.4rem;
+    font-family: var(--font-family);
+    width: 280px;
+    font-weight: 400;
+    margin-left: auto;
+    margin-right: auto;
+}
+.model-change-name-content input {
+    display: inline-block;
+    width: 80%;
+    height: 30px;
+    outline: 0;
+    margin-left: 10%;
+    margin-top: 10px;
+    font-size: 2rem;
+    background: transparent;
+    border-radius: 5px;
+    font-family: var(--font-family);
+    transition: border-color 0.2s;
+    border: solid 0.5px #d3d3d3;
+    padding: 15px 10px;
+    &:hover {
+        opacity: 0.6;
+        font-weight: bold;
+        font-family: var(--font-family);
+        border: solid 1px #0000ff;
+    }
+}
+///@at-root
+.model-change-name-bottom {
+    height: 70px;
+}
+.bottom-button {
+    margin-left: 50%;
+    width: 150px;
+    display: flex;
+}
+.model-change-name-bottom button {
+    margin-top: 15px;
+    border: 0;
+    width: 50px;
+    cursor: pointer;
+}
+.model-change-name-bottom .cancel {
+    height: 40px;
+    width: 55px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+.model-change-name-bottom .search {
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+    flex: 3;
+    background-color: var(--primary);
+    color: black;
+}
+// .search {
+//     display: flex;
+//     align-items: center;
+//     flex: 2.7; //1
+//     margin-right: 3px;
+//     position: relative;
+//     margin-left: 4%;
+// }

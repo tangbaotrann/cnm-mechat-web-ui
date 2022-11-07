@@ -26,7 +26,7 @@ function App() {
         dispatch(friendAccept());
         dispatch(meRequestFriend());
         dispatch(listGroupUser());
-    });
+    }, []);
     return (
         <Router>
             <Routes>

@@ -2,14 +2,15 @@
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faAnchorLock,
     faCaretDown,
     faClock,
     faNoteSticky,
+    faPenToSquare,
     faRightFromBracket,
     faTrash,
     faUserGroup,
     faUserPlus,
+    faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 // me
@@ -27,6 +28,8 @@ import ModelInfoAccount from '~/components/ModelWrapper/ModelInfoAccount';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
 import ModelWrapper from '~/components/ModelWrapper';
 import Conversation from '~/components/Conversation';
+import AddGroup from '~/components/AddGroup';
+import { changeNameGroups, outGroup } from '~/redux/features/Group/GroupSlice';
 
 const cx = classNames.bind(styles);
 
@@ -40,13 +43,15 @@ function ConversationInfo() {
     const filterUser = useSelector(filterUserGroup);
     const userCurrent = useSelector((state) => state.userCurrents.data);
     const [showPreview, setShowPreview] = useState(false);
+    const [openAddGroup, setOpenAddGroup] = useState(false);
+    const [modelChangeName, setModelChangeName] = useState(false);
+
     const [showImg, setShowImg] = useState();
+    const [changeNameGroup, setChangeNameGroup] = useState(conversation?.name);
     const infoConversation =
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
     const dispatch = useDispatch();
-
-    console.log(filterUser);
 
     useEffect(() => {
         dispatch(
@@ -85,6 +90,53 @@ function ConversationInfo() {
         setShowAddMembers(false);
         console.log(showAddMembers);
     };
+    //them thanh vien
+    const handleModelOpenAddGroup = () => {
+        setOpenAddGroup(true);
+    };
+    const handleModelCloseOpenAddGroup = () => {
+        setOpenAddGroup(false);
+    };
+    // mo dong model doi ten nhom
+    const openModelChangeName = () => {
+        setModelChangeName(true);
+    };
+    const closerModelChangeName = () => {
+        setModelChangeName(false);
+    };
+    const handleChangeNameGroup = (e) => {
+        setChangeNameGroup(e.target.value);
+    };
+    const submitChangeNameGroup = () => {
+        const dataChangeGroup = {
+            userId: infoUser._id,
+            newName: changeNameGroup,
+            conversationId: conversation.id,
+        };
+        dispatch(changeNameGroups(dataChangeGroup));
+        if (changeNameGroups()) {
+            alert('Đổi tên nhóm thành cônng');
+            window.location.reload(true);
+        }
+    };
+
+    //out nhom
+    const handleOutGroup = () => {
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn rời nhóm không?');
+        if (checkOutGroup === true) {
+            const dataOutGroup = {
+                userId: infoUser._id,
+                conversationId: conversation.id,
+            };
+            dispatch(outGroup(dataOutGroup));
+            if (outGroup()) {
+                alert('Bạn đã rời khỏi nhóm thành công');
+                window.location.reload(true);
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu rời nhóm');
+        }
+    };
 
     return (
         <div className={cx('wrapper')}>
@@ -113,7 +165,55 @@ function ConversationInfo() {
                             </div>
                             <div className={cx('info-name')}>
                                 <h3 className={cx('name')}>{conversation?.name}</h3>
+                                {conversation.createdBy !== null ? (
+                                    <FontAwesomeIcon
+                                        className={cx('icon-changeName')}
+                                        icon={faPenToSquare}
+                                        onClick={openModelChangeName}
+                                    />
+                                ) : null}
                             </div>
+                            <ModelWrapper
+                                className={cx('model-change-name')}
+                                open={modelChangeName}
+                                onClose={closerModelChangeName}
+                            >
+                                <div className={cx('model-change-name-bg')}>
+                                    <div className={cx('add-friend-title')}>
+                                        <span className={cx('friend-title')}>Đổi tên nhóm</span>
+                                        <button className={cx('close-btn')} onClick={closerModelChangeName}>
+                                            <FontAwesomeIcon className={cx('friend-close-ic')} icon={faXmark} />
+                                        </button>
+                                    </div>
+                                    <div className={cx('model-change-name-content')}>
+                                        <img
+                                            className={cx('model-change-name-avatar')}
+                                            src={
+                                                conversation?.imageLinkOfConver
+                                                    ? conversation.imageLinkOfConver
+                                                    : images.noImg
+                                            }
+                                            alt="avatar"
+                                        />
+
+                                        <p>
+                                            Bạn có muốn đổi tên nhóm, khi xác nhận tên nhóm mới sẽ hiển thị với tất cả
+                                            thành viên
+                                        </p>
+                                        <input type="text" value={changeNameGroup} onChange={handleChangeNameGroup} />
+                                    </div>
+                                    <div className={cx('model-change-name-bottom')}>
+                                        <div className={cx('bottom-button')}>
+                                            <button className={cx('cancel')} onClick={closerModelChangeName}>
+                                                Hủy
+                                            </button>
+                                            <button className={cx('search')} onClick={submitChangeNameGroup}>
+                                                Xác Nhận
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ModelWrapper>
                         </div>
 
                         <div className={cx('separator')}></div>
@@ -126,11 +226,7 @@ function ConversationInfo() {
                                     </div>
 
                                     <button className={cx('btn-click-icon')} onClick={handleAddMemberGroup}>
-                                        <FontAwesomeIcon
-                                            className={cx('item')}
-                                            icon={faUserGroup}
-                                            // onClick={handleModelOpenAddGroup}
-                                        />
+                                        <FontAwesomeIcon className={cx('item')} icon={faUserGroup} />
                                         <label>{conversation.members.length} Thành Viên</label>
                                     </button>
                                 </div>
@@ -307,7 +403,7 @@ function ConversationInfo() {
                                 />
                                 <label>Xóa lịch sử cuộc trò chuyện</label>
                             </button>
-                            <button className={cx('btn-click-footer')}>
+                            <button className={cx('btn-click-footer')} onClick={handleOutGroup}>
                                 <FontAwesomeIcon
                                     className={cx('item')}
                                     icon={faRightFromBracket}
@@ -488,15 +584,27 @@ function ConversationInfo() {
                             </h2>
                             <div className={cx('separator')}></div>
                             <div className={cx('button-addMembers')}>
-                                <button>
-                                    <FontAwesomeIcon
-                                        className={cx('item')}
-                                        icon={faUserPlus}
-                                        // onClick={handleModelOpenInfoAccount}
-                                    />
+                                <button onClick={handleModelOpenAddGroup}>
+                                    <FontAwesomeIcon className={cx('item')} icon={faUserPlus} />
                                     Thêm thành viên
                                 </button>
                             </div>
+                            {/* Tạo nhóm */}
+                            <ModelWrapper
+                                className={cx('model-add-friend')}
+                                open={openAddGroup}
+                                onClose={handleModelCloseOpenAddGroup}
+                            >
+                                <div className={cx('model-add-group-bg')}>
+                                    <div className={cx('add-friend-title')}>
+                                        <span className={cx('friend-title')}>Thêm thành viên</span>
+                                        <button className={cx('close-btn')}>
+                                            <FontAwesomeIcon className={cx('friend-close-ic')} icon={faXmark} />
+                                        </button>
+                                    </div>
+                                    <AddGroup addMemerber />
+                                </div>
+                            </ModelWrapper>
                             <div className={cx('separator')}></div>
                             <div className={cx('list-members')}>
                                 <label>Danh sách thành viên ({conversation.members.length})</label>

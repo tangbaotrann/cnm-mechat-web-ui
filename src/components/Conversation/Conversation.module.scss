@@ -93,3 +93,38 @@
         background-color: var(--grey-400);
     }
 }
+.key-leader {
+    position: relative;
+}
+.icon-camera {
+    position: absolute;
+
+    margin: auto;
+    font-size: 1.5rem;
+    color: yellow;
+    bottom: -22px;
+    right: 2px;
+
+    cursor: pointer;
+}
+.option-avatar {
+    display: flex;
+    align-items: center;
+}
+.button-addFriend button {
+    font-size: 13px;
+    height: 20px;
+    width: 70px;
+    border: 0;
+    margin-right: 5px;
+    border-radius: 5px;
+    background-color: var(--primary);
+    cursor: pointer;
+    &:hover {
+        opacity: 0.6;
+        background-color: var(--primary);
+    }
+}
+.model-info {
+    font-size: 500px;
+}
