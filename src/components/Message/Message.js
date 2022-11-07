@@ -160,7 +160,7 @@ function Message({ message, own, conversation, user }) {
                         </TippyHeadless>
                         {message.deleteBy.length === 0 && (
                             <>
-                                {conversation.isGroup === true && memberFriend._id === message.senderID ? (
+                                {conversation.isGroup === true && memberFriend?._id === message.senderID ? (
                                     <img className={cx('message-top-img')} src={user.avatarLink} alt="avatar" />
                                 ) : (
                                     <img
@@ -181,7 +181,7 @@ function Message({ message, own, conversation, user }) {
                     <div className={cx('message-top')}>
                         {message.deleteBy.length === 0 && (
                             <>
-                                {conversation.isGroup === true && memberFriend._id === message.senderID ? (
+                                {conversation.isGroup === true && memberFriend?._id === message.senderID ? (
                                     <img className={cx('message-top-img')} src={memberFriend.avatarLink} alt="avatar" />
                                 ) : (
                                     <img

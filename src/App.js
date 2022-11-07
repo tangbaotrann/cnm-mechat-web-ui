@@ -26,7 +26,6 @@ function App() {
         dispatch(friendAccept());
         dispatch(meRequestFriend());
         dispatch(listGroupUser());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <Router>

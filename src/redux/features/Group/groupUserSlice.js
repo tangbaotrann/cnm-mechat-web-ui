@@ -28,7 +28,6 @@ const groupUserSlice = createSlice({
 export const fetchApiGroupUserChat = createAsyncThunk('groupUserChat/fetchApiGroupUserChat', async (memberId) => {
     try {
         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${memberId}`);
-
         return res.data.data;
     } catch (err) {
         console.log(err);

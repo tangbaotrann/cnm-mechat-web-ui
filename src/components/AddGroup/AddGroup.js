@@ -6,12 +6,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import images from '~/assets/images';
 import filterSlice from '~/redux/features/filter/filterSlice';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
-import { createGroup } from '~/redux/features/Group/GroupSlice';
-import { listFriend, searchFilterFriend, userLogin, usersRemainingSelector } from '~/redux/selector';
+import { addMember, createGroup } from '~/redux/features/Group/GroupSlice';
+import {
+    filterFriendGroup,
+    filterUserGroup,
+    listFriend,
+    searchFilterFriend,
+    userLogin,
+    usersRemainingSelector,
+} from '~/redux/selector';
 import useDebounce from '../hooks/useDebounce';
 import styles from './AddGroup.module.scss';
 const cx = classNames.bind(styles);
-function AddGroup() {
+function AddGroup(addMemerber) {
     const [searchPhone, setSearchPhone] = useState('');
     const [nameGroup, setNameGroup] = useState('');
     const [searchResultShow, setSearchResultShow] = useState(false);
@@ -19,6 +26,7 @@ function AddGroup() {
     const debouncedValue = useDebounce(searchPhone, 500);
     const listFriends = useSelector(listFriend);
     const [checked, setChecked] = useState([]);
+    const conversation = useSelector((state) => state.conversations.conversationClick);
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
     //bat loi vali
@@ -31,19 +39,30 @@ function AddGroup() {
         dispatch(filterSlice.actions.searchFilterChange(searchPhone));
     }, [debouncedValue]);
     const userSearching = useSelector(usersRemainingSelector);
+    const filterFriendGroups = useSelector(filterFriendGroup);
+
     const handleSummit = () => {
-        console.log(nameGroup);
-        console.log(checked);
-        console.log(infoUser._id);
-        const data = { members: checked, createdBy: infoUser._id, name: nameGroup };
-        dispatch(createGroup(data));
-        if (createGroup()) {
-            alert('Nhóm thành công');
-            window.location.reload(true);
+        if (nameGroup === '') {
+            const dataAddMember = {
+                memberAddID: infoUser._id,
+                newMemberID: checked,
+                conversationId: conversation.id,
+            };
+            dispatch(addMember(dataAddMember));
+            if (addMember()) {
+                alert('thêm thành viên thành công');
+                window.location.reload(true);
+            }
+        } else {
+            const data = { members: checked, createdBy: infoUser._id, name: nameGroup };
+            dispatch(createGroup(data));
+            if (createGroup()) {
+                alert('Tạo Nhóm thành công');
+                window.location.reload(true);
+            }
         }
     };
     const handleCheck = (e) => {
-        console.log(e.target.value);
         var updatedList = [...checked];
         if (e.target.checked) {
             updatedList = [...checked, e.target.value];
@@ -73,6 +92,8 @@ function AddGroup() {
     useEffect(() => {
         if (searchPhone === '') {
             setError('');
+            dispatch(filterSlice.actions.searchFilterChange(null));
+            setSearchResultShow(false);
         }
     }, [searchPhone]);
 
@@ -84,22 +105,32 @@ function AddGroup() {
             window.location.reload(true);
         }
     };
+    const handlCancle = (e) => {
+        setError('');
+        dispatch(filterSlice.actions.searchFilterChange(null));
+        setSearchResultShow(false);
+        setChecked('');
+        setSearchPhone('');
+        setNameGroup('');
+    };
     return (
         <div>
-            <div className={cx('add-Group')}>
-                <label>Nhập tên nhóm: </label>
-                <input
-                    type="text"
-                    placeholder="Nhập tên nhóm"
-                    value={nameGroup}
-                    onChange={(e) => setNameGroup(e.target.value)}
-                />
-                {!!nameGroup && (
-                    <button className={cx('clear-btn1')} onClick={handleBtnClearText}>
-                        <FontAwesomeIcon className={cx('clear-icon')} icon={faCircleXmark} />
-                    </button>
-                )}
-            </div>
+            {addMemerber ? null : (
+                <div className={cx('add-Group')}>
+                    <label>Nhập tên nhóm: </label>
+                    <input
+                        type="text"
+                        placeholder="Nhập tên nhóm"
+                        value={nameGroup}
+                        onChange={(e) => setNameGroup(e.target.value)}
+                    />
+                    {!!nameGroup && (
+                        <button className={cx('clear-btn1')} onClick={handleBtnClearText}>
+                            <FontAwesomeIcon className={cx('clear-icon')} icon={faCircleXmark} />
+                        </button>
+                    )}
+                </div>
+            )}
             <div className={cx('title-add-Group')}>
                 <label>Thêm bạn vào nhóm</label>
             </div>
@@ -155,9 +186,15 @@ function AddGroup() {
                             return (
                                 <div className={cx('list-conversation')} key={user?._id}>
                                     <div className={cx('input-radio')}>
-                                        <input type="checkBox" value={user._id} onChange={handleCheck} />
+                                        <input
+                                            type="checkBox"
+                                            value={user._id}
+                                            onChange={handleCheck}
+                                            checked={filterFriendGroups.find((fr) =>
+                                                fr._id === user._id ? true : false,
+                                            )}
+                                        />
                                     </div>
-
                                     <img
                                         className={cx('avatar-img')}
                                         src={user?.imageLinkOfConver ? user.imageLinkOfConver : images.noImg}
@@ -172,14 +209,29 @@ function AddGroup() {
                     </div>
                 )}
             </div>
-            <div className={cx('add-friend-bottom')}>
-                <div className={cx('bottom-button')}>
-                    <button className={cx('cancel')}>Hủy</button>
-                    <button className={cx('search')} onClick={handleSummit}>
-                        Tạo
-                    </button>
+            {addMemerber ? (
+                <div className={cx('add-friend-bottom')}>
+                    <div className={cx('bottom-button')}>
+                        <button className={cx('cancel')} onClick={handlCancle}>
+                            Hủy
+                        </button>
+                        <button className={cx('search')} onClick={handleSummit}>
+                            Thêm
+                        </button>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className={cx('add-friend-bottom')}>
+                    <div className={cx('bottom-button')}>
+                        <button className={cx('cancel')} onClick={handlCancle}>
+                            Hủy
+                        </button>
+                        <button className={cx('search')} onClick={handleSummit}>
+                            Tạo
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
