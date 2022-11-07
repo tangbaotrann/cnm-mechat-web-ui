@@ -5,11 +5,18 @@ const groupUserSlice = createSlice({
     name: 'groupUserChat',
     initialState: {
         data: [],
+        isLoading: false,
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchApiGroupUserChat.pending, (state, action) => {
+                state.isLoading = true;
+            })
             .addCase(fetchApiGroupUserChat.fulfilled, (state, action) => {
+                // const member = action.payload;
+
                 state.data = action.payload;
+                state.isLoading = false;
             })
             .addCase(fetchApiGroupUserChat.rejected, (state, action) => {
                 console.log('Error!');
@@ -21,8 +28,6 @@ const groupUserSlice = createSlice({
 export const fetchApiGroupUserChat = createAsyncThunk('groupUserChat/fetchApiGroupUserChat', async (memberId) => {
     try {
         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${memberId}`);
-
-        console.log('25 - res -', res.data.data);
 
         return res.data.data;
     } catch (err) {
