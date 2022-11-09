@@ -1,6 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import socket from '~/util/socket';
+
+export const fetchApiConversationById = createAsyncThunk('listGroupUser/fetchApiConversationById', async (userId) => {
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${userId}`);
+
+        console.log('10 - ', res.data.data);
+
+        return res.data.data;
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 export const listGroupUser = createAsyncThunk('user/listGroupUser', async (arg, { rejectWithValue }) => {
     try {
         const getToken = JSON.parse(localStorage.getItem('user_login'));
@@ -8,7 +22,7 @@ export const listGroupUser = createAsyncThunk('user/listGroupUser', async (arg, 
         // check token
         if (getToken !== null) {
             const decodedToken = jwt_decode(getToken._token);
-            const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/conversations/${decodedToken._id}`);
+            const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${decodedToken._id}`);
             return res.data.data;
         }
     } catch (err) {
@@ -32,7 +46,7 @@ export const createGroup = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        console.log(jsonData);
+        console.log('---------->', jsonData);
         return jsonData;
     },
 );
@@ -117,7 +131,8 @@ export const outGroup = createAsyncThunk(
         );
 
         const jsonData = await response.json();
-        console.log(jsonData);
+        console.log('134 ---> ', jsonData);
+
         return jsonData;
     },
 );
@@ -145,26 +160,82 @@ export const changeNameGroups = createAsyncThunk(
 );
 const listGroupUsers = createSlice({
     name: 'listGroupUser',
-    initialState: { data: [] },
+    initialState: { data: [], isLoading: false },
+    reducers: {
+        arrivalCreateGroupFromSocket: (state, action) => {
+            const conversation = action.payload;
+            const _con = state.data.find((con) => con.id === conversation.id);
+
+            if (!_con) {
+                state.data.push(action.payload);
+            } else {
+                console.log('Existing conversation id!!!');
+                return;
+            }
+        },
+        arrivalDeleteConversationOutGroupFromSocket: (state, action) => {
+            const _con = state.data.findIndex((con) => con.id === action.payload);
+
+            state.data.splice(_con, 1);
+        },
+        arrivalUpdateLastMessageFromSocket: (state, action) => {
+            // const mess = action.payload;
+            // console.log('182 --', mess);
+        },
+    },
     extraReducers: (builder) => {
-        builder.addCase(listGroupUser.fulfilled, (state, action) => {
-            state.data = action.payload;
-        });
-        builder.addCase(createGroup.fulfilled, (state, action) => {
-            state.data = action.payload;
-        });
-        builder.addCase(deleteMember.fulfilled, (state, action) => {
-            state.data = action.payload;
-        });
-        builder.addCase(addMember.fulfilled, (state, action) => {
-            state.data = action.payload;
-        });
-        builder.addCase(outGroup.fulfilled, (state, action) => {
-            state.data = action.payload;
-        });
-        builder.addCase(changeNameGroups.fulfilled, (state, action) => {
-            state.data = action.payload;
-        });
+        builder
+            .addCase(fetchApiConversationById.pending, (state, action) => {
+                if (action.payload) {
+                    state.isLoading = true;
+                }
+            })
+            .addCase(fetchApiConversationById.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.data = action.payload;
+                    state.isLoading = false;
+                }
+            })
+            // .addCase(listGroupUser.pending, (state, action) => {
+            //     state.isLoading = true;
+            // })
+            // .addCase(listGroupUser.fulfilled, (state, action) => {
+            //     state.data = action.payload;
+            //     state.isLoading = false;
+            // })
+            .addCase(createGroup.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.data.push(action.payload);
+                }
+
+                // socket
+                socket.emit('create_group', {
+                    conversation: action.payload,
+                });
+            })
+            .addCase(deleteMember.fulfilled, (state, action) => {
+                // console.log('[DELETE = MEM]', action.payload);
+                // state.data = action.payload;
+                // socket
+                // socket.emit('user_out_group', {
+                //     info: action.payload,
+                // });
+            })
+            .addCase(addMember.fulfilled, (state, action) => {
+                // state.data = action.payload;
+            })
+            .addCase(outGroup.fulfilled, (state, action) => {
+                console.log('227 --->', action.payload);
+                // state.data = action.payload;
+
+                // socket
+                socket.emit('user_out_group', {
+                    info: action.payload,
+                });
+            })
+            .addCase(changeNameGroups.fulfilled, (state, action) => {
+                // state.data = action.payload;
+            });
     },
 });
 export default listGroupUsers;

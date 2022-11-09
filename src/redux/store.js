@@ -15,6 +15,7 @@ import userCurrents from './features/user/userCurrent';
 import friendsSlice from './features/friend/friendsSlice';
 import listGroupUsers from './features/Group/GroupSlice';
 import groupUserSlice from './features/Group/groupUserSlice';
+import listFriendRequests from './features/friend/friendRequestSlice';
 
 const store = configureStore({
     reducer: {
@@ -30,6 +31,7 @@ const store = configureStore({
         friends: friendsSlice.reducer,
         listGroupUser: listGroupUsers.reducer,
         groupUserSlices: groupUserSlice.reducer,
+        friendRequests: listFriendRequests.reducer,
     },
 });
 

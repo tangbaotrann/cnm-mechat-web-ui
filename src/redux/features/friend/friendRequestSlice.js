@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+// me
+import socket from '~/util/socket';
+
 export const friendRequests = createAsyncThunk(
     // Tên action
     'user/friendRequests',
@@ -8,7 +11,7 @@ export const friendRequests = createAsyncThunk(
     async (data) => {
         // Gọi lên API backend
 
-        const response = await fetch(`${process.env.REACT_APP_BASE_URL}friendRequests/create/`, {
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}friendRequests/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,9 +27,20 @@ export const friendRequests = createAsyncThunk(
 const listFriendRequests = createSlice({
     name: 'friendRequest',
     initialState: { data: [] },
+    reducers: {
+        friendRequestArrivalFromSocket: (state, action) => {
+            console.log('[friendRequestArrivalFromSocket]', action.payload);
+            state.data.push(action.payload);
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(friendRequests.fulfilled, (state, action) => {
-            state.data = action.payload;
+            // state.data = action.payload;
+
+            // socket
+            socket.emit('send_friend_request', {
+                request: action.payload.data,
+            });
         });
     },
 });

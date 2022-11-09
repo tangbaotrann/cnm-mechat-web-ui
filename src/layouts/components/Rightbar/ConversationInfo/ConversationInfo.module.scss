@@ -27,6 +27,7 @@
     flex-direction: column;
     margin-top: 26px;
     z-index: -9999;
+    position: relative;
 }
 
 .info-avatar,
@@ -255,10 +256,10 @@ image .info-show .info-show-3 {
     font-size: 16px;
     position: relative;
     font-family: var(--font-family);
+    cursor: pointer;
     &:hover {
         opacity: 0.6;
     }
-    cursor: pointer;
 }
 .members-group-title .icon {
     margin-right: 10px;

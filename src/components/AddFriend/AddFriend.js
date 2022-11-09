@@ -20,8 +20,9 @@ function AddFriend() {
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
 
-    // Handle open/ close model info account
     const dispatch = useDispatch();
+
+    // Handle open/ close model info account
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchPhone));
     }, [debouncedValue]);
@@ -53,7 +54,7 @@ function AddFriend() {
             setPhoneNumber('');
             dispatch(filterSlice.actions.searchFilterChange(null));
             setSearchResult(false);
-            window.location.reload(true);
+            //window.location.reload(true);
         }
     };
     return (

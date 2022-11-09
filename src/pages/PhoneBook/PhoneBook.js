@@ -2,8 +2,8 @@
 import classNames from 'classnames/bind';
 import { NavLink } from 'react-router-dom';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
@@ -21,6 +21,8 @@ import FriendRequestList from './FriendRequest_list/FriendRequestList';
 
 import Messenger from '~/layouts/components/Rightbar/Messenger';
 import ConversationInfo from '~/layouts/components/Rightbar/ConversationInfo';
+import socket from '~/util/socket';
+import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
 
 const cx = classNames.bind(styles);
 
@@ -32,14 +34,37 @@ function PhoneBook() {
     const listFriends = useSelector(listFriend);
     const conversation = useSelector((state) => state.conversations.conversationClick);
     const listGroup = useSelector(listGroupUser);
-    // const conversation = useSelector((state) => state.conversations.conversationClick);
-    // const message = useSelector((state) => state.messages.clickSendMessage);
 
-    // console.log('[conversation] - ', conversation);
-    // console.log('[LIST FRIEND - ] - ', listFriends);
-    const listAccept = useSelector(listFriendAccept);
-
+    //const listAccept = useSelector(listFriendAccept);
     const listMeRequest = useSelector(listMeRequests);
+
+    const listRequestFriend = useSelector((state) => state.friendRequests.data);
+
+    const dispatch = useDispatch();
+
+    const user = useSelector((state) => state.user.data);
+    console.log('user - ', user._id);
+
+    // realtime socket (fetch user)
+    useEffect(() => {
+        socket.emit('status_user', user._id);
+
+        socket.on('get_users', (users) => {
+            console.log('USER - ONLINE -', users);
+        });
+    }, [user._id]);
+
+    // realtime with socket
+    useEffect(() => {
+        socket.on('receiver_friend_request', (request) => {
+            console.log('[receiver_friend_request]', request);
+            dispatch(listFriendRequests.actions.friendRequestArrivalFromSocket(request));
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // re-call add friend
+    useEffect(() => {}, []);
 
     //
     const handleModelOpenInfoAccount = () => {
@@ -118,12 +143,16 @@ function PhoneBook() {
                         {!changeLayout ? (
                             <div className={cx('list-FriendRequest')}>
                                 <div className={cx('friendRequest')}>
-                                    {listAccept?.length === 0 ? null : <h1>Lời mời kết bạn ({listAccept?.length})</h1>}
-                                    {listAccept?.map((user) => {
+                                    {/* listAccept */}
+                                    {listRequestFriend?.length === 0 ? null : (
+                                        <h1>Lời mời kết bạn ({listRequestFriend?.length})</h1>
+                                    )}
+                                    {listRequestFriend?.map((user) => {
                                         return <FriendRequestList key={user.idFriendRequest} user={user} isPhoneBook />;
                                     })}
                                 </div>
                                 <div className={cx('meRequestFriend')}>
+                                    {/* listMeRequest */}
                                     {listMeRequest?.length === 0 ? null : (
                                         <h1>Yêu cầu kết bạn ({listMeRequest?.length})</h1>
                                     )}
