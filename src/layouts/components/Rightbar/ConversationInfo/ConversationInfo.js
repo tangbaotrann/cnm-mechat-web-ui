@@ -598,7 +598,7 @@ function ConversationInfo() {
                                 <div className={cx('model-add-group-bg')}>
                                     <div className={cx('add-friend-title')}>
                                         <span className={cx('friend-title')}>Thêm thành viên</span>
-                                        <button className={cx('close-btn')}>
+                                        <button className={cx('close-btn')} onClick={handleModelCloseOpenAddGroup}>
                                             <FontAwesomeIcon className={cx('friend-close-ic')} icon={faXmark} />
                                         </button>
                                     </div>

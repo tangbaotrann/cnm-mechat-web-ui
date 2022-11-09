@@ -8,12 +8,14 @@ export const fetchApiUser = createAsyncThunk('user/fetchApiUser', async (arg, { 
     try {
         const getToken = JSON.parse(localStorage.getItem('user_login'));
         // check token
-        if (getToken !== null) {
-            const decodedToken = jwt_decode(getToken._token);
+        if (localStorage.getItem('user_login') !== null) {
+            if (getToken !== null) {
+                const decodedToken = jwt_decode(getToken._token);
 
-            const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${decodedToken._id}`);
+                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${decodedToken._id}`);
 
-            return res.data.data;
+                return res.data.data;
+            }
         }
     } catch (err) {
         console.log(err);
@@ -51,7 +53,11 @@ const userSlice = createSlice({
         isSuccess: false,
         isLoading: false,
     },
-    reducers: {},
+    reducers: {
+        resetUserInfo: (state, { payload }) => {
+            state.data = payload;
+        },
+    },
     extraReducers: {
         [fetchApiUser.pending]: (state, { payload }) => {
             state.isLoading = true;

@@ -18,7 +18,7 @@ import {
 import useDebounce from '../hooks/useDebounce';
 import styles from './AddGroup.module.scss';
 const cx = classNames.bind(styles);
-function AddGroup(addMemerber) {
+function AddGroup({ addMemerber }) {
     const [searchPhone, setSearchPhone] = useState('');
     const [nameGroup, setNameGroup] = useState('');
     const [searchResultShow, setSearchResultShow] = useState(false);
@@ -185,16 +185,29 @@ function AddGroup(addMemerber) {
                         {listFriends?.map((user) => {
                             return (
                                 <div className={cx('list-conversation')} key={user?._id}>
-                                    <div className={cx('input-radio')}>
-                                        <input
-                                            type="checkBox"
-                                            value={user._id}
-                                            onChange={handleCheck}
-                                            checked={filterFriendGroups.find((fr) =>
-                                                fr._id === user._id ? true : false,
-                                            )}
-                                        />
-                                    </div>
+                                    {addMemerber ? (
+                                        <div className={cx('input-radio')}>
+                                            <input
+                                                type="checkBox"
+                                                value={user._id}
+                                                onChange={handleCheck}
+                                                checked={filterFriendGroups.find((fr) =>
+                                                    fr._id === user._id ? true : false,
+                                                )}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className={cx('input-radio')}>
+                                            <input
+                                                type="checkBox"
+                                                value={user._id}
+                                                onChange={handleCheck}
+                                                // checked={filterFriendGroups.find((fr) =>
+                                                //     fr._id === user._id ? true : false,
+                                                // )}
+                                            />
+                                        </div>
+                                    )}
                                     <img
                                         className={cx('avatar-img')}
                                         src={user?.imageLinkOfConver ? user.imageLinkOfConver : images.noImg}

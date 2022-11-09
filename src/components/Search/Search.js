@@ -176,7 +176,7 @@ function Search() {
                             <FontAwesomeIcon
                                 className={cx('friend-close-ic')}
                                 icon={faXmark}
-                                onClick={handleModelCloseInfoAccount}
+                                onClick={handleModelCloseOpenAddGroup}
                             />
                         </button>
                     </div>
