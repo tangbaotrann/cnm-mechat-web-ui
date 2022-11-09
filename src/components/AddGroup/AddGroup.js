@@ -18,7 +18,7 @@ import {
 import useDebounce from '../hooks/useDebounce';
 import styles from './AddGroup.module.scss';
 const cx = classNames.bind(styles);
-function AddGroup(addMemerber) {
+function AddGroup({ addMemerber }) {
     const [searchPhone, setSearchPhone] = useState('');
     const [nameGroup, setNameGroup] = useState('');
     const [searchResultShow, setSearchResultShow] = useState(false);
@@ -35,6 +35,9 @@ function AddGroup(addMemerber) {
         setNameGroup('');
     };
     const dispatch = useDispatch();
+
+    // console.log('39', addMemerber);
+
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchPhone));
     }, [debouncedValue]);
@@ -51,17 +54,18 @@ function AddGroup(addMemerber) {
             dispatch(addMember(dataAddMember));
             if (addMember()) {
                 alert('thêm thành viên thành công');
-                window.location.reload(true);
+                // window.location.reload(true);
             }
         } else {
             const data = { members: checked, createdBy: infoUser._id, name: nameGroup };
             dispatch(createGroup(data));
             if (createGroup()) {
                 alert('Tạo Nhóm thành công');
-                window.location.reload(true);
+                // window.location.reload(true);
             }
         }
     };
+
     const handleCheck = (e) => {
         var updatedList = [...checked];
         if (e.target.checked) {

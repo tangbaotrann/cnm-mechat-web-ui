@@ -391,29 +391,33 @@ function ConversationInfo() {
                         {/* Link */}
                         <ItemStored isLink />
                         <div className={cx('separator')}></div>
-                        <div className={cx('members-group')}>
-                            <div className={cx('members-group-title')}>
-                                <label>Thiết lập bảo mật</label>
-                                <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
-                            </div>
+                        {conversation.isGroup && (
+                            <>
+                                <div className={cx('members-group')}>
+                                    <div className={cx('members-group-title')}>
+                                        <label>Thiết lập bảo mật</label>
+                                        <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
+                                    </div>
 
-                            <button className={cx('btn-click-footer')}>
-                                <FontAwesomeIcon
-                                    className={cx('item')}
-                                    icon={faTrash}
-                                    // onClick={handleModelOpenAddGroup}
-                                />
-                                <label>Xóa lịch sử cuộc trò chuyện</label>
-                            </button>
-                            <button className={cx('btn-click-footer')} onClick={handleOutGroup}>
-                                <FontAwesomeIcon
-                                    className={cx('item')}
-                                    icon={faRightFromBracket}
-                                    // onClick={handleModelOpenAddGroup}
-                                />
-                                <label>Rời nhóm</label>
-                            </button>
-                        </div>
+                                    <button className={cx('btn-click-footer')}>
+                                        <FontAwesomeIcon
+                                            className={cx('item')}
+                                            icon={faTrash}
+                                            // onClick={handleModelOpenAddGroup}
+                                        />
+                                        <label>Xóa lịch sử cuộc trò chuyện</label>
+                                    </button>
+                                    <button className={cx('btn-click-footer')} onClick={handleOutGroup}>
+                                        <FontAwesomeIcon
+                                            className={cx('item')}
+                                            icon={faRightFromBracket}
+                                            // onClick={handleModelOpenAddGroup}
+                                        />
+                                        <label>Rời nhóm</label>
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </>
             ) : (

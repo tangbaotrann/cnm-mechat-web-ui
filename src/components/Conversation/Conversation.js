@@ -16,12 +16,18 @@ import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import conversationSlice from '~/redux/features/conversation/conversationSlice';
-import { deleteMember, outGroup } from '~/redux/features/Group/GroupSlice';
+import listGroupUsers, {
+    deleteMember,
+    fetchApiConversationById,
+    listGroupUser,
+    outGroup,
+} from '~/redux/features/Group/GroupSlice';
 import { faKey, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { fetchApiGroupUserChat } from '~/redux/features/Group/groupUserSlice';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
+import socket from '~/util/socket';
 const cx = classNames.bind(styles);
 
 function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
@@ -35,20 +41,28 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const [showInfo, setShowInfo] = useState(false);
     const dispatch = useDispatch();
     //  tam
-    const [conversations, setConversation] = useState([]);
+    // const [conversations, setConversation] = useState([]);
     const conversationID = useSelector((state) => state.conversations.conversationClick);
-    useEffect(() => {
-        const fetchApi = async () => {
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);
-                setConversation(res.data.data);
-            } catch (err) {
-                console.log(err);
-            }
-        };
 
-        fetchApi();
-    }, [user?._id]);
+    const conversations = useSelector((state) => state.listGroupUser.data);
+
+    // console.log('[INFO-USER]', infoUser);
+    // console.log('[CONVERSION]', conversation);
+
+    useEffect(() => {
+        // const fetchApi = async () => {
+        //     try {
+        //         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);
+        //         setConversation(res.data.data);
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // };
+
+        // fetchApi();
+        dispatch(fetchApiConversationById(user._id));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user._id]);
 
     useEffect(() => {
         listFriendFilters?.map((key) => {
@@ -82,6 +96,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             }
         });
     };
+
     //xoa thanh vien khoi nhom
     const handleDeleteMemberGroup = () => {
         let deletes = window.confirm('Bạn có chắc chắn muốn xóa không?');
@@ -97,6 +112,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             alert('bạn đã hủy yêu cầu xóa bạn');
         }
     };
+
     //roi nhom
     const handleOutGroup = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn rời nhóm không?');
@@ -108,7 +124,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             dispatch(outGroup(dataOutGroup));
             if (outGroup()) {
                 alert('Bạn đã rời khỏi nhóm thành công');
-                window.location.reload(true);
+                // window.location.reload(true);
             }
         } else {
             alert('bạn đã hủy yêu cầu rời nhóm');

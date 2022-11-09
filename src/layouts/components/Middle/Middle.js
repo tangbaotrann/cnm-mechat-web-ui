@@ -1,7 +1,6 @@
 // libs
 import classNames from 'classnames/bind';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // me
@@ -9,30 +8,49 @@ import styles from './Middle.module.scss';
 import Conversation from '~/components/Conversation';
 import Search from '~/components/Search';
 import conversationSlice from '~/redux/features/conversation/conversationSlice';
+import socket from '~/util/socket';
+import listGroupUsers, { fetchApiConversationById } from '~/redux/features/Group/GroupSlice';
 
 const cx = classNames.bind(styles);
 
 function Middle() {
-    const [conversations, setConversation] = useState([]);
-
     const dispatch = useDispatch();
 
     const user = useSelector((state) => state.user.data);
+    const conversations = useSelector((state) => state.listGroupUser.data);
+
+    // console.log('conversations - 25 -', conversations);
 
     // Handle fetch conversation
     useEffect(() => {
-        const fetchApi = async () => {
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);
-                // console.log('conversation by id - ', res.data.data);
-                setConversation(res.data.data);
-            } catch (err) {
-                console.log(err);
-            }
-        };
+        dispatch(fetchApiConversationById(user._id));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user._id]);
 
-        fetchApi();
-    }, [user?._id]);
+    useEffect(() => {
+        socket.on('send_conversation_group', (conversation) => {
+            console.log('[send_conversation_group]', conversation);
+            if (conversation) {
+                dispatch(listGroupUsers.actions.arrivalCreateGroupFromSocket(conversation));
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // // realtime with out-group
+    useEffect(() => {
+        socket.on('remove_conversation_block_group', (info) => {
+            // console.log('[remove_conversation_block_group]', info);
+            dispatch(listGroupUsers.actions.arrivalDeleteConversationOutGroupFromSocket(info));
+        });
+
+        socket.on('update_last_message', (info) => {
+            console.log('[update_last_message]', info);
+            dispatch(listGroupUsers.actions.arrivalUpdateLastMessageFromSocket(info));
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
@@ -51,12 +69,16 @@ function Middle() {
             <div className={cx('conversations')}>
                 {conversations.map((conversation) => {
                     return (
-                        <div
-                            key={conversation.id}
-                            onClick={() => dispatch(conversationSlice.actions.clickConversation(conversation))}
-                        >
-                            <Conversation conversation={conversation} />
-                        </div>
+                        <>
+                            {conversation.id && (
+                                <div
+                                    onClick={() => dispatch(conversationSlice.actions.clickConversation(conversation))}
+                                    key={conversation.id}
+                                >
+                                    <Conversation conversation={conversation} />
+                                </div>
+                            )}
+                        </>
                     );
                 })}
             </div>

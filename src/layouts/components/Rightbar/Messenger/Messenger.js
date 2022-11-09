@@ -32,6 +32,8 @@ import messagesSlice, {
     fetchApiMessagesByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
+import listGroupUsers from '~/redux/features/Group/GroupSlice';
+import { userLogin } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -51,13 +53,15 @@ function Messenger() {
     const isLoading = useSelector((state) => state.messages.isLoading);
     const preLoading = useSelector((state) => state.messages.preLoading);
 
+    const infoUser = useSelector(userLogin);
+
     const scrollMessenger = useRef();
 
     //console.log('[LIST MESSAGES] - ', listMessage);
     // console.log('[USER] - ', user);
     // console.log('[CONVERSATION] - ', conversation);
     // console.log('[CONVERSATION.MEMBERS] - ', conversation.members);
-    // console.log('[newImageMessage] - ', newImageMessage);
+    console.log('[infoUser] - ', infoUser);
 
     // fetch message from conversationId
     useEffect(() => {

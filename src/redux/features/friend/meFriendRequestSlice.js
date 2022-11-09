@@ -2,6 +2,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+
+// me
+import socket from '~/util/socket';
+
 export const meRequestFriend = createAsyncThunk('user/meRequestFriend', async (arg, { rejectWithValue }) => {
     try {
         const getToken = JSON.parse(localStorage.getItem('user_login'));
@@ -44,13 +48,25 @@ export const callBack = createAsyncThunk(
 const listMeRequestFriend = createSlice({
     name: 'listMeRequest',
     initialState: { data: [] },
+    // reducers: {
+    //     recallArrivalAddFriend: (state, action) {
+    //         state.data =
+    //     }
+    // }
     extraReducers: (builder) => {
         builder
             .addCase(meRequestFriend.fulfilled, (state, action) => {
                 state.data = action.payload;
             })
             .addCase(callBack.fulfilled, (state, action) => {
+                // const { status, senderID, idRequest } = action.payload;
+                console.log('[re-call-send-id]', action.payload);
                 state.data = action.payload;
+
+                // socket
+                socket.emit('recall_add_friend', {
+                    request: state.payload,
+                });
             });
     },
 });

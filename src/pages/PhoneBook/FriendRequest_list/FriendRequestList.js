@@ -1,6 +1,7 @@
 import styles from './FriendRequestList.module.scss';
 import classNames from 'classnames/bind';
 import images from '~/assets/images';
+import { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { accept } from '~/redux/features/friend/friendAcceptSlice';
@@ -11,6 +12,10 @@ const cx = classNames.bind(styles);
 function FriendRequestList({ user, isPhoneBook }) {
     const dispatch = useDispatch();
     const infoUser = useSelector(userLogin);
+
+    // realtime socket
+    useEffect(() => {}, []);
+
     const handleAccept = () => {
         const data = {
             status: true,
@@ -21,11 +26,12 @@ function FriendRequestList({ user, isPhoneBook }) {
         dispatch(accept(data));
         if (accept()) {
             alert('chấp nhận kết bạn thành công');
-            window.location.reload(true);
+            //window.location.reload(true);
         } else {
             alert('Số điện thoại chưa đăng ký tài khoảng');
         }
     };
+
     const handleCancel = () => {
         const data = {
             status: false,
@@ -41,6 +47,7 @@ function FriendRequestList({ user, isPhoneBook }) {
             alert('Từ chối kết bạn thất bại');
         }
     };
+
     const handleCallback = () => {
         const data = {
             status: true,
@@ -48,7 +55,7 @@ function FriendRequestList({ user, isPhoneBook }) {
             idRequest: user.idFriendRequest,
         };
         dispatch(callBack(data));
-        window.location.reload(true);
+        // window.location.reload(true);
     };
     return (
         <div className={cx('content')}>
