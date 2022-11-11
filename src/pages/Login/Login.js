@@ -5,6 +5,9 @@ import images from '~/assets/images';
 import { useState, useEffect } from 'react';
 import { PhoneIphone, Lock } from '@material-ui/icons';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogin } from '~/redux/selector';
+import { fetchApiUser } from '~/redux/features/user/userSlice';
 //
 
 const cx = classNames.bind(styles);
@@ -13,18 +16,13 @@ function Login() {
     useEffect(() => {
         document.title = 'Trang đăng nhập';
     });
+
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     //loi
     const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
     const [errorPassWord, setErrorPassWord] = useState('');
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (localStorage.getItem('user_login')) {
-            navigate('/me.chat');
-        }
-    });
 
     const sign = () => {
         return fetch(`${process.env.REACT_APP_BASE_URL}auths/login`, {
@@ -65,8 +63,7 @@ function Login() {
                 .then((token) => {
                     if (typeof token != 'undefined') {
                         alert('Đăng nhập thành công');
-                        console.log('hoan thanh');
-                        console.log(token);
+
                         localStorage.setItem('user_login', JSON.stringify(token));
                         navigate('/me.chat');
                     }

@@ -6,35 +6,42 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Radio } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLogin } from '~/redux/selector';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { fetchApiUser } from '~/redux/features/user/userSlice';
 const cx = classNames.bind(styles);
 function AddInfoUser() {
+    useEffect(() => {
+        dispatch(fetchApiUser());
+    }, []);
     const infoUser = useSelector((state) => state.user.data);
-
+    console.log(infoUser);
+    const dispatch = useDispatch();
+    console.log(infoUser?.fullName);
     const navigate = useNavigate();
-    const [fullName, setFullName] = useState(infoUser.fullName);
+    const [fullNamee, setFullNamee] = useState(infoUser?.fullName);
     const [optionSex, setOptionSex] = useState(infoUser?.gender);
     const [birthday, setBirthday] = useState(moment(infoUser?.birthday).format('YYYY-MM-DD'));
     const [avatar, setAvatar] = useState(infoUser?.avatarLink);
-
+    console.log(infoUser?.fullName);
+    console.log(infoUser?.fullName);
+    console.log(fullNamee);
     useEffect(() => {
         return () => {
             avatar && URL.revokeObjectURL(avatar.previews);
         };
     }, [avatar]);
-    const dispatch = useDispatch();
+
     const handleChangeFullName = (e) => {
-        setFullName(e.target.value);
+        setFullNamee(e.target.value);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
-            fullName: fullName,
+            fullName: fullNamee,
             gender: optionSex,
             birthday: birthday,
             idUser: infoUser._id,
@@ -109,7 +116,7 @@ function AddInfoUser() {
                             <input
                                 className={cx('sub-input-info-acc')}
                                 type="text"
-                                value={fullName}
+                                value={fullNamee}
                                 onChange={handleChangeFullName}
                             />
                             <span className={cx('sub-desc')}>Sử dụng tên thật để bạn bè dễ dàng nhận diện hơn.</span>

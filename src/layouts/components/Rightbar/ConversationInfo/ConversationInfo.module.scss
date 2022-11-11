@@ -27,7 +27,6 @@
     flex-direction: column;
     margin-top: 26px;
     z-index: -9999;
-    position: relative;
 }
 
 .info-avatar,
@@ -52,6 +51,7 @@
     height: 62px;
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
 }
 
 .name {

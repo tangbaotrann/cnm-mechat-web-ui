@@ -18,11 +18,14 @@ import images from '~/assets/images';
 import Popper from '~/components/Popper';
 import ModelWrapper from '~/components/ModelWrapper';
 import ModelInfoAccount from '~/components/ModelWrapper/ModelInfoAccount';
+import { useDispatch } from 'react-redux';
+import userSlice from '~/redux/features/user/userSlice';
 
 const cx = classNames.bind(styles);
 
 function MenuItem({ user }) {
     const [openIntroVersion, setOpenIntroVersion] = useState(false);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     // Handle open/ close model intro version
     const handleModelOpenIntroVersion = () => {
@@ -48,6 +51,7 @@ function MenuItem({ user }) {
     //logout
     const userlogout = () => {
         localStorage.removeItem('user_login');
+        dispatch(userSlice.actions.resetUserInfo([]));
         navigate('/login');
     };
     // Menu popper sub intro

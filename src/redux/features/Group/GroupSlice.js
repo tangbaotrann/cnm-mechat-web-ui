@@ -44,7 +44,7 @@ export const createGroup = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        console.log('---------->', jsonData);
+
         return jsonData;
     },
 );
@@ -61,7 +61,7 @@ export const fetchApiAddMemberToGroup = createAsyncThunk('listGroupUser/fetchApi
     }
 });
 
-//xoa
+//xoa thanh vien
 export const deleteMember = createAsyncThunk(
     // Tên action
     'user/deleteMember ',
@@ -150,6 +150,79 @@ export const changeNameGroups = createAsyncThunk(
             },
             body: JSON.stringify({ newName, userId }),
         });
+
+        const jsonData = await response.json();
+
+        return jsonData;
+    },
+);
+//giai tan nhom
+export const deleteConversation = createAsyncThunk(
+    // Tên action
+    'user/deleteConversation ',
+    async (data) => {
+        // Gọi lên API backend
+        const { conversationId } = data;
+        const { mainId } = data;
+        console.log(data);
+        const response = await fetch(
+            `${process.env.REACT_APP_BASE_URL}conversations/delete-conversation/${conversationId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ mainId }),
+            },
+        );
+
+        const jsonData = await response.json();
+        console.log(jsonData);
+        return jsonData;
+    },
+);
+// chặn tin nhắn của 1 thành viên
+export const blockMember = createAsyncThunk(
+    // Tên action
+    'user/blockMember ',
+    async (data) => {
+        // Gọi lên API backend
+        const { conversationId } = data;
+        const { userId } = data;
+        const response = await fetch(
+            `${process.env.REACT_APP_BASE_URL}conversations/block-conversation/${conversationId}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
+            },
+        );
+
+        const jsonData = await response.json();
+        console.log(jsonData);
+        return jsonData;
+    },
+);
+//bor chan tin nhan
+export const cancelBlockMember = createAsyncThunk(
+    // Tên action
+    'user/cancelBlockMember ',
+    async (data) => {
+        // Gọi lên API backend
+        const { conversationId } = data;
+        const { userId } = data;
+        const response = await fetch(
+            `${process.env.REACT_APP_BASE_URL}conversations/remove-block-conversation/${conversationId}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
+            },
+        );
 
         const jsonData = await response.json();
         console.log(jsonData);
@@ -245,14 +318,7 @@ const listGroupUsers = createSlice({
                     conversation: action.payload,
                 });
             })
-            .addCase(deleteMember.fulfilled, (state, action) => {
-                // console.log('[DELETE = MEM]', action.payload);
-                // state.data = action.payload;
-                // socket
-                // socket.emit('user_out_group', {
-                //     info: action.payload,
-                // });
-            })
+            .addCase(deleteMember.fulfilled, (state, action) => {})
             .addCase(addMember.fulfilled, (state, action) => {
                 console.log('[add_user_to_group]', action.payload);
                 // state.data = action.payload;
@@ -279,6 +345,15 @@ const listGroupUsers = createSlice({
                 });
             })
             .addCase(changeNameGroups.fulfilled, (state, action) => {
+                // state.data = action.payload;
+            })
+            .addCase(deleteConversation.fulfilled, (state, action) => {
+                // state.data = action.payload;
+            })
+            .addCase(blockMember.fulfilled, (state, action) => {
+                // state.data = action.payload;
+            })
+            .addCase(cancelBlockMember.fulfilled, (state, action) => {
                 // state.data = action.payload;
             });
     },

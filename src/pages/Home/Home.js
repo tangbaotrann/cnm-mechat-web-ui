@@ -33,10 +33,6 @@ function Home() {
 
     useEffect(() => {
         socket.emit('status_user', user._id);
-
-        socket.on('get_users', (users) => {
-            console.log('USER - ONLINE - CONVERSATION', users);
-        });
     }, [user?._id]);
 
     // useEffect(() => {

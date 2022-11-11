@@ -189,16 +189,29 @@ function AddGroup({ addMemerber }) {
                         {listFriends?.map((user) => {
                             return (
                                 <div className={cx('list-conversation')} key={user?._id}>
-                                    <div className={cx('input-radio')}>
-                                        <input
-                                            type="checkBox"
-                                            value={user._id}
-                                            onChange={handleCheck}
-                                            checked={filterFriendGroups.find((fr) =>
-                                                fr._id === user._id ? true : false,
-                                            )}
-                                        />
-                                    </div>
+                                    {addMemerber ? (
+                                        <div className={cx('input-radio')}>
+                                            <input
+                                                type="checkBox"
+                                                value={user._id}
+                                                onChange={handleCheck}
+                                                checked={filterFriendGroups.find((fr) =>
+                                                    fr._id === user._id ? true : false,
+                                                )}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className={cx('input-radio')}>
+                                            <input
+                                                type="checkBox"
+                                                value={user._id}
+                                                onChange={handleCheck}
+                                                // checked={filterFriendGroups.find((fr) =>
+                                                //     fr._id === user._id ? true : false,
+                                                // )}
+                                            />
+                                        </div>
+                                    )}
                                     <img
                                         className={cx('avatar-img')}
                                         src={user?.imageLinkOfConver ? user.imageLinkOfConver : images.noImg}

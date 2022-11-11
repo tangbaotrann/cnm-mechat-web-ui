@@ -15,8 +15,16 @@ import { friendDelete } from '~/redux/features/friend/friendAcceptSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
 import conversationSlice from '~/redux/features/conversation/conversationSlice';
-import { deleteMember, fetchApiConversationById, outGroup } from '~/redux/features/Group/GroupSlice';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
+import listGroupUsers, {
+    blockMember,
+    cancelBlockMember,
+    deleteConversation,
+    deleteMember,
+    fetchApiConversationById,
+    listGroupUser,
+    outGroup,
+} from '~/redux/features/Group/GroupSlice';
+import { faKey, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
@@ -127,6 +135,52 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             }),
         );
     };
+    const handleDeleteGroup = () => {
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn giải tán nhóm không?');
+        if (checkOutGroup === true) {
+            const data = {
+                conversationId: conversationID.id,
+                mainId: filterLeaders[0]._id,
+            };
+            dispatch(deleteConversation(data));
+            if (deleteConversation()) {
+                alert('Bạn đã giải tán nhóm');
+                window.location.reload(true);
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu giải tán nhóm');
+        }
+    };
+    const handleBlockMember = () => {
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chặn tin nhắn không?');
+        if (checkOutGroup === true) {
+            const data = {
+                conversationId: conversationID.id,
+                userId: conversation._id,
+            };
+            dispatch(blockMember(data));
+            if (blockMember()) {
+                alert('Bạn đã chặn tin nhắn');
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu chặn tin nhắn');
+        }
+    };
+    const handleCancelBlockMember = () => {
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn bỏ chặn tin nhắn không?');
+        if (checkOutGroup === true) {
+            const data = {
+                conversationId: conversationID.id,
+                userId: conversation._id,
+            };
+            dispatch(cancelBlockMember(data));
+            if (cancelBlockMember()) {
+                alert('Bạn đã bỏ chặn tin nhắn');
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu bỏ chặn tin nhắn');
+        }
+    };
     return (
         <>
             {conversationInfo ? (
@@ -164,6 +218,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                         <p className={cx('deleteFriend')} onClick={handleOutGroup}>
                                             <button className={cx('item-btn')}>Rời nhóm</button>
                                         </p>
+                                        <p className={cx('deleteFriend')} onClick={handleDeleteGroup}>
+                                            <button className={cx('item-btn')}>Giải tán nhóm</button>
+                                        </p>
                                     </Popper>
                                 </div>
                             )}
@@ -188,6 +245,16 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                 <p className={cx('deleteFriend')} onClick={handleDeleteMemberGroup}>
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
                                                 </p>
+
+                                                {conversationID.blockBy.includes(conversation._id) ? (
+                                                    <p className={cx('deleteFriend')} onClick={handleCancelBlockMember}>
+                                                        <button className={cx('item-btn')}>Đã chặn</button>
+                                                    </p>
+                                                ) : (
+                                                    <p className={cx('deleteFriend')} onClick={handleBlockMember}>
+                                                        <button className={cx('item-btn')}>Chặn tin nhắn</button>
+                                                    </p>
+                                                )}
                                             </Popper>
                                         </div>
                                     )}
