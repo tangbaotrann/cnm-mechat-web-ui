@@ -32,7 +32,7 @@ function PhoneBook() {
     const [showConversation, setShowConversation] = useState('');
 
     const listFriends = useSelector(listFriend);
-    const conversation = useSelector((state) => state.conversations.conversationClick);
+    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
     const listGroup = useSelector(listGroupUser);
 
     //const listAccept = useSelector(listFriendAccept);

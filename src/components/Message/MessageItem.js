@@ -117,11 +117,27 @@ function MessageItem({ message, own }) {
                                                 open={showPreview}
                                                 onClose={handleHidePreviewImageAndVideo}
                                             >
-                                                <img
-                                                    className={cx('preview-image-send-user')}
-                                                    src={message?.imageLink}
-                                                    alt="img"
-                                                />
+                                                <>
+                                                    {message.imageLink.length === 1 ? (
+                                                        <img
+                                                            className={cx('preview-image-send-user')}
+                                                            src={message?.imageLink}
+                                                            alt="img"
+                                                        />
+                                                    ) : (
+                                                        message.imageLink.map((mess, index) => {
+                                                            return (
+                                                                <div key={index}>
+                                                                    <img
+                                                                        className={cx('preview-image-send-user')}
+                                                                        src={mess}
+                                                                        alt="img"
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        })
+                                                    )}
+                                                </>
                                             </ModelWrapper>
                                         </>
                                     )}
@@ -229,11 +245,27 @@ function MessageItem({ message, own }) {
                                         open={showPreview}
                                         onClose={handleHidePreviewImageAndVideo}
                                     >
-                                        <img
-                                            className={cx('preview-image-send-user')}
-                                            src={message.imageLink}
-                                            alt="img"
-                                        />
+                                        <>
+                                            {message.imageLink.length === 1 ? (
+                                                <img
+                                                    className={cx('preview-image-send-user')}
+                                                    src={message.imageLink}
+                                                    alt="img"
+                                                />
+                                            ) : (
+                                                message.imageLink.map((mess, index) => {
+                                                    return (
+                                                        <div key={index}>
+                                                            <img
+                                                                className={cx('preview-image-send-user')}
+                                                                src={mess}
+                                                                alt="img"
+                                                            />
+                                                        </div>
+                                                    );
+                                                })
+                                            )}
+                                        </>
                                     </ModelWrapper>
                                 </>
                             )}

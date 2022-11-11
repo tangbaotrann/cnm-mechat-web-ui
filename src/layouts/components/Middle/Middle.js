@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import styles from './Middle.module.scss';
 import Conversation from '~/components/Conversation';
 import Search from '~/components/Search';
-import conversationSlice from '~/redux/features/conversation/conversationSlice';
 import socket from '~/util/socket';
 import listGroupUsers, { fetchApiConversationById } from '~/redux/features/Group/GroupSlice';
 
@@ -19,7 +18,7 @@ function Middle() {
     const user = useSelector((state) => state.user.data);
     const conversations = useSelector((state) => state.listGroupUser.data);
 
-    // console.log('conversations - 25 -', conversations);
+    console.log('conversations - 25 -', conversations);
 
     // Handle fetch conversation
     useEffect(() => {
@@ -29,7 +28,7 @@ function Middle() {
 
     useEffect(() => {
         socket.on('send_conversation_group', (conversation) => {
-            console.log('[send_conversation_group]', conversation);
+            // console.log('[send_conversation_group]', conversation);
             if (conversation) {
                 dispatch(listGroupUsers.actions.arrivalCreateGroupFromSocket(conversation));
             }
@@ -45,10 +44,19 @@ function Middle() {
         });
 
         socket.on('update_last_message', (info) => {
-            console.log('[update_last_message]', info);
+            // console.log('[update_last_message]', info);
             dispatch(listGroupUsers.actions.arrivalUpdateLastMessageFromSocket(info));
         });
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // realtime user add group
+    useEffect(() => {
+        socket.on('send_conversation_group', (conversation) => {
+            console.log('[send_conversation_group]', conversation);
+            dispatch(listGroupUsers.actions.arrivalAddMemberFromSocket(conversation));
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -72,7 +80,7 @@ function Middle() {
                         <>
                             {conversation.id && (
                                 <div
-                                    onClick={() => dispatch(conversationSlice.actions.clickConversation(conversation))}
+                                    onClick={() => dispatch(listGroupUsers.actions.clickConversation(conversation))}
                                     key={conversation.id}
                                 >
                                     <Conversation conversation={conversation} />
