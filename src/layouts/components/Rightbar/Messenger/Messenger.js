@@ -59,7 +59,7 @@ function Messenger() {
 
     //console.log('[LIST MESSAGES] - ', listMessage);
     // console.log('[USER] - ', user);
-    // console.log('[CONVERSATION] - ', conversation);
+    console.log('[CONVERSATION] - ', conversation);
     // console.log('[CONVERSATION.MEMBERS] - ', conversation.members);
 
     // fetch message from conversationId
@@ -249,168 +249,190 @@ function Messenger() {
                 )}
             </div>
 
-            <div className={cx('messenger-footer')}>
-                <div className={cx('toolbar-on-chat-input')}>
-                    {/* option image */}
-                    <label htmlFor="file">
-                        <div className={cx('option-image-icon')}>
-                            <Tippy className={cx('tool-tip')} content="Gửi hình ảnh hoặc video" delay={[200, 0]}>
-                                <FontAwesomeIcon className={cx('option-icon')} icon={faImage} />
-                            </Tippy>
-                            <input
-                                className={cx('hide')}
-                                type="file"
-                                id="file"
-                                accept=".png, .jpg, .jpeg, .mov, .mp4"
-                                onChange={handleChangeImageMessage}
-                                multiple
-                            />
+            {/* Message */}
+            {conversation.blockBy.includes(infoUser._id) ? (
+                <div className={cx('Block')}>
+                    <h2>Bạn đã bị chặn nhắn tin...</h2>
+                </div>
+            ) : (
+                <>
+                    <div className={cx('messenger-footer')}>
+                        <div className={cx('toolbar-on-chat-input')}>
+                            {/* option image */}
+                            <label htmlFor="file">
+                                <div className={cx('option-image-icon')}>
+                                    <Tippy
+                                        className={cx('tool-tip')}
+                                        content="Gửi hình ảnh hoặc video"
+                                        delay={[200, 0]}
+                                    >
+                                        <FontAwesomeIcon className={cx('option-icon')} icon={faImage} />
+                                    </Tippy>
+                                    <input
+                                        className={cx('hide')}
+                                        type="file"
+                                        id="file"
+                                        accept=".png, .jpg, .jpeg, .mov, .mp4"
+                                        onChange={handleChangeImageMessage}
+                                        multiple
+                                    />
+                                </div>
+                            </label>
+                            {/* option file */}
+                            <TippyHeadless
+                                render={(attrs) => (
+                                    <div tabIndex="-1" {...attrs}>
+                                        {/* Sub menu option footer */}
+                                        <Popper className={cx('menu-option-file')}>
+                                            <>
+                                                <label htmlFor="files">
+                                                    <div className={cx('option-file-btn-fix')}>
+                                                        <FontAwesomeIcon
+                                                            className={cx('sub-menu-icon-footer')}
+                                                            icon={faFile}
+                                                        />
+                                                        Chọn File
+                                                        <input
+                                                            className={cx('hide')}
+                                                            type="file"
+                                                            id="files"
+                                                            accept=".docx, .pptx, .pdf, .xlsx"
+                                                            onChange={handleChangeFileMessage}
+                                                        />
+                                                    </div>
+                                                </label>
+                                                <button className={cx('option-file-btn')}>
+                                                    <FontAwesomeIcon
+                                                        className={cx('sub-menu-icon-footer')}
+                                                        icon={faGoogleDrive}
+                                                    />
+                                                    Gửi File từ Google Driver
+                                                </button>
+                                            </>
+                                        </Popper>
+                                    </div>
+                                )}
+                                delay={[0, 100]}
+                                placement="top-start"
+                                trigger="click"
+                                interactive
+                            >
+                                <Tippy className={cx('tool-tip')} content="Đính kèm File" delay={[200, 0]}>
+                                    <div className={cx('option-file-icon')}>
+                                        <FontAwesomeIcon className={cx('option-icon')} icon={faPaperclip} />
+                                    </div>
+                                </Tippy>
+                            </TippyHeadless>
                         </div>
-                    </label>
-                    {/* option file */}
-                    <TippyHeadless
-                        render={(attrs) => (
-                            <div tabIndex="-1" {...attrs}>
-                                {/* Sub menu option footer */}
-                                <Popper className={cx('menu-option-file')}>
-                                    <>
-                                        <label htmlFor="files">
-                                            <div className={cx('option-file-btn-fix')}>
-                                                <FontAwesomeIcon className={cx('sub-menu-icon-footer')} icon={faFile} />
-                                                Chọn File
-                                                <input
-                                                    className={cx('hide')}
-                                                    type="file"
-                                                    id="files"
-                                                    accept=".docx, .pptx, .pdf, .xlsx"
-                                                    onChange={handleChangeFileMessage}
-                                                />
-                                            </div>
-                                        </label>
-                                        <button className={cx('option-file-btn')}>
-                                            <FontAwesomeIcon
-                                                className={cx('sub-menu-icon-footer')}
-                                                icon={faGoogleDrive}
-                                            />
-                                            Gửi File từ Google Driver
-                                        </button>
-                                    </>
-                                </Popper>
-                            </div>
-                        )}
-                        delay={[0, 100]}
-                        placement="top-start"
-                        trigger="click"
-                        interactive
-                    >
-                        <Tippy className={cx('tool-tip')} content="Đính kèm File" delay={[200, 0]}>
-                            <div className={cx('option-file-icon')}>
-                                <FontAwesomeIcon className={cx('option-icon')} icon={faPaperclip} />
-                            </div>
-                        </Tippy>
-                    </TippyHeadless>
-                </div>
-                {/* Message */}
-                <div className={cx('message-container')}>
-                    {/* Input message */}
-                    <textarea
-                        className={cx('message-input')}
-                        value={
-                            newMessage && newMessage.emoji?.join('')
-                                ? newMessage && newMessage.emoji?.join('')
-                                : newMessage.emoji?.join('')
-                                ? newMessage.emoji?.join('')
-                                : newMessage
-                        }
-                        onChange={handleChangeMessage}
-                        placeholder="Nhập tin nhắn ..."
-                    ></textarea>
+                        <div className={cx('message-container')}>
+                            {/* Input message */}
+                            {/* const blockMembers = useSelector(filterBlockMembers); infoUser */}
+                            {/*  ? ( */}
 
-                    {/* Preview emoji */}
-                    <TippyHeadless
-                        render={(attrs) => (
-                            <div tabIndex="-1" {...attrs}>
-                                <Popper>
-                                    {previewEmoji && (
-                                        <div className={cx('display-preview-emoji')}>
-                                            <EmojiPicker
-                                                onEmojiClick={handleEmojiClicked}
-                                                defaultSkinTone={SkinTones}
-                                                width={300}
-                                            />
-                                        </div>
-                                    )}
-                                </Popper>
-                            </div>
-                        )}
-                        delay={[0, 100]}
-                        trigger="click"
-                        interactive
-                        appendTo={document.body}
-                    >
-                        <button className={cx('preview-emoji')} onClick={handlePreviewEmoji}>
-                            <Tippy className={cx('tool-tip')} content="Biểu cảm" delay={[200, 0]}>
-                                <FontAwesomeIcon className={cx('icon-right')} icon={faFaceSmile} />
-                            </Tippy>
-                        </button>
-                    </TippyHeadless>
+                            <textarea
+                                className={cx('message-input')}
+                                value={
+                                    newMessage && newMessage.emoji?.join('')
+                                        ? newMessage && newMessage.emoji?.join('')
+                                        : newMessage.emoji?.join('')
+                                        ? newMessage.emoji?.join('')
+                                        : newMessage
+                                }
+                                onChange={handleChangeMessage}
+                                placeholder="Nhập tin nhắn ..."
+                            ></textarea>
 
-                    {/* Button send message || chosenEmoji*/}
-                    {newMessage || newImageMessage.length !== 0 || newFileMessage ? (
-                        <button className={cx('send-message-btn')} onClick={handleSendMessage}>
-                            GỬI
-                        </button>
-                    ) : (
-                        <Tippy className={cx('tool-tip')} content="Gửi nhanh biểu tượng cảm xúc" delay={[200, 0]}>
-                            <button className={cx('send-message-like')}>
-                                <FontAwesomeIcon icon={faThumbsUp} />
-                            </button>
-                        </Tippy>
-                    )}
-                </div>
-                {/* Preview upload Image and Video */}
-                <div className={cx('preview-upload')}>
-                    {btnClosePreview && (
-                        <button className={cx('close-btn')} onClick={handleClosePreview}>
-                            <FontAwesomeIcon icon={faClose} className={cx('close-icon')} />
-                        </button>
-                    )}
-
-                    {/* {newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] === 'mp4' && (
-                        <video className={cx('image-upload')} src={newImageMessage[0].preview} alt="video" controls />
-                    )} */}
-
-                    {newImageMessage.length > 0 ? (
-                        <div>
-                            {newImageMessage.map((img, index) => {
-                                return (
-                                    <>
-                                        {img.data.name.split('.')[img.data.name.split('.').length - 1] === 'mp4' ? (
-                                            <video
-                                                className={cx('image-upload')}
-                                                key={index}
-                                                src={img.preview}
-                                                alt="video"
-                                                controls
-                                            />
-                                        ) : (
-                                            <img
-                                                className={cx('image-upload')}
-                                                key={index}
-                                                src={img.preview}
-                                                alt="preview-img"
-                                            />
-                                        )}
-                                    </>
-                                );
-                            })}
+                            {/* Preview emoji */}
+                            <TippyHeadless
+                                render={(attrs) => (
+                                    <div tabIndex="-1" {...attrs}>
+                                        <Popper>
+                                            {previewEmoji && (
+                                                <div className={cx('display-preview-emoji')}>
+                                                    <EmojiPicker
+                                                        onEmojiClick={handleEmojiClicked}
+                                                        defaultSkinTone={SkinTones}
+                                                        width={300}
+                                                    />
+                                                </div>
+                                            )}
+                                        </Popper>
+                                    </div>
+                                )}
+                                delay={[0, 100]}
+                                trigger="click"
+                                interactive
+                                appendTo={document.body}
+                            >
+                                <button className={cx('preview-emoji')} onClick={handlePreviewEmoji}>
+                                    <Tippy className={cx('tool-tip')} content="Biểu cảm" delay={[200, 0]}>
+                                        <FontAwesomeIcon className={cx('icon-right')} icon={faFaceSmile} />
+                                    </Tippy>
+                                </button>
+                            </TippyHeadless>
+                            {/* Button send message || chosenEmoji*/}
+                            {newMessage || newImageMessage.length !== 0 || newFileMessage ? (
+                                <button className={cx('send-message-btn')} onClick={handleSendMessage}>
+                                    GỬI
+                                </button>
+                            ) : (
+                                <Tippy
+                                    className={cx('tool-tip')}
+                                    content="Gửi nhanh biểu tượng cảm xúc"
+                                    delay={[200, 0]}
+                                >
+                                    <button className={cx('send-message-like')}>
+                                        <FontAwesomeIcon icon={faThumbsUp} />
+                                    </button>
+                                </Tippy>
+                            )}
                         </div>
-                    ) : null}
+                        {/* Preview upload Image and Video */}
+                        <div className={cx('preview-upload')}>
+                            {btnClosePreview && (
+                                <button className={cx('close-btn')} onClick={handleClosePreview}>
+                                    <FontAwesomeIcon icon={faClose} className={cx('close-icon')} />
+                                </button>
+                            )}
 
-                    {/* file message */}
-                    {newFileMessage && <PreviewFileMessage newFileMessage={newFileMessage} />}
-                </div>
-            </div>
+                            {/* {newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] === 'mp4' && (
+                    <video className={cx('image-upload')} src={newImageMessage[0].preview} alt="video" controls />
+                )} */}
+
+                            {newImageMessage.length > 0 ? (
+                                <div>
+                                    {newImageMessage.map((img, index) => {
+                                        return (
+                                            <>
+                                                {img.data.name.split('.')[img.data.name.split('.').length - 1] ===
+                                                'mp4' ? (
+                                                    <video
+                                                        className={cx('image-upload')}
+                                                        key={index}
+                                                        src={img.preview}
+                                                        alt="video"
+                                                        controls
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        className={cx('image-upload')}
+                                                        key={index}
+                                                        src={img.preview}
+                                                        alt="preview-img"
+                                                    />
+                                                )}
+                                            </>
+                                        );
+                                    })}
+                                </div>
+                            ) : null}
+
+                            {/* file message */}
+                            {newFileMessage && <PreviewFileMessage newFileMessage={newFileMessage} />}
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

@@ -17,6 +17,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import conversationSlice from '~/redux/features/conversation/conversationSlice';
 import listGroupUsers, {
+    blockMember,
+    cancelBlockMember,
     deleteConversation,
     deleteMember,
     fetchApiConversationById,
@@ -44,7 +46,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     //  tam
     // const [conversations, setConversation] = useState([]);
     const conversationID = useSelector((state) => state.conversations.conversationClick);
-
+    // console.log(conversationID);
     const conversations = useSelector((state) => state.listGroupUser.data);
 
     // console.log('[INFO-USER]', infoUser);
@@ -148,11 +150,50 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         );
     };
     const handleDeleteGroup = () => {
-        const data = {
-            conversationId: conversationID.id,
-            mainId: filterLeaders[0]._id,
-        };
-        dispatch(deleteConversation(data));
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn giải tán nhóm không?');
+        if (checkOutGroup === true) {
+            const data = {
+                conversationId: conversationID.id,
+                mainId: filterLeaders[0]._id,
+            };
+            dispatch(deleteConversation(data));
+            if (deleteConversation()) {
+                alert('Bạn đã giải tán nhóm');
+                window.location.reload(true);
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu giải tán nhóm');
+        }
+    };
+    const handleBlockMember = () => {
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chặn tin nhắn không?');
+        if (checkOutGroup === true) {
+            const data = {
+                conversationId: conversationID.id,
+                userId: conversation._id,
+            };
+            dispatch(blockMember(data));
+            if (blockMember()) {
+                alert('Bạn đã chặn tin nhắn');
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu chặn tin nhắn');
+        }
+    };
+    const handleCancelBlockMember = () => {
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn bỏ chặn tin nhắn không?');
+        if (checkOutGroup === true) {
+            const data = {
+                conversationId: conversationID.id,
+                userId: conversation._id,
+            };
+            dispatch(cancelBlockMember(data));
+            if (cancelBlockMember()) {
+                alert('Bạn đã bỏ chặn tin nhắn');
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu bỏ chặn tin nhắn');
+        }
     };
     return (
         <>
@@ -218,6 +259,16 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                 <p className={cx('deleteFriend')} onClick={handleDeleteMemberGroup}>
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
                                                 </p>
+
+                                                {conversationID.blockBy.includes(conversation._id) ? (
+                                                    <p className={cx('deleteFriend')} onClick={handleCancelBlockMember}>
+                                                        <button className={cx('item-btn')}>Đã chặn</button>
+                                                    </p>
+                                                ) : (
+                                                    <p className={cx('deleteFriend')} onClick={handleBlockMember}>
+                                                        <button className={cx('item-btn')}>Chặn tin nhắn</button>
+                                                    </p>
+                                                )}
                                             </Popper>
                                         </div>
                                     )}

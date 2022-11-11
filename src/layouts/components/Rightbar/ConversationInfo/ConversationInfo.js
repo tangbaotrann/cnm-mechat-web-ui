@@ -101,8 +101,7 @@ function ConversationInfo() {
     };
     // mo dong model doi ten nhom
     const openModelChangeName = () => {
-        console.log('ok');
-        //setModelChangeName(true);
+        setModelChangeName(true);
     };
     const closerModelChangeName = () => {
         setModelChangeName(false);
