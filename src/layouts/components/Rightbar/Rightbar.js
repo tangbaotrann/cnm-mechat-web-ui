@@ -12,7 +12,7 @@ const cx = classNames.bind(styles);
 
 function Rightbar() {
     const conversation = useSelector((state) => state.conversations.conversationClick);
-    console.log(conversation);
+
     return (
         <div className={cx('wrapper')}>
             {/* Để show ra Chat current -> get theo conversationId */}

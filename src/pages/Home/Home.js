@@ -1,19 +1,17 @@
 // libs
 import classNames from 'classnames/bind';
+import { CircularProgress } from '@material-ui/core';
 
 // me
 import styles from './Home.module.scss';
 import Sidebar from '~/layouts/components/Sidebar';
 import Center from '~/layouts/components/Middle';
 import Rightbar from '~/layouts/components/Rightbar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
-import { meRequestFriend } from '~/redux/features/friend/meFriendRequestSlice';
-import { friendAccept } from '~/redux/features/friend/friendAcceptSlice';
-import { fetchUsers } from '~/redux/features/user/usersSlice';
-import { listGroupUser } from '~/redux/features/Group/GroupSlice';
-import { conversationSlice } from '~/redux/selector';
+import socket from '~/util/socket';
+import listGroupUsers from '~/redux/features/Group/GroupSlice';
 
 const cx = classNames.bind(styles);
 
@@ -21,20 +19,39 @@ function Home() {
     //Da doi qua ben app.js
     const dispatch = useDispatch();
 
+    const user = useSelector((state) => state.user.data);
+    const isLoading = useSelector((state) => state.listGroupUser.isLoading);
+
     useEffect(() => {
         document.title = 'Mechat Web';
     }, []);
 
     useEffect(() => {
         dispatch(fetchApiUser());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        socket.emit('status_user', user._id);
+    }, [user?._id]);
+
+    // useEffect(() => {
+    //     dispatch(listGroupUser());
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+
     return (
-        <div className={cx('wrapper')}>
-            <Sidebar />
-            <Center />
-            <Rightbar />
-        </div>
+        <>
+            {isLoading ? (
+                <CircularProgress className={cx('loading-messages')} />
+            ) : (
+                <div className={cx('wrapper')}>
+                    <Sidebar />
+                    <Center />
+                    <Rightbar />
+                </div>
+            )}
+        </>
     );
 }
 

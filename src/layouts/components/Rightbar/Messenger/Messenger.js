@@ -32,6 +32,8 @@ import messagesSlice, {
     fetchApiMessagesByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
+import listGroupUsers from '~/redux/features/Group/GroupSlice';
+import { userLogin } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -51,18 +53,20 @@ function Messenger() {
     const isLoading = useSelector((state) => state.messages.isLoading);
     const preLoading = useSelector((state) => state.messages.preLoading);
 
+    const infoUser = useSelector(userLogin);
+
     const scrollMessenger = useRef();
 
     //console.log('[LIST MESSAGES] - ', listMessage);
     // console.log('[USER] - ', user);
     // console.log('[CONVERSATION] - ', conversation);
     // console.log('[CONVERSATION.MEMBERS] - ', conversation.members);
-    // console.log('[newImageMessage] - ', newImageMessage);
 
     // fetch message from conversationId
     useEffect(() => {
         dispatch(fetchApiMessagesByConversationId(conversation.id));
-    }, [conversation.id, dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [conversation.id]);
 
     // user join room
     useEffect(() => {
@@ -80,14 +84,16 @@ function Messenger() {
         socket.on('receiver_message', (message) => {
             dispatch(messagesSlice.actions.arrivalMessageFromSocket(message));
         });
-    }, [dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // realtime re-call message of receiver
     useEffect(() => {
         socket.on('receiver_recall_message', (message) => {
             dispatch(messagesSlice.actions.recallMessageFromSocket(message));
         });
-    }, [dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // handle change message
     const handleChangeMessage = (e) => {

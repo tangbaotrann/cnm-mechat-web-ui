@@ -6,6 +6,16 @@ export const listFriendAccept = (state) => state.listAccept.data;
 export const conversationSlice = (state) => state.conversations.conversationClick;
 export const listMeRequests = (state) => state.listMeRequest.data;
 export const listGroupUser = (state) => state.listGroupUser.data;
+
+// export const member = (state) => state.groupUserSlices.data;
+// console.log('11 - mem -', member);
+// // member
+// export const getMember = createSelector(member, (members) => {
+//     if(member) {
+//         const friend =
+//     }
+// })
+
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users) {
         const friends = users.filter((_user) => user.friends.includes(_user._id));

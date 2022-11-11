@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+
+// me
+import socket from '~/util/socket';
+
 // lay danh sach da gui yeu cau ket ban
 export const friendAccept = createAsyncThunk('user/friendAccept', async (arg, { rejectWithValue }) => {
     try {
@@ -82,7 +86,20 @@ const listFriendAccept = createSlice({
                 state.data = action.payload;
             })
             .addCase(accept.fulfilled, (state, action) => {
-                state.data = action.payload;
+                console.log('85 - ', action.payload);
+                const { listFriendsReceiver, listFriendsSender, friendRequestID, sender, receiver, conversation } =
+                    action.payload;
+                const del = state.data.findIndex((friend) => friend.friendRequestID === friendRequestID);
+                state.data.splice(del, 1);
+
+                // socket accept friend
+                socket.emit('accept_friend_request', {
+                    listFriendsReceiver,
+                    listFriendsSender,
+                    sender,
+                    receiver,
+                    conversation,
+                });
             })
             .addCase(friendDelete.fulfilled, (state, action) => {
                 state.data = action.payload;

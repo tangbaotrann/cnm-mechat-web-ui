@@ -1,5 +1,6 @@
 // lib
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+// import axios from 'axios';
 
 const conversationSlice = createSlice({
     name: 'conversations',
@@ -9,7 +10,6 @@ const conversationSlice = createSlice({
     },
     reducers: {
         clickConversation: (state, action) => {
-            console.log('[click conversation by id] - ', action.payload);
             state.conversationClick = action.payload;
         },
     },

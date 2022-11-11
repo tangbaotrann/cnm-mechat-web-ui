@@ -53,6 +53,8 @@ function ConversationInfo() {
     const debouncedValue = useDebounce(infoConversation, 500);
     const dispatch = useDispatch();
 
+    // console.log(filterUser);
+
     useEffect(() => {
         dispatch(
             infoUserConversation({
@@ -88,7 +90,7 @@ function ConversationInfo() {
     const handleAddMemberGroup = () => {
         setShow(false);
         setShowAddMembers(false);
-        console.log(showAddMembers);
+        // console.log(showAddMembers);
     };
     //them thanh vien
     const handleModelOpenAddGroup = () => {
@@ -99,7 +101,8 @@ function ConversationInfo() {
     };
     // mo dong model doi ten nhom
     const openModelChangeName = () => {
-        setModelChangeName(true);
+        console.log('ok');
+        //setModelChangeName(true);
     };
     const closerModelChangeName = () => {
         setModelChangeName(false);
@@ -165,7 +168,7 @@ function ConversationInfo() {
                             </div>
                             <div className={cx('info-name')}>
                                 <h3 className={cx('name')}>{conversation?.name}</h3>
-                                {conversation.createdBy !== null ? (
+                                {conversation.createdBy ? (
                                     <FontAwesomeIcon
                                         className={cx('icon-changeName')}
                                         icon={faPenToSquare}
@@ -389,29 +392,33 @@ function ConversationInfo() {
                         {/* Link */}
                         <ItemStored isLink />
                         <div className={cx('separator')}></div>
-                        <div className={cx('members-group')}>
-                            <div className={cx('members-group-title')}>
-                                <label>Thiết lập bảo mật</label>
-                                <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
-                            </div>
+                        {conversation.isGroup && (
+                            <>
+                                <div className={cx('members-group')}>
+                                    <div className={cx('members-group-title')}>
+                                        <label>Thiết lập bảo mật</label>
+                                        <FontAwesomeIcon className={cx('icon')} icon={faCaretDown} />
+                                    </div>
 
-                            <button className={cx('btn-click-footer')}>
-                                <FontAwesomeIcon
-                                    className={cx('item')}
-                                    icon={faTrash}
-                                    // onClick={handleModelOpenAddGroup}
-                                />
-                                <label>Xóa lịch sử cuộc trò chuyện</label>
-                            </button>
-                            <button className={cx('btn-click-footer')} onClick={handleOutGroup}>
-                                <FontAwesomeIcon
-                                    className={cx('item')}
-                                    icon={faRightFromBracket}
-                                    // onClick={handleModelOpenAddGroup}
-                                />
-                                <label>Rời nhóm</label>
-                            </button>
-                        </div>
+                                    <button className={cx('btn-click-footer')}>
+                                        <FontAwesomeIcon
+                                            className={cx('item')}
+                                            icon={faTrash}
+                                            // onClick={handleModelOpenAddGroup}
+                                        />
+                                        <label>Xóa lịch sử cuộc trò chuyện</label>
+                                    </button>
+                                    <button className={cx('btn-click-footer')} onClick={handleOutGroup}>
+                                        <FontAwesomeIcon
+                                            className={cx('item')}
+                                            icon={faRightFromBracket}
+                                            // onClick={handleModelOpenAddGroup}
+                                        />
+                                        <label>Rời nhóm</label>
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </>
             ) : (
