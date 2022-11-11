@@ -3,9 +3,11 @@ export const searchTextSelector = (state) => state.filters.search;
 export const userListSelector = (state) => state.users.data;
 export const userInfoSelector = (state) => state.user.data;
 export const listFriendAccept = (state) => state.listAccept.data;
-export const conversationSlice = (state) => state.conversations.conversationClick;
+export const conversationSlice = (state) => state.listGroupUser.conversationClick; // state.conversations.conversationClick
 export const listMeRequests = (state) => state.listMeRequest.data;
 export const listGroupUser = (state) => state.listGroupUser.data;
+
+export const listMessage = (state) => state.messages.data;
 
 // export const member = (state) => state.groupUserSlices.data;
 // console.log('11 - mem -', member);
@@ -203,5 +205,39 @@ export const allSearch = createSelector(
             }
         }
         return false;
+    },
+);
+
+export const getMessageFromUserInGroupFromSelector = createSelector(
+    userInfoSelector,
+    userListSelector,
+    listMessage,
+    (userInfo, userList, listMessage) => {
+        try {
+            const _message = listMessage.map((message) => {
+                const user = userList.find((us) => us._id === message.senderID);
+                return message.deleteBy.includes(userInfo._id)
+                    ? null
+                    : {
+                          _id: message._id,
+                          action: message.action,
+                          content: message.content,
+                          imageLink: message.imageLink,
+                          fileLink: message.fileLink,
+                          createdAt: message.createdAt,
+                          deleteBy: message.deleteBy,
+                          senderID: message.senderID,
+                          user: {
+                              id: user?._id,
+                              name: user?.fullName,
+                              avatarLink: user?.avatarLink,
+                          },
+                      };
+            });
+
+            return _message;
+        } catch (err) {
+            console.log('[getMessageFromUserInGroup]', err);
+        }
     },
 );
