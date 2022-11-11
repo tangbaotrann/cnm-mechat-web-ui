@@ -231,8 +231,17 @@ export const cancelBlockMember = createAsyncThunk(
 );
 const listGroupUsers = createSlice({
     name: 'listGroupUser',
-    initialState: { data: [], isLoading: false },
+    initialState: {
+        data: [],
+        isLoading: false,
+        isLoadingOutGroup: false,
+        conversationClick: null,
+    },
     reducers: {
+        clickConversation: (state, action) => {
+            console.log('[click conversation by id] - ', action.payload);
+            state.conversationClick = action.payload;
+        },
         arrivalCreateGroupFromSocket: (state, action) => {
             const conversation = action.payload;
             const _con = state.data.find((con) => con.id === conversation.id);
@@ -250,21 +259,53 @@ const listGroupUsers = createSlice({
             state.data.splice(_con, 1);
         },
         arrivalUpdateLastMessageFromSocket: (state, action) => {
-            // const mess = action.payload;
-            // console.log('182 --', mess);
+            // pre-last message
+            const preConversationLastMessage = action.payload;
+            const updateConversationLastMessage = state.data.find(
+                (con) => con.id === preConversationLastMessage.conversationID,
+            );
+
+            // update last message
+            updateConversationLastMessage.content =
+                preConversationLastMessage.contentMessage || preConversationLastMessage.content;
+            updateConversationLastMessage.time = preConversationLastMessage.createAt;
+
+            // index conversation
+            const conversationIndex = state.data.findIndex(
+                (con) => con.id === preConversationLastMessage.conversationID,
+            );
+
+            state.data.splice(conversationIndex, 1);
+            state.data.push(updateConversationLastMessage);
+        },
+        arrivalAddMemberFromSocket: (state, action) => {
+            const preMember = action.payload;
+            console.log('preMember', preMember);
+            const member = state.data.find((mem) => mem.id === preMember.id);
+
+            console.log('member', member);
+
+            if (!member) {
+                // state.data.push(action.payload);
+            } else {
+                console.log('Existing conversation id!!!');
+                return;
+            }
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchApiConversationById.pending, (state, action) => {
-                if (action.payload) {
+                if (state.isLoading) {
                     state.isLoading = true;
                 }
             })
             .addCase(fetchApiConversationById.fulfilled, (state, action) => {
+                if (state.isLoading) {
+                    state.isLoading = false;
+                }
                 if (action.payload) {
                     state.data = action.payload;
-                    state.isLoading = false;
                 }
             })
             .addCase(createGroup.fulfilled, (state, action) => {
@@ -279,10 +320,24 @@ const listGroupUsers = createSlice({
             })
             .addCase(deleteMember.fulfilled, (state, action) => {})
             .addCase(addMember.fulfilled, (state, action) => {
+                console.log('[add_user_to_group]', action.payload);
                 // state.data = action.payload;
+
+                socket.emit('add_user_to_group', {
+                    info: action.payload,
+                });
+            })
+            .addCase(outGroup.pending, (state, payload) => {
+                // if (state.isLoadingOutGroup) {
+                // state.isLoadingOutGroup = true;
+                // }
             })
             .addCase(outGroup.fulfilled, (state, action) => {
+                //console.log('227 --->', action.payload);
                 // state.data = action.payload;
+                // if (state.isLoadingOutGroup) {
+                state.isLoadingOutGroup = true;
+                // }
 
                 // socket
                 socket.emit('user_out_group', {

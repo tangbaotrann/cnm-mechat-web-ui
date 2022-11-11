@@ -34,7 +34,7 @@ import { changeNameGroups, outGroup } from '~/redux/features/Group/GroupSlice';
 const cx = classNames.bind(styles);
 
 function ConversationInfo() {
-    const conversation = useSelector((state) => state.conversations.conversationClick);
+    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
     const listMessage = useSelector((state) => state.messages.data);
     const [show, setShow] = useState(true);
     const [showAddMembers, setShowAddMembers] = useState(true);
@@ -52,8 +52,6 @@ function ConversationInfo() {
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
     const dispatch = useDispatch();
-
-    // console.log(filterUser);
 
     useEffect(() => {
         dispatch(
@@ -617,6 +615,7 @@ function ConversationInfo() {
                                 {filterUser?.map((user) => {
                                     return (
                                         <div key={user?._id}>
+                                            {/* conversation={user} tao comment tạm cái */}
                                             <Conversation conversation={user} conversationInfo isPhoneBook />
                                         </div>
                                     );

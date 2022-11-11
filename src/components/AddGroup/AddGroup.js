@@ -26,7 +26,7 @@ function AddGroup({ addMemerber }) {
     const debouncedValue = useDebounce(searchPhone, 500);
     const listFriends = useSelector(listFriend);
     const [checked, setChecked] = useState([]);
-    const conversation = useSelector((state) => state.conversations.conversationClick);
+    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
     //bat loi vali

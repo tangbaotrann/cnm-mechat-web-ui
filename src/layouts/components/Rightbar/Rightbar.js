@@ -11,12 +11,16 @@ import ConversationInfo from './ConversationInfo';
 const cx = classNames.bind(styles);
 
 function Rightbar() {
-    const conversation = useSelector((state) => state.conversations.conversationClick);
+    const conversation = useSelector((state) => state.listGroupUser.conversationClick); //state.conversations.conversationClick
+    const isLoadingOutGroup = useSelector((state) => state.listGroupUser.isLoadingOutGroup);
+    // const me = useSelector((state) => state.listGroupUser.data);
+
+    console.log('conversation - 18', conversation);
 
     return (
         <div className={cx('wrapper')}>
             {/* Để show ra Chat current -> get theo conversationId */}
-            {conversation ? (
+            {conversation && isLoadingOutGroup === false ? (
                 <div className={cx('container')}>
                     <Messenger />
                     <ConversationInfo />

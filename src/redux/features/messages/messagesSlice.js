@@ -57,24 +57,6 @@ const messagesSlice = createSlice({
             .addCase(fetchApiMessagesByConversationId.rejected, (state, action) => {
                 console.log('Error!');
             })
-            //fetch 10 messages last
-            .addCase(fetchApiMessageLastByConversationId.pending, (state, action) => {
-                state.preLoading = true;
-            })
-            .addCase(fetchApiMessageLastByConversationId.fulfilled, (state, action) => {
-                const messages = action.payload;
-
-                // if (!messages) {
-                const preMessages = state.data.concat([...messages, messages]);
-                state.data = preMessages;
-                // }
-
-                state.preLoading = false;
-                //console.log('preMessages - ', preMessages);
-            })
-            .addCase(fetchApiMessageLastByConversationId, (state, action) => {
-                console.log('Error!');
-            })
             // send message
             .addCase(fetchApiSendMessage.fulfilled, (state, action) => {
                 state.data.push(action.payload);
@@ -125,33 +107,6 @@ export const fetchApiMessagesByConversationId = createAsyncThunk(
     async (conversationID) => {
         try {
             const res = await axios.get(`${process.env.REACT_APP_BASE_URL}messages/${conversationID}`);
-            // const res = await axios.post(
-            //     `${process.env.REACT_APP_BASE_URL}messages/ten-last-messages/${conversationID}`,
-            //     {
-            //         data: { count: 0 },
-            //     },
-            // );
-
-            return res.data;
-        } catch (err) {
-            console.log(err);
-        }
-    },
-);
-
-// fetch 10 messages last
-export const fetchApiMessageLastByConversationId = createAsyncThunk(
-    'messages/fetchApiMessageLastByConversationId',
-    async ({ conversationID, countMessage }) => {
-        try {
-            console.log('COUNT - ', countMessage);
-            console.log('conversationID - ', conversationID);
-            const res = await axios.post(
-                `${process.env.REACT_APP_BASE_URL}messages/ten-last-messages/${conversationID}`,
-                {
-                    data: { count: countMessage },
-                },
-            );
 
             return res.data;
         } catch (err) {

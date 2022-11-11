@@ -14,7 +14,6 @@ import Popper from '../Popper';
 import { friendDelete } from '~/redux/features/friend/friendAcceptSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import conversationSlice from '~/redux/features/conversation/conversationSlice';
 import listGroupUsers, {
     blockMember,
@@ -28,41 +27,28 @@ import listGroupUsers, {
 import { faKey, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
-import { fetchApiGroupUserChat } from '~/redux/features/Group/groupUserSlice';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
-import socket from '~/util/socket';
+
 const cx = classNames.bind(styles);
 
 function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const infoUser = useSelector(userLogin);
 
     const user = useSelector((state) => state.user.data);
-    const userCurrent = useSelector((state) => state.userCurrents.data);
     const filterLeaders = useSelector(filterLeader);
     const listFriendFilters = useSelector(filterFriendGroup);
     const [Friend, setFriend] = useState(false);
-    const [showInfo, setShowInfo] = useState(false);
+
     const dispatch = useDispatch();
-    //  tam
-    // const [conversations, setConversation] = useState([]);
-    const conversationID = useSelector((state) => state.conversations.conversationClick);
-    // console.log(conversationID);
+
+    const conversationID = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
     const conversations = useSelector((state) => state.listGroupUser.data);
 
     // console.log('[INFO-USER]', infoUser);
+    // console.log('[USER]', user);
     // console.log('[CONVERSION]', conversation);
 
     useEffect(() => {
-        // const fetchApi = async () => {
-        //     try {
-        //         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${user?._id}`);
-        //         setConversation(res.data.data);
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // };
-
-        // fetchApi();
         dispatch(fetchApiConversationById(user._id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user._id]);
@@ -201,7 +187,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 <div className={cx('list-conversation')} onClick={handleSeeninfoInGroup}>
                     <img
                         className={cx('avatar-img')}
-                        src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
+                        src={conversation?.imageLinkOfConver ? conversation?.imageLinkOfConver : images.noImg}
                         alt="avatar"
                     />
 

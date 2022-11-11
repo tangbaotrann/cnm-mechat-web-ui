@@ -33,7 +33,7 @@ import messagesSlice, {
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
-import { userLogin } from '~/redux/selector';
+import { getMessageFromUserInGroupFromSelector, userLogin } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -48,16 +48,15 @@ function Messenger() {
     const dispatch = useDispatch();
 
     const user = useSelector((state) => state.user.data);
-    const conversation = useSelector((state) => state.conversations.conversationClick);
-    const listMessage = useSelector((state) => state.messages.data);
+    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
+    // const listMessage = useSelector((state) => state.messages.data); //sai
+    const listMessage = useSelector(getMessageFromUserInGroupFromSelector); //sai
     const isLoading = useSelector((state) => state.messages.isLoading);
     const preLoading = useSelector((state) => state.messages.preLoading);
 
-    const infoUser = useSelector(userLogin);
-
     const scrollMessenger = useRef();
-
-    //console.log('[LIST MESSAGES] - ', listMessage);
+    const infoUser = useSelector(userLogin);
+    console.log('[LIST MESSAGES] - ', listMessage);
     // console.log('[USER] - ', user);
     console.log('[CONVERSATION] - ', conversation);
     // console.log('[CONVERSATION.MEMBERS] - ', conversation.members);
@@ -161,8 +160,6 @@ function Messenger() {
     const handleSendMessage = async (e) => {
         e.preventDefault();
 
-        console.log('newImageMessage 1', newImageMessage);
-
         dispatch(
             fetchApiSendMessage({
                 conversationID: conversation.id,
@@ -190,20 +187,6 @@ function Messenger() {
     useEffect(() => {
         conversation && listMessage && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
     }, [conversation, listMessage]);
-
-    // handle loading messages last
-    // const handleLoadingMessagesLast = (e) => {
-    //     if (e.target?.scrollTop === 0) {
-    //         if (listMessage.length >= 10) {
-    //             dispatch(
-    //                 fetchApiMessageLastByConversationId({
-    //                     conversationID: conversation.id,
-    //                     countMessage: listMessage.length,
-    //                 }),
-    //             );
-    //         }
-    //     }
-    // };
 
     return (
         <div className={cx('messenger')}>
@@ -240,7 +223,7 @@ function Messenger() {
                                         message={message}
                                         own={message.senderID === user._id}
                                         conversation={conversation}
-                                        user={user}
+                                        // user={user}
                                     />
                                 </div>
                             );

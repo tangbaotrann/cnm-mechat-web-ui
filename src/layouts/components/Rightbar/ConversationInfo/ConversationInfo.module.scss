@@ -39,6 +39,7 @@
     margin-left: 5px;
     margin-top: 5px;
     cursor: pointer;
+    z-index: 9999;
 
     &:hover {
         opacity: 0.8;

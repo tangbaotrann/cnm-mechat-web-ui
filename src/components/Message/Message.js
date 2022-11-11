@@ -4,8 +4,7 @@ import TippyHeadless from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import moment from 'moment';
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { faCopy, faEllipsis, faQuoteRight, faRepeat, faShare, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -16,35 +15,24 @@ import images from '~/assets/images';
 import Popper from '../Popper';
 import MessageItem from './MessageItem';
 import { fetchApiDeleteMessage, fetchApiRecallMessage } from '~/redux/features/messages/messagesSlice';
-import { fetchApiGroupUserChat } from '~/redux/features/Group/groupUserSlice';
-// import { infoUserConversation } from '~/redux/features/user/userCurrent';
 
 const cx = classNames.bind(styles);
 
 function Message({ message, own, conversation, user }) {
     const dispatch = useDispatch();
 
-    const memberFriend = useSelector((state) => state.groupUserSlices.data); // groupUserSlices
-
     // console.log('member - 29 -', member);
-    //console.log('[USER - 25] - ', user);
-    // console.log('[message] - 25 -', message);
+    // console.log('[USER - 25] - ', user);
+    console.log('[message] - 25 -', message);
     // console.log('[conversation] - 26 ', conversation);
-    // console.log('member fiend - 34 - ', memberFriend);
     // console.log('memberFriend._id === message.senderID', memberFriend._id);
     // console.log('user', user._id, memberFriend._id);
-
-    // find member in group
-    useEffect(() => {
-        dispatch(fetchApiGroupUserChat(conversation.members.find((member) => member === message.senderID)));
-    }, [conversation, dispatch, message.senderID]); //message.senderID
 
     // handle delete message
     const handleDeleteMessage = async () => {
         dispatch(
             fetchApiDeleteMessage({
                 messageId: message._id,
-                // conversationID: conversation.id,
                 userId: user._id,
             }),
         );
@@ -160,8 +148,8 @@ function Message({ message, own, conversation, user }) {
                         </TippyHeadless>
                         {message.deleteBy.length === 0 && (
                             <>
-                                {conversation.isGroup === true && memberFriend?._id === message.senderID ? (
-                                    <img className={cx('message-top-img')} src={user.avatarLink} alt="avatar" />
+                                {conversation.isGroup === true ? (
+                                    <img className={cx('message-top-img')} src={message.user.avatarLink} alt="avatar" />
                                 ) : (
                                     <img
                                         className={cx('message-top-img')}
@@ -181,8 +169,8 @@ function Message({ message, own, conversation, user }) {
                     <div className={cx('message-top')}>
                         {message.deleteBy.length === 0 && (
                             <>
-                                {conversation.isGroup === true && memberFriend?._id === message.senderID ? (
-                                    <img className={cx('message-top-img')} src={memberFriend.avatarLink} alt="avatar" />
+                                {conversation.isGroup === true ? (
+                                    <img className={cx('message-top-img')} src={message.user.avatarLink} alt="avatar" />
                                 ) : (
                                     <img
                                         className={cx('message-top-img')}
