@@ -14,15 +14,14 @@ import Search from '~/components/Search';
 import Conversation from '~/components/Conversation';
 import Sidebar from '~/layouts/components/Sidebar';
 import BoxChat from '~/components/BoxChat';
-import { listFriend, listFriendAccept, listGroupUser, listMeRequests } from '~/redux/selector';
 import ModelWrapper from '~/components/ModelWrapper';
 import AddFriend from '~/components/AddFriend';
 import FriendRequestList from './FriendRequest_list/FriendRequestList';
-
 import Messenger from '~/layouts/components/Rightbar/Messenger';
 import ConversationInfo from '~/layouts/components/Rightbar/ConversationInfo';
 import socket from '~/util/socket';
 import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
+import { listFriend, listGroupUser, listMeRequests, conversationSlice, userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -32,18 +31,13 @@ function PhoneBook() {
     const [showConversation, setShowConversation] = useState('');
 
     const listFriends = useSelector(listFriend);
-    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
+    const user = useSelector(userInfoSelector);
+    const conversation = useSelector(conversationSlice);
     const listGroup = useSelector(listGroupUser);
-
-    //const listAccept = useSelector(listFriendAccept);
     const listMeRequest = useSelector(listMeRequests);
-
-    const listRequestFriend = useSelector((state) => state.friendRequests.data);
+    const listRequestFriend = useSelector((state) => state.friendRequests.data); // hỏi Nhớ
 
     const dispatch = useDispatch();
-
-    const user = useSelector((state) => state.user.data);
-    console.log('user - ', user._id);
 
     // realtime socket (fetch user)
     useEffect(() => {
@@ -66,25 +60,29 @@ function PhoneBook() {
     // re-call add friend
     useEffect(() => {}, []);
 
-    //
     const handleModelOpenInfoAccount = () => {
         setOpenInfoAccount(true);
     };
+
     const handleModelCloseInfoAccount = () => {
         setOpenInfoAccount(false);
     };
+
     const handleRequesfriend = () => {
         setShowConversation('');
         setChangeLayout(false);
     };
+
     const handleGroupChat = () => {
         setShowConversation('');
         setChangeLayout(true);
     };
+
     const tam = () => {
         console.log('60---', conversation);
         setShowConversation(conversation);
     };
+
     return (
         <div className={cx('wrapper')}>
             <Sidebar />

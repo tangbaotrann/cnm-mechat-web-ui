@@ -1,17 +1,16 @@
 // libs
 import classNames from 'classnames/bind';
-import { CircularProgress } from '@material-ui/core';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // me
 import styles from './Home.module.scss';
 import Sidebar from '~/layouts/components/Sidebar';
 import Center from '~/layouts/components/Middle';
 import Rightbar from '~/layouts/components/Rightbar';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
 import socket from '~/util/socket';
-import listGroupUsers from '~/redux/features/Group/GroupSlice';
+import { userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -19,8 +18,7 @@ function Home() {
     //Da doi qua ben app.js
     const dispatch = useDispatch();
 
-    const user = useSelector((state) => state.user.data);
-    const isLoading = useSelector((state) => state.listGroupUser.isLoading);
+    const user = useSelector(userInfoSelector);
 
     useEffect(() => {
         document.title = 'Mechat Web';
@@ -35,23 +33,12 @@ function Home() {
         socket.emit('status_user', user._id);
     }, [user?._id]);
 
-    // useEffect(() => {
-    //     dispatch(listGroupUser());
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-
     return (
-        <>
-            {isLoading ? (
-                <CircularProgress className={cx('loading-messages')} />
-            ) : (
-                <div className={cx('wrapper')}>
-                    <Sidebar />
-                    <Center />
-                    <Rightbar />
-                </div>
-            )}
-        </>
+        <div className={cx('wrapper')}>
+            <Sidebar />
+            <Center />
+            <Rightbar />
+        </div>
     );
 }
 

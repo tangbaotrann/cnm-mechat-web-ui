@@ -7,20 +7,20 @@ import styles from './Rightbar.module.scss';
 import images from '~/assets/images';
 import Messenger from './Messenger';
 import ConversationInfo from './ConversationInfo';
+import { conversationSlice, isLoadingOutGroup } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function Rightbar() {
-    const conversation = useSelector((state) => state.listGroupUser.conversationClick); //state.conversations.conversationClick
-    const isLoadingOutGroup = useSelector((state) => state.listGroupUser.isLoadingOutGroup);
-    // const me = useSelector((state) => state.listGroupUser.data);
+    const conversation = useSelector(conversationSlice);
+    const isLoading = useSelector(isLoadingOutGroup);
 
-    console.log('conversation - 18', conversation);
+    // console.log('conversation - 18', conversation);
 
     return (
         <div className={cx('wrapper')}>
             {/* Để show ra Chat current -> get theo conversationId */}
-            {conversation && isLoadingOutGroup === false ? (
+            {conversation && isLoading === false ? (
                 <div className={cx('container')}>
                     <Messenger />
                     <ConversationInfo />

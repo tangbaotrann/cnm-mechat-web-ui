@@ -34,6 +34,11 @@
     display: flex;
     justify-content: center;
 }
+
+.info-avatar {
+    position: relative;
+}
+
 .info-name .icon-changeName {
     font-size: 16px;
     margin-left: 5px;
@@ -465,3 +470,36 @@ image .info-show .info-show-3 {
 //     position: relative;
 //     margin-left: 4%;
 // }
+
+.hide {
+    display: none;
+    cursor: pointer;
+}
+
+.icon-camera {
+    position: absolute;
+    left: 40px;
+    right: 0;
+    bottom: 2px;
+    margin: auto;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.btn-update-avatar-group {
+    border: none;
+    outline: none;
+    background-color: var(--primary);
+    color: var(--white);
+    font-size: 1.3rem;
+    border-radius: 4px;
+    padding: 4px;
+    margin-bottom: 4px;
+
+    &:hover {
+        opacity: 0.6;
+        cursor: pointer;
+    }
+}

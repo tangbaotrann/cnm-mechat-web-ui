@@ -22,7 +22,6 @@ import EmojiPicker, { SkinTones } from 'emoji-picker-react';
 
 // me
 import styles from './Messenger.module.scss';
-import images from '~/assets/images';
 import Message from '~/components/Message';
 import Popper from '~/components/Popper';
 import OnlineStatus from '~/components/OnlineStatus';
@@ -32,8 +31,14 @@ import messagesSlice, {
     fetchApiMessagesByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
+import {
+    userLogin,
+    userInfoSelector,
+    conversationSlice,
+    isLoadingMessenger,
+    getMessageFromUserInGroupFromSelector,
+} from '~/redux/selector';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
-import { getMessageFromUserInGroupFromSelector, userLogin } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -47,25 +52,29 @@ function Messenger() {
 
     const dispatch = useDispatch();
 
-    const user = useSelector((state) => state.user.data);
-    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
-    // const listMessage = useSelector((state) => state.messages.data); //sai
-    const listMessage = useSelector(getMessageFromUserInGroupFromSelector); //sai
-    const isLoading = useSelector((state) => state.messages.isLoading);
-    const preLoading = useSelector((state) => state.messages.preLoading);
+    const listMessage = useSelector(getMessageFromUserInGroupFromSelector);
+    const infoUser = useSelector(userLogin);
+    // const listConversation = useSelector(listGroupUser);
+    const user = useSelector(userInfoSelector);
+    const conversation = useSelector(conversationSlice);
+    const isLoading = useSelector(isLoadingMessenger);
 
     const scrollMessenger = useRef();
-    const infoUser = useSelector(userLogin);
-    console.log('[LIST MESSAGES] - ', listMessage);
-    // console.log('[USER] - ', user);
-    console.log('[CONVERSATION] - ', conversation);
-    // console.log('[CONVERSATION.MEMBERS] - ', conversation.members);
 
     // fetch message from conversationId
     useEffect(() => {
         dispatch(fetchApiMessagesByConversationId(conversation.id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversation.id]);
+
+    // realtime with block message user in group
+    useEffect(() => {
+        socket.on('blocked_message_user', (arrBlocked) => {
+            console.log('[blocked_message_user]', arrBlocked);
+            dispatch(listGroupUsers.actions.arrivalBlockMessageUserInGroupFromSocket(arrBlocked));
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // user join room
     useEffect(() => {
@@ -127,7 +136,6 @@ function Messenger() {
         file.previewFile = URL.createObjectURL(file);
 
         setNewFileMessage(file);
-        // dispatch(messagesSlice.actions.changeFileMessage(file));
         setBtnClosePreview(!btnClosePreview);
     };
 
@@ -210,7 +218,6 @@ function Messenger() {
 
             {/* onScroll={handleLoadingMessagesLast} */}
             <div className={cx('messenger-body')}>
-                {preLoading && <img className={cx('prev-loading')} src={images.preLoadingMessage} alt="prev-loading" />}
                 {/* Messages */}
                 {isLoading ? (
                     <CircularProgress className={cx('loading-messages')} />
@@ -218,10 +225,10 @@ function Messenger() {
                     <>
                         {listMessage.map((message) => {
                             return (
-                                <div key={message._id} ref={scrollMessenger}>
+                                <div key={message?._id} ref={scrollMessenger}>
                                     <Message
                                         message={message}
-                                        own={message.senderID === user._id}
+                                        own={message?.senderID === user?._id}
                                         conversation={conversation}
                                         // user={user}
                                     />
@@ -232,8 +239,8 @@ function Messenger() {
                 )}
             </div>
 
-            {/* Message */}
-            {conversation.blockBy.includes(infoUser._id) ? (
+            {/* Message conversation */}
+            {conversation?.blockBy?.includes(infoUser._id) ? (
                 <div className={cx('Block')}>
                     <h2>Bạn đã bị chặn nhắn tin...</h2>
                 </div>
