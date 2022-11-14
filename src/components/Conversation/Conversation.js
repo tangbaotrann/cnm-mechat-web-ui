@@ -2,51 +2,52 @@
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'timeago.js';
+import { MoreHoriz } from '@material-ui/icons';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import TippyHeadless from '@tippyjs/react/headless';
+
 // me
 import styles from './Conversation.module.scss';
 import images from '~/assets/images';
-import { MoreHoriz } from '@material-ui/icons';
-import { filterFriendGroup, filterLeader, userLogin } from '~/redux/selector';
 import Popper from '../Popper';
 import { friendDelete } from '~/redux/features/friend/friendAcceptSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
-import conversationSlice from '~/redux/features/conversation/conversationSlice';
 import listGroupUsers, {
     blockMember,
     cancelBlockMember,
     deleteConversation,
     deleteMember,
     fetchApiConversationById,
-    listGroupUser,
     outGroup,
 } from '~/redux/features/Group/GroupSlice';
-import { faKey, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
+import {
+    filterFriendGroup,
+    filterLeader,
+    listGroupUser,
+    userInfoSelector,
+    userLogin,
+    conversationSlice,
+} from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
-    const infoUser = useSelector(userLogin);
-
-    const user = useSelector((state) => state.user.data);
-    const filterLeaders = useSelector(filterLeader);
-    const listFriendFilters = useSelector(filterFriendGroup);
     const [Friend, setFriend] = useState(false);
 
     const dispatch = useDispatch();
 
-    const conversationID = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
-    const conversations = useSelector((state) => state.listGroupUser.data);
-
-    // console.log('[INFO-USER]', infoUser);
-    // console.log('[USER]', user);
-    // console.log('[CONVERSION]', conversation);
+    const infoUser = useSelector(userLogin);
+    const filterLeaders = useSelector(filterLeader);
+    const listFriendFilters = useSelector(filterFriendGroup);
+    const user = useSelector(userInfoSelector);
+    const conversationID = useSelector(conversationSlice);
+    const conversations = useSelector(listGroupUser);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
@@ -60,6 +61,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             }
         });
     }, []);
+
     const handleCancel = () => {
         let deletes = window.confirm('Bạn có chắc chắn muốn sửa không?');
         if (deletes === true) {
@@ -119,6 +121,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             alert('bạn đã hủy yêu cầu rời nhóm');
         }
     };
+
     //kết bạn
     const handleAddFriend = () => {
         const data = { senderID: infoUser._id, receiverID: conversation._id };
@@ -128,6 +131,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             window.location.reload(true);
         }
     };
+
     const handleSeeninfoInGroup = () => {
         dispatch(
             infoUserConversation({
@@ -135,6 +139,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             }),
         );
     };
+
     const handleDeleteGroup = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn giải tán nhóm không?');
         if (checkOutGroup === true) {
@@ -145,12 +150,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             dispatch(deleteConversation(data));
             if (deleteConversation()) {
                 alert('Bạn đã giải tán nhóm');
-                window.location.reload(true);
+                // window.location.reload(true);
             }
         } else {
             alert('bạn đã hủy yêu cầu giải tán nhóm');
         }
     };
+
     const handleBlockMember = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chặn tin nhắn không?');
         if (checkOutGroup === true) {
@@ -166,6 +172,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             alert('bạn đã hủy yêu cầu chặn tin nhắn');
         }
     };
+
     const handleCancelBlockMember = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn bỏ chặn tin nhắn không?');
         if (checkOutGroup === true) {
@@ -181,6 +188,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             alert('bạn đã hủy yêu cầu bỏ chặn tin nhắn');
         }
     };
+
     return (
         <>
             {conversationInfo ? (

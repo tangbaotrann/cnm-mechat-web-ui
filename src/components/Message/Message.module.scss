@@ -7,6 +7,48 @@
 .message-top {
     display: flex;
     position: relative;
+    width: 100%;
+}
+
+.display-container {
+    display: flex;
+    width: 100%;
+    position: relative;
+}
+
+.display-action {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: var(--bg-action);
+    border-radius: 4px;
+    padding: 3px;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
+}
+
+.text-action {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-opacity);
+}
+
+.time-action {
+    font-size: 1rem;
+    margin-top: 6px;
+    margin-right: 52px;
+    color: var(--text-opacity);
+}
+
+.display-action-none {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.display-action-none-receiver {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
 }
 
 .message-image {
@@ -95,6 +137,7 @@
     flex-direction: column;
     align-items: flex-end;
     margin-top: 30px;
+    position: relative;
 }
 
 .own .message-top-text {
@@ -265,8 +308,4 @@
 
 .display-group-item-image {
     padding: 4px;
-}
-
-.loading-messages {
-    // font-size: ;
 }

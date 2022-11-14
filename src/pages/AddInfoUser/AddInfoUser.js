@@ -1,33 +1,39 @@
+// lib
 import classNames from 'classnames/bind';
+import { Radio } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
 //me
 import styles from './AddInfoUser.module.scss';
 import images from '~/assets/images';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Radio } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
-import { useNavigate } from 'react-router-dom';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
+import { userInfoSelector } from '~/redux/selector';
+
 const cx = classNames.bind(styles);
+
 function AddInfoUser() {
-    useEffect(() => {
-        dispatch(fetchApiUser());
-    }, []);
-    const infoUser = useSelector((state) => state.user.data);
-    console.log(infoUser);
-    const dispatch = useDispatch();
-    console.log(infoUser?.fullName);
-    const navigate = useNavigate();
     const [fullNamee, setFullNamee] = useState(infoUser?.fullName);
     const [optionSex, setOptionSex] = useState(infoUser?.gender);
     const [birthday, setBirthday] = useState(moment(infoUser?.birthday).format('YYYY-MM-DD'));
     const [avatar, setAvatar] = useState(infoUser?.avatarLink);
-    console.log(infoUser?.fullName);
-    console.log(infoUser?.fullName);
-    console.log(fullNamee);
+
+    const infoUser = useSelector(userInfoSelector);
+
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        dispatch(fetchApiUser());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     useEffect(() => {
         return () => {
             avatar && URL.revokeObjectURL(avatar.previews);
@@ -58,9 +64,11 @@ function AddInfoUser() {
             console.log('ok');
         }
     };
+
     const handleChange1 = (e) => {
         setBirthday(e.target.value);
     };
+
     const handleChange = (e) => {
         const sex = e.target.value;
         if (sex === 'male') {
@@ -69,15 +77,18 @@ function AddInfoUser() {
             setOptionSex(1);
         }
     };
+
     const handleChangeAvatar = (e) => {
         const file = e.target.files[0];
         file.previews = URL.createObjectURL(file);
         setAvatar(file);
         console.log(file);
     };
+
     const handlecancel = () => {
         navigate('/me.chat');
     };
+
     return (
         <div className={cx('body-info')}>
             <div className={cx('wrapper')}>

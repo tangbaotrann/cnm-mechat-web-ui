@@ -45,7 +45,7 @@ export const updateAvatar = createAsyncThunk(
                     'content-type': 'multipart/form-data',
                 },
             });
-            console.log('52 - ', res.data);
+            // console.log('52 - ', res.data);
             return res.data;
         }
     },
