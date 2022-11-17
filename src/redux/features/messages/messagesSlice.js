@@ -12,6 +12,7 @@ const messagesSlice = createSlice({
         isLoading: false,
         preLoading: false,
         clickSendMessage: null,
+        notifications: [],
     },
     reducers: {
         messageCurrent: (state, action) => {
@@ -39,6 +40,17 @@ const messagesSlice = createSlice({
 
             state.data = messages;
         },
+        arrivalNotificationsMessageFromSocket: (state, action) => {
+            const newMessage = action.payload;
+            const messageId = state.data.find((message) => message._id === newMessage._id);
+
+            if (messageId) {
+                state.notifications.push(action.payload);
+            } else {
+                console.log('Notification error!');
+                return;
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -48,11 +60,6 @@ const messagesSlice = createSlice({
             .addCase(fetchApiMessagesByConversationId.fulfilled, (state, action) => {
                 state.data = action.payload;
                 state.isLoading = false;
-
-                //const sortMessages = action.payload;
-                //console.log('SORT - ', sortMessages);
-                // const messages = sortMessages.includes((mess) => mess._id === sortMessages._id);
-                // const _sort = sortMessages.sort((a, b) => b.createdAt?.localeCompare(a.createdAt));
             })
             .addCase(fetchApiMessagesByConversationId.rejected, (state, action) => {
                 console.log('Error!');

@@ -54,7 +54,6 @@ function Messenger() {
 
     const listMessage = useSelector(getMessageFromUserInGroupFromSelector);
     const infoUser = useSelector(userLogin);
-    // const listConversation = useSelector(listGroupUser);
     const user = useSelector(userInfoSelector);
     const conversation = useSelector(conversationSlice);
     const isLoading = useSelector(isLoadingMessenger);
@@ -66,6 +65,16 @@ function Messenger() {
         dispatch(fetchApiMessagesByConversationId(conversation.id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversation.id]);
+
+    // realtime with notification message
+    useEffect(() => {
+        socket.on('get_notification_message', (message) => {
+            if (message) {
+                dispatch(messagesSlice.actions.arrivalNotificationsMessageFromSocket(message));
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // realtime with block message user in group
     useEffect(() => {
@@ -125,7 +134,6 @@ function Messenger() {
         });
 
         setNewImageMessage(listImg);
-
         setBtnClosePreview(!btnClosePreview);
     };
 
