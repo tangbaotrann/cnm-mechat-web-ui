@@ -1,12 +1,12 @@
 import styles from './FriendRequestList.module.scss';
 import classNames from 'classnames/bind';
 import images from '~/assets/images';
-import { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { accept } from '~/redux/features/friend/friendAcceptSlice';
 import { userLogin } from '~/redux/selector';
-import { callBack } from '~/redux/features/friend/meFriendRequestSlice';
+import { fetchApiAcceptRequestFriend, fetchApiExitRequestFriend } from '~/redux/features/friend/friendRequestSlice';
+import { fetchApiRecallRequestAddFriend } from '~/redux/features/friend/friendRequestSlice';
+
 const cx = classNames.bind(styles);
 
 function FriendRequestList({ user, isPhoneBook }) {
@@ -14,7 +14,7 @@ function FriendRequestList({ user, isPhoneBook }) {
     const infoUser = useSelector(userLogin);
 
     // realtime socket
-    useEffect(() => {}, []);
+    // useEffect(() => {}, []);
 
     const handleAccept = () => {
         const data = {
@@ -23,10 +23,9 @@ function FriendRequestList({ user, isPhoneBook }) {
             receiverID: infoUser._id,
             idRequest: user.idFriendRequest,
         };
-        dispatch(accept(data));
-        if (accept()) {
-            alert('chấp nhận kết bạn thành công');
-            //window.location.reload(true);
+        dispatch(fetchApiAcceptRequestFriend(data));
+        if (fetchApiAcceptRequestFriend()) {
+            alert('Chấp nhận kết bạn thành công');
         } else {
             alert('Số điện thoại chưa đăng ký tài khoảng');
         }
@@ -39,10 +38,9 @@ function FriendRequestList({ user, isPhoneBook }) {
             receiverID: infoUser._id,
             idRequest: user.idFriendRequest,
         };
-        dispatch(accept(data));
-        if (accept()) {
+        dispatch(fetchApiExitRequestFriend(data));
+        if (fetchApiExitRequestFriend()) {
             alert('Từ chối kết bạn thành công');
-            window.location.reload(true);
         } else {
             alert('Từ chối kết bạn thất bại');
         }
@@ -54,8 +52,8 @@ function FriendRequestList({ user, isPhoneBook }) {
             senderID: infoUser._id,
             idRequest: user.idFriendRequest,
         };
-        dispatch(callBack(data));
-        // window.location.reload(true);
+
+        dispatch(fetchApiRecallRequestAddFriend(data));
     };
     return (
         <div className={cx('content')}>

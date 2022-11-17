@@ -13,10 +13,10 @@ import TippyHeadless from '@tippyjs/react/headless';
 import styles from './Conversation.module.scss';
 import images from '~/assets/images';
 import Popper from '../Popper';
-import { friendDelete } from '~/redux/features/friend/friendAcceptSlice';
+import { fetchApiDeleteFriend } from '~/redux/features/friend/friendRequestSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
-import listGroupUsers, {
+import {
     blockMember,
     cancelBlockMember,
     deleteConversation,
@@ -33,6 +33,7 @@ import {
     userInfoSelector,
     userLogin,
     conversationSlice,
+    notificationsMessage,
 } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
@@ -48,6 +49,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const user = useSelector(userInfoSelector);
     const conversationID = useSelector(conversationSlice);
     const conversations = useSelector(listGroupUser);
+    const notifications = useSelector(notificationsMessage);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
@@ -63,30 +65,30 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     }, []);
 
     const handleCancel = () => {
-        let deletes = window.confirm('Bạn có chắc chắn muốn sửa không?');
+        let deletes = window.confirm('Bạn có chắc chắn muốn xóa không?');
         if (deletes === true) {
             const data = {
                 idUser: infoUser._id,
                 status: true,
                 userDeleteId: conversation._id,
             };
-            dispatch(friendDelete(data));
-            alert('Xóa bạn thành công');
+            dispatch(fetchApiDeleteFriend(data));
+            alert('Xóa bạn thành công.');
         } else {
-            alert('bạn đã hủy yêu cầu xóa bạn');
+            alert('Bạn đã hủy yêu cầu xóa bạn!');
         }
     };
 
-    //
-    const tam = () => {
-        conversations.map((c) => {
-            if (c.members.includes(conversation._id)) {
-                if (c.isGroup === false) {
-                    return dispatch(conversationSlice.actions.clickConversation(c));
-                }
-            }
-        });
-    };
+    // Sai
+    // const tam = () => {
+    //     conversations.map((c) => {
+    //         if (c.members.includes(conversation._id)) {
+    //             if (c.isGroup === false) {
+    //                 return dispatch(conversationSlice.actions.clickConversation(c));
+    //             }
+    //         }
+    //     });
+    // };
 
     //xoa thanh vien khoi nhom
     const handleDeleteMemberGroup = () => {
@@ -308,7 +310,8 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     )}
                 </div>
             ) : (
-                <div className={cx('list-conversation')} onClick={tam}>
+                <div className={cx('list-conversation')}>
+                    {/*onClick={tam}  */}
                     <img
                         className={cx('avatar-img')}
                         src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
@@ -351,7 +354,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     {isPhoneBook ? null : (
                         <div className={cx('notification')}>
                             <span className={cx('time')}>{format(conversation?.time)}</span>
-                            {/* <span className={cx('badge')}>5+</span> */}
+                            {conversationID?.id === conversation?.id ? (
+                                <>
+                                    {notifications.length > 0 && (
+                                        <span className={cx('badge')}>{notifications.length}</span>
+                                    )}
+                                </>
+                            ) : null}
                         </div>
                     )}
                 </div>

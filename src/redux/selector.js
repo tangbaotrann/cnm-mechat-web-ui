@@ -3,17 +3,18 @@ import { createSelector } from '@reduxjs/toolkit';
 export const searchTextSelector = (state) => state.filters.search;
 export const userListSelector = (state) => state.users.data;
 export const userInfoSelector = (state) => state.user.data;
-export const listFriendAccept = (state) => state.listAccept.data;
 export const listGroupUser = (state) => state.listGroupUser.data;
 export const conversationSlice = (state) => state.listGroupUser.conversationClick;
 export const isLoadingOutGroup = (state) => state.listGroupUser.isLoadingOutGroup;
-export const listMeRequests = (state) => state.listMeRequest.data;
+export const listMeRequests = (state) => state.friendRequests.dataSended;
+export const listFriendAccept = (state) => state.friendRequests.data;
 export const listMessage = (state) => state.messages.data;
+export const notificationsMessage = (state) => state.messages.notifications;
 export const isLoadingMessenger = (state) => state.messages.isLoading;
 
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users) {
-        const friends = users.filter((_user) => user.friends.includes(_user._id));
+        const friends = users.filter((_user) => user?.friends.includes(_user._id));
         return friends.map((user) => ({
             _id: user._id,
             name: user.fullName,
