@@ -10,6 +10,7 @@ import {
     faGlobe,
     faCircleInfo,
     faRightFromBracket,
+    faFlag,
 } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 // me
@@ -20,13 +21,17 @@ import ModelWrapper from '~/components/ModelWrapper';
 import ModelInfoAccount from '~/components/ModelWrapper/ModelInfoAccount';
 import { useDispatch } from 'react-redux';
 import userSlice from '~/redux/features/user/userSlice';
+import Report from '~/components/Report';
 
 const cx = classNames.bind(styles);
 
 function MenuItem({ user }) {
     const [openIntroVersion, setOpenIntroVersion] = useState(false);
+    const [openReport, setOpenReport] = useState(false);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     // Handle open/ close model intro version
     const handleModelOpenIntroVersion = () => {
         setOpenIntroVersion(true);
@@ -98,6 +103,15 @@ function MenuItem({ user }) {
         );
     };
 
+    // handle report clicked
+    const handleReportClick = () => {
+        setOpenReport(true);
+    };
+
+    const handleModelCloseReport = () => {
+        setOpenReport(false);
+    };
+
     return (
         <>
             <div className={cx('setting-header')}>
@@ -108,6 +122,19 @@ function MenuItem({ user }) {
                 <div className={cx('setting-option')}>
                     <FontAwesomeIcon className={cx('setting-icon')} icon={faGear} />
                     <button className={cx('setting-item-btn')}>Cài đặt</button>
+                </div>
+                <div className={cx('setting-option')}>
+                    <FontAwesomeIcon className={cx('setting-icon')} icon={faFlag} />
+                    <button className={cx('setting-item-btn')} onClick={handleReportClick}>
+                        Báo cáo hành vi
+                    </button>
+
+                    {/* Model report */}
+                    <ModelWrapper className={cx('model-report')} open={openReport} onClose={handleModelCloseReport}>
+                        <>
+                            <Report />
+                        </>
+                    </ModelWrapper>
                 </div>
             </div>
 

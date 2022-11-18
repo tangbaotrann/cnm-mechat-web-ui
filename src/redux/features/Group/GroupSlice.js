@@ -353,16 +353,15 @@ const listGroupUsers = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchApiConversationById.pending, (state, action) => {
-                if (state.isLoading) {
+                if (action.payload) {
                     state.isLoading = true;
+                    // state.data = action.payload;
                 }
             })
             .addCase(fetchApiConversationById.fulfilled, (state, action) => {
-                if (state.isLoading) {
-                    state.isLoading = false;
-                }
                 if (action.payload) {
                     state.data = action.payload;
+                    state.isLoading = false;
                 }
             })
             .addCase(createGroup.fulfilled, (state, action) => {

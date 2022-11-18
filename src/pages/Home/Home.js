@@ -2,6 +2,7 @@
 import classNames from 'classnames/bind';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { CircularProgress } from '@material-ui/core';
 
 // me
 import styles from './Home.module.scss';
@@ -10,7 +11,7 @@ import Center from '~/layouts/components/Middle';
 import Rightbar from '~/layouts/components/Rightbar';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
 import socket from '~/util/socket';
-import { userInfoSelector } from '~/redux/selector';
+import { isLoadingInHomePage, userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -19,6 +20,7 @@ function Home() {
     const dispatch = useDispatch();
 
     const user = useSelector(userInfoSelector);
+    const isLoading = useSelector(isLoadingInHomePage);
 
     useEffect(() => {
         document.title = 'Mechat Web';
@@ -35,9 +37,15 @@ function Home() {
 
     return (
         <div className={cx('wrapper')}>
-            <Sidebar />
-            <Center />
-            <Rightbar />
+            {isLoading ? (
+                <CircularProgress className={cx('loading-icon')} />
+            ) : (
+                <>
+                    <Sidebar />
+                    <Center />
+                    <Rightbar />
+                </>
+            )}
         </div>
     );
 }

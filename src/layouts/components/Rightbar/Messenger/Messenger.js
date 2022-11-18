@@ -393,10 +393,6 @@ function Messenger() {
                                 </button>
                             )}
 
-                            {/* {newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] === 'mp4' && (
-                    <video className={cx('image-upload')} src={newImageMessage[0].preview} alt="video" controls />
-                )} */}
-
                             {newImageMessage.length > 0 ? (
                                 <div>
                                     {newImageMessage.map((img, index) => {
