@@ -60,7 +60,7 @@
 }
 
 // Model intro version
-.model-intro {
+.model-intro, .model-report {
     width: 400px;
     height: 200px;
 }
@@ -109,6 +109,11 @@
     height: 32px;
     border-radius: 6px;
     object-fit: cover;
+}
+
+// model report
+.model-report {
+    height: calc(100vh - 400px);
 }
 
 // hr
