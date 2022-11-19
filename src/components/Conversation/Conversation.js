@@ -51,6 +51,8 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const conversations = useSelector(listGroupUser);
     const notifications = useSelector(notificationsMessage);
 
+    // console.log('54 - ', filterLeaders);
+
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -198,7 +200,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     <img
                         className={cx('avatar-img')}
                         src={conversation?.imageLinkOfConver ? conversation?.imageLinkOfConver : images.noImg}
-                        alt="avatar"
+                        alt="avatar-user"
                     />
 
                     {/* <ModelInfoAccount seenInfoInGroup user={userCurrent} /> */}

@@ -23,9 +23,9 @@ function Middle() {
 
     // Handle fetch conversation
     useEffect(() => {
-        dispatch(fetchApiConversationById(user._id));
+        dispatch(fetchApiConversationById(user?._id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user._id]);
+    }, [user?._id]);
 
     // realtime with create group
     useEffect(() => {

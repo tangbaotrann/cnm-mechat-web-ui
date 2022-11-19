@@ -1,6 +1,7 @@
 // lib
 import classNames from 'classnames/bind';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // me
 import styles from './Report.module.scss';
@@ -8,12 +9,22 @@ import images from '~/assets/images';
 import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faImage } from '@fortawesome/free-solid-svg-icons';
+import { fetchApiCreateReport } from '~/redux/features/report/reportSlice';
+import { getMessageFromUserInGroupFromSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function Report() {
+    const [newMessageText, setNewMessageText] = useState('');
     const [newImageMessage, setNewImageMessage] = useState([]);
     const [btnClosePreview, setBtnClosePreview] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const report = useSelector(getMessageFromUserInGroupFromSelector);
+
+    console.log('report', report);
+    // console.log('message', newMessageText);
 
     // handle change image and preview image
     const handleChangeImageMessage = (e) => {
@@ -37,8 +48,27 @@ function Report() {
         setBtnClosePreview(false);
     };
 
+    // handle onchange mesage text
+    const handleOnchangeMessageReport = (e) => {
+        const mess = e.target.value;
+
+        setNewMessageText(mess);
+    };
+
     // handle confirm report
-    const handleConfirmReport = () => {};
+    const handleConfirmReport = () => {
+        dispatch(
+            fetchApiCreateReport({
+                messageId: report,
+                fileImage: newImageMessage,
+                content: newMessageText,
+            }),
+        );
+
+        setNewMessageText('');
+        setNewImageMessage([]);
+        setBtnClosePreview(false);
+    };
 
     return (
         <div className={cx('model-report')}>
@@ -65,7 +95,11 @@ function Report() {
                     </div>
                 </label>
 
-                <textarea className={cx('message-input')} placeholder="Nhập nội dung báo cáo của bạn..."></textarea>
+                <textarea
+                    className={cx('message-input')}
+                    placeholder="Nhập nội dung báo cáo của bạn..."
+                    onChange={handleOnchangeMessageReport}
+                ></textarea>
 
                 {/* Button close preview */}
                 {btnClosePreview && (
