@@ -1,13 +1,11 @@
 import styles from './Login.module.scss';
 import classNames from 'classnames/bind';
 import images from '~/assets/images';
+import { CircularProgress } from '@material-ui/core';
 
 import { useState, useEffect } from 'react';
 import { PhoneIphone, Lock } from '@material-ui/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { userLogin } from '~/redux/selector';
-import { fetchApiUser } from '~/redux/features/user/userSlice';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 //
 
 const cx = classNames.bind(styles);
@@ -22,7 +20,12 @@ function Login() {
     //loi
     const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
     const [errorPassWord, setErrorPassWord] = useState('');
+
     const navigate = useNavigate();
+
+    const isLoading = useLocation();
+
+    console.log('is -', isLoading.state);
 
     const sign = () => {
         return fetch(`${process.env.REACT_APP_BASE_URL}auths/login`, {
@@ -62,10 +65,15 @@ function Login() {
             sign()
                 .then((token) => {
                     if (typeof token != 'undefined') {
-                        alert('Đăng nhập thành công');
+                        // alert('Đăng nhập thành công');
 
                         localStorage.setItem('user_login', JSON.stringify(token));
-                        navigate('/me.chat');
+                        navigate('/login', {
+                            state: true,
+                        });
+                        setTimeout(() => {
+                            navigate('/me.chat');
+                        }, 2000);
                     }
                 })
                 .catch((err) => {
@@ -140,8 +148,15 @@ function Login() {
                         </div>
                         <span className={cx('error')}>{errorPassWord}</span>
                         <div className={cx('form-button')}>
-                            <button type="submit" variant="contained" color="primary" onClick={sign}>
-                                ĐĂNG NHẬP
+                            <button
+                                className={cx('isLoading')}
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                onClick={sign}
+                                disabled={isLoading.state}
+                            >
+                                {isLoading.state ? <CircularProgress color="inherit" /> : 'ĐĂNG NHẬP'}
                             </button>
                         </div>
                         <div className={cx('form-forget')}>

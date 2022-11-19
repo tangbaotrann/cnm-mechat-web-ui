@@ -56,7 +56,7 @@ function ConversationInfo() {
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
 
-    console.log('conversation - avt', conversation);
+    // console.log('conversation - avt', conversation);
 
     useEffect(() => {
         dispatch(
@@ -151,7 +151,7 @@ function ConversationInfo() {
         };
         dispatch(changeNameGroups(dataChangeGroup));
         if (changeNameGroups()) {
-            alert('Đổi tên nhóm thành cônng');
+            alert('Đổi tên nhóm thành công');
             // window.location.reload(true);
         }
     };

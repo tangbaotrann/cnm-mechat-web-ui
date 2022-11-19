@@ -13,10 +13,11 @@ export const listFriendAccept = (state) => state.friendRequests.data;
 export const listMessage = (state) => state.messages.data;
 export const notificationsMessage = (state) => state.messages.notifications;
 export const isLoadingMessenger = (state) => state.messages.isLoading;
+export const reportSelector = (state) => state.reportSlice.data;
 
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users) {
-        const friends = users.filter((_user) => user?.friends.includes(_user._id));
+        const friends = users.filter((_user) => user?.friends?.includes(_user?._id));
         return friends.map((user) => ({
             _id: user._id,
             name: user.fullName,
@@ -146,6 +147,22 @@ export const filterUserGroup = createSelector(conversationSlice, userListSelecto
         isFriend: false,
     }));
 });
+
+// find user other
+export const findUserOtherInConversationSingle = createSelector(
+    conversationSlice,
+    userListSelector,
+    (conversation, users) => {
+        const user = users.map((us) => {
+            const _u = conversation.members.find((u) => u !== us._id);
+            // console.log('_u', _u);
+
+            return _u;
+        });
+
+        return user;
+    },
+);
 
 ///tim ban trong membergrood
 export const filterFriendGroup = createSelector(conversationSlice, listFriend, (c, lf) => {

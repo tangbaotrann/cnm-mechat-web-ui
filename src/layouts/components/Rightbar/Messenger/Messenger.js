@@ -12,9 +12,9 @@ import {
     faFaceSmile,
     faFile,
     faImage,
+    faLock,
     faPaperclip,
     faThumbsUp,
-    faUserGroup,
     faVideo,
 } from '@fortawesome/free-solid-svg-icons';
 import { CircularProgress } from '@material-ui/core';
@@ -37,8 +37,10 @@ import {
     conversationSlice,
     isLoadingMessenger,
     getMessageFromUserInGroupFromSelector,
+    findUserOtherInConversationSingle,
+    listGroupUser,
 } from '~/redux/selector';
-import listGroupUsers from '~/redux/features/Group/GroupSlice';
+import listGroupUsers, { blockMember, cancelBlockMember } from '~/redux/features/Group/GroupSlice';
 
 const cx = classNames.bind(styles);
 
@@ -52,8 +54,9 @@ function Messenger() {
 
     const dispatch = useDispatch();
 
-    const listMessage = useSelector(getMessageFromUserInGroupFromSelector);
     const infoUser = useSelector(userLogin);
+    const userBlock = useSelector(findUserOtherInConversationSingle);
+    const listMessage = useSelector(getMessageFromUserInGroupFromSelector);
     const user = useSelector(userInfoSelector);
     const conversation = useSelector(conversationSlice);
     const isLoading = useSelector(isLoadingMessenger);
@@ -79,7 +82,7 @@ function Messenger() {
     // realtime with block message user in group
     useEffect(() => {
         socket.on('blocked_message_user', (arrBlocked) => {
-            console.log('[blocked_message_user]', arrBlocked);
+            // console.log('[blocked_message_user]', arrBlocked);
             dispatch(listGroupUsers.actions.arrivalBlockMessageUserInGroupFromSocket(arrBlocked));
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -204,6 +207,46 @@ function Messenger() {
         conversation && listMessage && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
     }, [conversation, listMessage]);
 
+    // handle blocked message user
+    const handleBlockedSingle = () => {
+        let choice = window.confirm(`Bạn có chắc chắn muốn chặn tin nhắn của ${conversation.name} không?`);
+
+        if (choice === true) {
+            const data = {
+                conversationId: conversation.id,
+                userId: userBlock.find((block) => block !== user._id), // userBlock
+            };
+
+            dispatch(blockMember(data));
+
+            if (blockMember()) {
+                alert('Bạn đã chặn tin nhắn thành công.');
+            }
+        } else {
+            alert('Bạn đã hủy chặn tin nhắn thành công.');
+        }
+    };
+
+    // handle un-blocked message user
+    const handleUnBlockedSingle = () => {
+        let choice = window.confirm(`Bạn có chắc chắn muốn bỏ chặn tin nhắn của ${conversation.name} không?`);
+
+        if (choice === true) {
+            const data = {
+                conversationId: conversation.id,
+                userId: userBlock.find((block) => block !== user._id),
+            };
+
+            dispatch(cancelBlockMember(data));
+
+            if (cancelBlockMember()) {
+                alert('Bạn đã bỏ chặn tin nhắn thành công.');
+            }
+        } else {
+            alert('Bạn đã hủy chặn tin nhắn thành công.');
+        }
+    };
+
     return (
         <div className={cx('messenger')}>
             <div className={cx('messenger-header')}>
@@ -216,11 +259,27 @@ function Messenger() {
                             <FontAwesomeIcon className={cx('icon')} icon={faVideo} />
                         </button>
                     </Tippy>
-                    <Tippy className={cx('tool-tip')} content="Thêm bạn vào trò chuyện" delay={[200, 0]}>
-                        <button className={cx('btn-click-icon')}>
-                            <FontAwesomeIcon className={cx('icon')} icon={faUserGroup} />
-                        </button>
-                    </Tippy>
+
+                    {/* block single */}
+                    {conversation.isGroup ? null : (
+                        <>
+                            {conversation?.blockBy?.includes(userBlock.find((block) => block !== user._id)) ? (
+                                <button className={cx('un-blocked-single')} onClick={handleUnBlockedSingle}>
+                                    Bỏ chặn
+                                </button>
+                            ) : (
+                                <Tippy
+                                    className={cx('tool-tip')}
+                                    content={`Chặn tin nhắn của ${conversation.name}`}
+                                    delay={[200, 0]}
+                                >
+                                    <button className={cx('blocked-single')} onClick={handleBlockedSingle}>
+                                        <FontAwesomeIcon icon={faLock} />
+                                    </button>
+                                </Tippy>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
 
