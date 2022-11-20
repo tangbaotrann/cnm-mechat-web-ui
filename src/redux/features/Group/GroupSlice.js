@@ -3,6 +3,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import socket from '~/util/socket';
 
+// fetch api conversation by id
 export const fetchApiConversationById = createAsyncThunk('listGroupUser/fetchApiConversationById', async (userId) => {
     try {
         const res = await axios.get(`${process.env.REACT_APP_BASE_URL}conversations/${userId}`);
@@ -12,6 +13,30 @@ export const fetchApiConversationById = createAsyncThunk('listGroupUser/fetchApi
         console.log(err);
     }
 });
+
+// delete conversation single
+export const fetchApiDeleteConversationSingle = createAsyncThunk(
+    'listGroupUser/fetchApiDeleteConversationSingle',
+    async ({ conversationId, userId }) => {
+        try {
+            console.log('20 - conversationId', conversationId);
+            console.log('20 - userId', userId);
+            const res = await axios.delete(
+                `${process.env.REACT_APP_BASE_URL}conversations/delete-for-you/${conversationId}`,
+                {
+                    data: { userId },
+                    headers: { Authorization: '***' },
+                },
+            );
+
+            console.log('22 - ', res.data);
+
+            return res.data;
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
 
 export const listGroupUser = createAsyncThunk('user/listGroupUser', async (arg, { rejectWithValue }) => {
     try {
@@ -363,6 +388,12 @@ const listGroupUsers = createSlice({
                     state.data = action.payload;
                     state.isLoading = false;
                 }
+            })
+            .addCase(fetchApiDeleteConversationSingle.fulfilled, (state, action) => {
+                const preConversation = action.payload;
+                const currConversation = state.data.findIndex((con) => con.id === preConversation.id);
+
+                state.data.splice(currConversation, 1);
             })
             .addCase(createGroup.fulfilled, (state, action) => {
                 if (action.payload) {

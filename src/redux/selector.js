@@ -154,7 +154,7 @@ export const findUserOtherInConversationSingle = createSelector(
     userListSelector,
     (conversation, users) => {
         const user = users.map((us) => {
-            const _u = conversation.members.find((u) => u !== us._id);
+            const _u = conversation?.members.find((u) => u !== us._id);
             // console.log('_u', _u);
 
             return _u;

@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'timeago.js';
 import { MoreHoriz } from '@material-ui/icons';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis, faKey } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -22,6 +22,7 @@ import {
     deleteConversation,
     deleteMember,
     fetchApiConversationById,
+    fetchApiDeleteConversationSingle,
     outGroup,
 } from '~/redux/features/Group/GroupSlice';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
@@ -51,6 +52,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const conversations = useSelector(listGroupUser);
     const notifications = useSelector(notificationsMessage);
 
+    console.log('55 - ', conversation);
     // console.log('54 - ', filterLeaders);
 
     useEffect(() => {
@@ -161,6 +163,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         }
     };
 
+    // handle block message user
     const handleBlockMember = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chặn tin nhắn không?');
         if (checkOutGroup === true) {
@@ -177,6 +180,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         }
     };
 
+    // handle un-block message user
     const handleCancelBlockMember = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn bỏ chặn tin nhắn không?');
         if (checkOutGroup === true) {
@@ -190,6 +194,23 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             }
         } else {
             alert('bạn đã hủy yêu cầu bỏ chặn tin nhắn');
+        }
+    };
+
+    // handle delete conversation single
+    const handleDeleteConversationSingle = () => {
+        const choice = window.confirm('Bạn có chắc chắn muốn xóa cuộc hội thoại này không?');
+
+        if (choice === true) {
+            dispatch(
+                fetchApiDeleteConversationSingle({
+                    conversationId: conversation.id,
+                    userId: user._id,
+                }),
+            );
+            alert('Bạn đã xóa thành công cuộc hội thoại.');
+        } else {
+            alert('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
         }
     };
 
@@ -312,58 +333,86 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     )}
                 </div>
             ) : (
-                <div className={cx('list-conversation')}>
-                    {/*onClick={tam}  */}
-                    <img
-                        className={cx('avatar-img')}
-                        src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
-                        alt="avatar"
-                    />
+                <div className={cx('container-conversation')}>
+                    <div className={cx('list-conversation')}>
+                        {/*onClick={tam}  */}
+                        <img
+                            className={cx('avatar-img')}
+                            src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
+                            alt="avatar"
+                        />
 
-                    <div className={cx('content')}>
-                        <h4 className={cx('username')}>{conversation?.name} </h4>
+                        <div className={cx('content')}>
+                            <h4 className={cx('username')}>{conversation?.name} </h4>
+                            {isPhoneBook ? null : (
+                                <p className={cx('message')}>{conversation?.content || conversation?.lastMessage}</p>
+                            )}
+                        </div>
+
+                        {isPhoneBook && !Group ? (
+                            <TippyHeadless
+                                render={(attrs) => (
+                                    <div tabIndex="-1" {...attrs}>
+                                        <Popper className={cx('own-menu-list-children')}>
+                                            <p className={cx('deleteFriend')}>
+                                                <ModelInfoAccount yourProfile friend user={conversation} />
+                                            </p>
+                                            <p className={cx('deleteFriend')} onClick={handleCancel}>
+                                                <button className={cx('item-btn')}> Xóa Bạn</button>
+                                            </p>
+                                        </Popper>
+                                    </div>
+                                )}
+                                interactive
+                                trigger="click"
+                                placement="bottom-start"
+                                offset={[4, 4]}
+                            >
+                                <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                                    <div>
+                                        <MoreHoriz className={cx('item')} />
+                                    </div>
+                                </Tippy>
+                            </TippyHeadless>
+                        ) : null}
+
                         {isPhoneBook ? null : (
-                            <p className={cx('message')}>{conversation?.content || conversation?.lastMessage}</p>
+                            <div className={cx('notification')}>
+                                <span className={cx('time')}>{format(conversation?.time)}</span>
+                                {conversationID?.id === conversation?.id ? (
+                                    <>
+                                        {notifications.length > 0 && (
+                                            <span className={cx('badge')}>{notifications.length}</span>
+                                        )}
+                                    </>
+                                ) : null}
+                            </div>
                         )}
                     </div>
 
-                    {isPhoneBook && !Group ? (
-                        <TippyHeadless
-                            render={(attrs) => (
-                                <div tabIndex="-1" {...attrs}>
-                                    <Popper className={cx('own-menu-list-children')}>
-                                        <p className={cx('deleteFriend')}>
-                                            <ModelInfoAccount yourProfile friend user={conversation} />
-                                        </p>
-                                        <p className={cx('deleteFriend')} onClick={handleCancel}>
-                                            <button className={cx('item-btn')}> Xóa Bạn</button>
-                                        </p>
-                                    </Popper>
-                                </div>
-                            )}
-                            interactive
-                            trigger="click"
-                            placement="bottom-start"
-                            offset={[4, 4]}
-                        >
-                            <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
-                                <div>
-                                    <MoreHoriz className={cx('item')} />
-                                </div>
-                            </Tippy>
-                        </TippyHeadless>
-                    ) : null}
                     {isPhoneBook ? null : (
-                        <div className={cx('notification')}>
-                            <span className={cx('time')}>{format(conversation?.time)}</span>
-                            {conversationID?.id === conversation?.id ? (
-                                <>
-                                    {notifications.length > 0 && (
-                                        <span className={cx('badge')}>{notifications.length}</span>
-                                    )}
-                                </>
-                            ) : null}
-                        </div>
+                        <button className={cx('option-remove-conversation')}>
+                            <TippyHeadless
+                                render={(attrs) => (
+                                    <div tabIndex="-1" {...attrs} className={cx('tippy-remove-conversation')}>
+                                        <Popper className={cx('popper-remove-conversation')}>
+                                            <button
+                                                className={cx('btn-remove')}
+                                                onClick={handleDeleteConversationSingle}
+                                            >
+                                                Xóa cuộc hội thoại
+                                            </button>
+                                        </Popper>
+                                    </div>
+                                )}
+                                delay={[0, 100]}
+                                placement="bottom-end"
+                                // offset={[0, 0]}
+                                interactive
+                            >
+                                <FontAwesomeIcon className={cx('option-del')} icon={faEllipsis} />
+                            </TippyHeadless>
+                        </button>
                     )}
                 </div>
             )}
