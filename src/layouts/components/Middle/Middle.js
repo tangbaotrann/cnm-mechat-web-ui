@@ -10,12 +10,7 @@ import Conversation from '~/components/Conversation';
 import Search from '~/components/Search';
 import socket from '~/util/socket';
 import listGroupUsers, { fetchApiConversationById } from '~/redux/features/Group/GroupSlice';
-import {
-    userInfoSelector,
-    listGroupUser,
-    isLoadingConversation,
-    findUserOtherInConversationSingle,
-} from '~/redux/selector';
+import { userInfoSelector, listGroupUser, isLoadingConversation } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -25,10 +20,6 @@ function Middle() {
     const user = useSelector(userInfoSelector);
     const conversations = useSelector(listGroupUser);
     const isLoading = useSelector(isLoadingConversation);
-
-    const userOrder = useSelector(findUserOtherInConversationSingle);
-
-    console.log('userOrder - ', userOrder);
 
     // Handle fetch conversation
     useEffect(() => {
@@ -85,7 +76,7 @@ function Middle() {
                     <>
                         {conversations.map((conversation) => {
                             return (
-                                <>
+                                <div key={conversation.id}>
                                     {conversation.id && !conversation?.deleteBy.includes(user._id) && (
                                         <div
                                             onClick={() =>
@@ -96,7 +87,7 @@ function Middle() {
                                             <Conversation key={conversation.id} conversation={conversation} />
                                         </div>
                                     )}
-                                </>
+                                </div>
                             );
                         })}
                     </>

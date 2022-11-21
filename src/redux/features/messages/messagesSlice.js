@@ -104,6 +104,17 @@ const messagesSlice = createSlice({
             })
             .addCase(fetchApiRecallMessage.rejected, (state, action) => {
                 console.log('Error!');
+            })
+            // move message
+            .addCase(fetchApiMoveMessage.fulfilled, (state, action) => {
+                // console.log('action.payload - ', action.payload.newMessage);
+                const newMessages = action.payload.newMessage;
+                // console.log('newMessages - ', newMessages);
+                newMessages.forEach((message) => {
+                    socket.emit('send_message', {
+                        message: message,
+                    });
+                });
             });
     },
 });
@@ -155,7 +166,7 @@ export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessag
             },
         });
 
-        console.log('resFormData', resFormData.data);
+        // console.log('resFormData', resFormData.data);
 
         return resFormData.data;
     }
@@ -194,5 +205,24 @@ export const fetchApiRecallMessage = createAsyncThunk(
         }
     },
 );
+
+// move message
+export const fetchApiMoveMessage = createAsyncThunk('messages/fetchApiMoveMessage', async (data) => {
+    try {
+        console.log('[fetchApiMoveMessage - data]', data);
+        const { conversationId, messageId, userId } = data;
+        const res = await axios.post(`${process.env.REACT_APP_BASE_URL}messages/move-message/${messageId}`, {
+            conversationId: conversationId,
+            userId: userId,
+            headers: { Authorization: '***' },
+        });
+
+        console.log('res -', res.data);
+
+        return res.data;
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 export default messagesSlice;

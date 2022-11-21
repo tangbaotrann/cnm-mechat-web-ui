@@ -19,8 +19,6 @@ export const fetchApiDeleteConversationSingle = createAsyncThunk(
     'listGroupUser/fetchApiDeleteConversationSingle',
     async ({ conversationId, userId }) => {
         try {
-            console.log('20 - conversationId', conversationId);
-            console.log('20 - userId', userId);
             const res = await axios.delete(
                 `${process.env.REACT_APP_BASE_URL}conversations/delete-for-you/${conversationId}`,
                 {
@@ -29,14 +27,14 @@ export const fetchApiDeleteConversationSingle = createAsyncThunk(
                 },
             );
 
-            console.log('22 - ', res.data);
-
             return res.data;
         } catch (err) {
             console.log(err);
         }
     },
 );
+
+//
 
 export const listGroupUser = createAsyncThunk('user/listGroupUser', async (arg, { rejectWithValue }) => {
     try {
