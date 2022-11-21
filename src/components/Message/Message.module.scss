@@ -359,3 +359,11 @@
         background-color: var(--primary);
     }
 }
+
+// model report
+.model-report {
+    width: calc(100vw - 900px);
+    height: calc(100vh - 400px);
+    // overflow-y: scroll;
+    // overflow-y: overlay;
+}
