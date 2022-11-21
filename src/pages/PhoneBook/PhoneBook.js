@@ -29,6 +29,7 @@ import {
     listFriendAccept,
 } from '~/redux/selector';
 import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
+import listGroupUsers from '~/redux/features/Group/GroupSlice';
 
 const cx = classNames.bind(styles);
 
@@ -85,15 +86,31 @@ function PhoneBook() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // realtime delete friend
+    // realtime delete friend // arrivalDeleteConversationOutGroupFromSocket
+    // listFriendRequests.actions.arrivalDeleteFriendFromSocket(conversationDeleted)
     useEffect(() => {
-        socket.on('confirm_delete', (_id) => {
-            console.log('[confirm_delete]', _id);
-            dispatch(listFriendRequests.actions.arrivalDeleteFriendFromSocket(_id));
+        socket.on('remove_conversation_block_group', (conversationDeleted) => {
+            console.log('[remove_conversation_block_group]', conversationDeleted);
+            dispatch(listGroupUsers.actions.arrivalDeleteConversationOutGroupFromSocket(conversationDeleted));
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // realtime filter friend
+    // useEffect(() => {
+    //     // socket.off('send_friends');
+    //     // socket.on('send_friends', (friends) => {
+    //     //     console.log('[send_friends]', friends);
+    //     //     dispatch(listFriendRequests.actions.arrivalFilterFriendFromSocket(friends));
+    //     // });
+    //     // socket.off('send_friends');
+    //     // socket.on('receive_friends', (friends) => {
+    //     //     console.log('[receive_friends]', friends);
+    //     //     dispatch(listFriendRequests.actions.arrivalFilterFriendFromSocket(friends));
+    //     // });
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
     const handleModelOpenInfoAccount = () => {
         setOpenInfoAccount(true);
@@ -147,7 +164,7 @@ function PhoneBook() {
                         {listFriends?.map((user) => {
                             return (
                                 <div key={user?._id}>
-                                    <Conversation conversation={user} isPhoneBook />;
+                                    <Conversation conversation={user} isPhoneBook />
                                 </div>
                             );
                         })}

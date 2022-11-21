@@ -30,13 +30,6 @@ const listFriendRequests = createSlice({
             const currReq = state.data.findIndex((req) => req.idFriendRequest === preReq);
             state.data.splice(currReq, 1);
         },
-        arrivalDeleteFriendFromSocket: (state, action) => {
-            console.log('34 - ', action.payload);
-            const preReq = action.payload;
-            const currReq = state.data.findIndex((req) => req._id === preReq); // no conversationId
-            console.log('37 - ', currReq);
-            state.data.splice(currReq, 1);
-        },
     },
     extraReducers: (builder) => {
         builder
@@ -107,12 +100,17 @@ const listFriendRequests = createSlice({
                 });
             })
             .addCase(fetchApiDeleteFriend.fulfilled, (state, action) => {
-                // state.data = action.payload;
-                console.log('[delete_friend]', action.payload);
+                //console.log('111 - ', action.payload);
+                // const preReq = action.payload;
+
+                // state.data = preReq.listFriendsUser;
+                // console.log('114 - ', preReq.listFriendsUser);
+
+                // console.log('[delete_friend]', action.payload);
 
                 // socket
                 socket.emit('delete_friend', {
-                    request: action.payload.conversationDeleted,
+                    request: action.payload,
                 });
             });
     },
@@ -157,7 +155,7 @@ export const fetchApiAcceptRequestFriend = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-
+        console.log('id con -', jsonData);
         return jsonData;
     },
 );
@@ -215,7 +213,7 @@ export const friendAccept = createAsyncThunk('user/friendAccept', async (arg, { 
             const res = await axios.get(
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-list-request/${decodedToken._id}`,
             );
-            // console.log('[19] -> ', res.data);
+            console.log('[19] -> ', res.data.data);
             return res.data.data;
         }
     } catch (err) {

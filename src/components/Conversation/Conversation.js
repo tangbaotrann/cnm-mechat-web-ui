@@ -52,8 +52,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const conversations = useSelector(listGroupUser);
     const notifications = useSelector(notificationsMessage);
 
-    console.log('55 - ', conversation);
-    // console.log('54 - ', filterLeaders);
+    // console.log('55 - ', conversation);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
@@ -262,7 +261,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                             placement="bottom-start"
                             offset={[4, 4]}
                         >
-                            <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                            <Tippy className={cx('tool-tip')} content="Lựa chọn" delay={[200, 0]}>
                                 <div>
                                     <MoreHoriz className={cx('item')} />
                                 </div>
@@ -296,7 +295,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                     placement="bottom-start"
                                     offset={[4, 4]}
                                 >
-                                    <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                                    <Tippy className={cx('tool-tip')} content="Lựa chọn" delay={[200, 0]}>
                                         <div>
                                             <MoreHoriz className={cx('item')} />
                                         </div>
@@ -320,7 +319,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                             placement="bottom-start"
                                             offset={[4, 4]}
                                         >
-                                            <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                                            <Tippy className={cx('tool-tip')} content="Lựa chọn" delay={[200, 0]}>
                                                 <div>
                                                     <MoreHoriz className={cx('item')} />
                                                 </div>
@@ -368,7 +367,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                 placement="bottom-start"
                                 offset={[4, 4]}
                             >
-                                <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                                <Tippy className={cx('tool-tip')} content="Lựa chọn" delay={[200, 0]}>
                                     <div>
                                         <MoreHoriz className={cx('item')} />
                                     </div>

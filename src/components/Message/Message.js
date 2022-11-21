@@ -4,7 +4,8 @@ import TippyHeadless from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { faCopy, faEllipsis, faQuoteRight, faRepeat, faShare, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -15,10 +16,15 @@ import images from '~/assets/images';
 import Popper from '../Popper';
 import MessageItem from './MessageItem';
 import { fetchApiDeleteMessage, fetchApiRecallMessage } from '~/redux/features/messages/messagesSlice';
+import ModelWrapper from '../ModelWrapper';
+
+import MoveMessage from './MoveMessage';
 
 const cx = classNames.bind(styles);
 
 function Message({ message, own, conversation }) {
+    const [showConversations, setShowConversation] = useState(false);
+
     const dispatch = useDispatch();
 
     //console.log('[MESSAGE - ACTION] - ', message?.action);
@@ -45,6 +51,11 @@ function Message({ message, own, conversation }) {
         );
     };
 
+    // show model conversation
+    const handleShowModelConversation = () => {
+        setShowConversation(true);
+    };
+
     return (
         <>
             {own ? (
@@ -66,10 +77,24 @@ function Message({ message, own, conversation }) {
                                             </Tippy>
 
                                             <Tippy className={cx('tool-tip')} content="Chia sẻ" delay={[200, 0]}>
-                                                <button className={cx('option-btn')}>
+                                                <button
+                                                    className={cx('option-btn')}
+                                                    onClick={handleShowModelConversation}
+                                                >
                                                     <FontAwesomeIcon className={cx('option-icon')} icon={faShare} />
                                                 </button>
                                             </Tippy>
+                                            {/* show model conversations */}
+                                            <ModelWrapper
+                                                className={cx('model-conversations')}
+                                                open={showConversations}
+                                                onClose={() => setShowConversation(!showConversations)}
+                                            >
+                                                <>
+                                                    <MoveMessage message={message} />
+                                                </>
+                                            </ModelWrapper>
+
                                             {/* Menu children */}
                                             <TippyHeadless
                                                 render={(attrs) => (
@@ -207,10 +232,24 @@ function Message({ message, own, conversation }) {
                                             </Tippy>
 
                                             <Tippy className={cx('tool-tip')} content="Chia sẻ" delay={[200, 0]}>
-                                                <button className={cx('option-btn')}>
+                                                <button
+                                                    className={cx('option-btn')}
+                                                    onClick={handleShowModelConversation}
+                                                >
                                                     <FontAwesomeIcon className={cx('option-icon')} icon={faShare} />
                                                 </button>
                                             </Tippy>
+                                            {/* show model conversations */}
+                                            <ModelWrapper
+                                                className={cx('model-conversations')}
+                                                open={showConversations}
+                                                onClose={() => setShowConversation(!showConversations)}
+                                            >
+                                                <>
+                                                    <MoveMessage message={message} />
+                                                </>
+                                            </ModelWrapper>
+
                                             {/* Menu children */}
                                             <TippyHeadless
                                                 render={(attrs) => (
