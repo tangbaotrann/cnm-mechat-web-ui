@@ -1,7 +1,11 @@
-import styles from './FriendRequestList.module.scss';
+// lib
 import classNames from 'classnames/bind';
-import images from '~/assets/images';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+// me
+import styles from './FriendRequestList.module.scss';
+import images from '~/assets/images';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '~/redux/selector';
 import { fetchApiAcceptRequestFriend, fetchApiExitRequestFriend } from '~/redux/features/friend/friendRequestSlice';
@@ -23,11 +27,13 @@ function FriendRequestList({ user, isPhoneBook }) {
             receiverID: infoUser._id,
             idRequest: user.idFriendRequest,
         };
+
         dispatch(fetchApiAcceptRequestFriend(data));
+
         if (fetchApiAcceptRequestFriend()) {
-            alert('Chấp nhận kết bạn thành công');
+            toast.success('Chấp nhận kết bạn thành công.');
         } else {
-            alert('Số điện thoại chưa đăng ký tài khoảng');
+            toast.error('Số điện thoại chưa đăng ký tài khoản!');
         }
     };
 
@@ -38,11 +44,13 @@ function FriendRequestList({ user, isPhoneBook }) {
             receiverID: infoUser._id,
             idRequest: user.idFriendRequest,
         };
+
         dispatch(fetchApiExitRequestFriend(data));
+
         if (fetchApiExitRequestFriend()) {
-            alert('Từ chối kết bạn thành công');
+            toast.success('Từ chối kết bạn thành công.');
         } else {
-            alert('Từ chối kết bạn thất bại');
+            toast.error('Từ chối kết bạn thất bại');
         }
     };
 
@@ -54,6 +62,7 @@ function FriendRequestList({ user, isPhoneBook }) {
         };
 
         dispatch(fetchApiRecallRequestAddFriend(data));
+        toast.success('Bạn đã thu hồi lời mời kết bạn.');
     };
     return (
         <div className={cx('content')}>
@@ -77,6 +86,9 @@ function FriendRequestList({ user, isPhoneBook }) {
                     </div>
                 )}
             </div>
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" closeOnClick={false} />
         </div>
     );
 }

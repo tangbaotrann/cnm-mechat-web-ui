@@ -5,10 +5,18 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import moment from 'moment';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
-import { faCopy, faEllipsis, faQuoteRight, faRepeat, faShare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCopy,
+    faEllipsis,
+    faQuoteRight,
+    faRepeat,
+    faShare,
+    faTrash,
+    faFlag,
+} from '@fortawesome/free-solid-svg-icons';
 
 // me
 import styles from './Message.module.scss';
@@ -17,13 +25,14 @@ import Popper from '../Popper';
 import MessageItem from './MessageItem';
 import { fetchApiDeleteMessage, fetchApiRecallMessage } from '~/redux/features/messages/messagesSlice';
 import ModelWrapper from '../ModelWrapper';
-
 import MoveMessage from './MoveMessage';
+import Report from '../Report';
 
 const cx = classNames.bind(styles);
 
 function Message({ message, own, conversation }) {
     const [showConversations, setShowConversation] = useState(false);
+    const [openReport, setOpenReport] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -56,6 +65,15 @@ function Message({ message, own, conversation }) {
         setShowConversation(true);
     };
 
+    // handle report clicked
+    const handleReportClick = () => {
+        setOpenReport(true);
+    };
+
+    const handleModelCloseReport = () => {
+        setOpenReport(false);
+    };
+
     return (
         <>
             {own ? (
@@ -67,14 +85,26 @@ function Message({ message, own, conversation }) {
                                 <div tabIndex="-1" {...attrs}>
                                     <Popper className={cx('own-menu-list')}>
                                         <div className={cx('options')}>
-                                            <Tippy className={cx('tool-tip')} content="Trả lời" delay={[200, 0]}>
-                                                <button className={cx('option-btn')}>
-                                                    <FontAwesomeIcon
-                                                        className={cx('option-icon')}
-                                                        icon={faQuoteRight}
-                                                    />
+                                            <Tippy
+                                                className={cx('tool-tip')}
+                                                content="Báo cáo tin nhắn"
+                                                delay={[200, 0]}
+                                            >
+                                                <button className={cx('option-btn')} onClick={handleReportClick}>
+                                                    <FontAwesomeIcon className={cx('option-icon')} icon={faFlag} />
                                                 </button>
                                             </Tippy>
+
+                                            {/* Show report */}
+                                            <ModelWrapper
+                                                className={cx('model-report')}
+                                                open={openReport}
+                                                onClose={handleModelCloseReport}
+                                            >
+                                                <>
+                                                    <Report message={message} />
+                                                </>
+                                            </ModelWrapper>
 
                                             <Tippy className={cx('tool-tip')} content="Chia sẻ" delay={[200, 0]}>
                                                 <button

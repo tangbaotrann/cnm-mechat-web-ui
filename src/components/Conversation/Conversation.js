@@ -27,15 +27,7 @@ import {
 } from '~/redux/features/Group/GroupSlice';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
-import {
-    filterFriendGroup,
-    filterLeader,
-    listGroupUser,
-    userInfoSelector,
-    userLogin,
-    conversationSlice,
-    notificationsMessage,
-} from '~/redux/selector';
+import { filterFriendGroup, filterLeader, userInfoSelector, userLogin, conversationSlice } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -49,8 +41,6 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const listFriendFilters = useSelector(filterFriendGroup);
     const user = useSelector(userInfoSelector);
     const conversationID = useSelector(conversationSlice);
-    const conversations = useSelector(listGroupUser);
-    const notifications = useSelector(notificationsMessage);
 
     // console.log('55 - ', conversation);
 
@@ -378,13 +368,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                         {isPhoneBook ? null : (
                             <div className={cx('notification')}>
                                 <span className={cx('time')}>{format(conversation?.time)}</span>
-                                {conversationID?.id === conversation?.id ? (
+                                {/* {conversationID?.id === conversation?.id ? (
                                     <>
                                         {notifications.length > 0 && (
                                             <span className={cx('badge')}>{notifications.length}</span>
                                         )}
                                     </>
-                                ) : null}
+                                ) : null} */}
                             </div>
                         )}
                     </div>

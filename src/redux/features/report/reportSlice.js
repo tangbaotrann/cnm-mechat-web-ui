@@ -12,38 +12,42 @@ const reportSlice = createSlice({
         builder.addCase(fetchApiCreateReport.fulfilled, (state, action) => {
             console.log('action.payload', action.payload);
 
-            state.data.push(action.payload);
+            state.data = action.payload;
         });
     },
 });
 
 // create form data
-const createFormData = (data) => {
-    const { messageId, fileImage, content } = data;
+const createFormData = (reported) => {
+    const { messageId, imageLink, content } = reported;
 
-    console.log('data - 17', data);
+    console.log('data - 17', reported);
 
     const dataForm = new FormData();
 
-    if (messageId.length === 1) {
-        console.log('message id', messageId[0]._id);
-        dataForm.append('messageId', messageId[0]._id);
-    } else if (messageId.length > 1) {
-        messageId.forEach((mess) => {
-            dataForm.append('messageId', mess);
-        });
-    }
+    // if (messageId.length === 1) {
+    //     console.log('message id', messageId[0]._id);
+    //     dataForm.append('messageId', messageId[0]._id);
+    // } else if (messageId.length > 1) {
+    //     messageId.forEach((mess) => {
+    //         dataForm.append('messageId', mess);
+    //     });
+    // }
 
-    dataForm.append('fileImage', fileImage[0].preview);
+    dataForm.append('messageId', messageId);
+    dataForm.append('fileImage', imageLink[0].data);
+    console.log('fileImage - 39', imageLink[0].data);
     dataForm.append('content', content);
 
     return dataForm;
 };
 
 // create report
-export const fetchApiCreateReport = createAsyncThunk('reportSlice/fetchApiCreateReport', async (data) => {
+export const fetchApiCreateReport = createAsyncThunk('reportSlice/fetchApiCreateReport', async (reported) => {
     try {
-        let formData = createFormData(data);
+        console.log('47 - data - fetch -', reported);
+        let formData = createFormData(reported);
+        console.log('49 - form-data -', formData);
         const res = await axios.post(`${process.env.REACT_APP_BASE_URL}reports`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',

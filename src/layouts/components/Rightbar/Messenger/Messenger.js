@@ -19,6 +19,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { CircularProgress } from '@material-ui/core';
 import EmojiPicker, { SkinTones } from 'emoji-picker-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './Messenger.module.scss';
@@ -38,7 +40,6 @@ import {
     isLoadingMessenger,
     getMessageFromUserInGroupFromSelector,
     findUserOtherInConversationSingle,
-    listGroupUser,
 } from '~/redux/selector';
 import listGroupUsers, { blockMember, cancelBlockMember } from '~/redux/features/Group/GroupSlice';
 
@@ -179,6 +180,12 @@ function Messenger() {
     const handleSendMessage = async (e) => {
         e.preventDefault();
 
+        // check size file
+        if (newFileMessage?.size / 1024 / 1024 > 5 || newImageMessage?.size / 1024 / 1024 > 5) {
+            toast.error('Xin lỗi, file của bạn vượt quá 5 MB. Vui lòng chọn file khác để gửi!');
+            return;
+        }
+
         dispatch(
             fetchApiSendMessage({
                 conversationID: conversation.id,
@@ -220,10 +227,10 @@ function Messenger() {
             dispatch(blockMember(data));
 
             if (blockMember()) {
-                alert('Bạn đã chặn tin nhắn thành công.');
+                toast.success(`Bạn đã chặn tin nhắn với ${conversation.name}.`);
             }
         } else {
-            alert('Bạn đã hủy chặn tin nhắn thành công.');
+            toast.info('Bạn đã hủy chặn tin nhắn.');
         }
     };
 
@@ -240,10 +247,10 @@ function Messenger() {
             dispatch(cancelBlockMember(data));
 
             if (cancelBlockMember()) {
-                alert('Bạn đã bỏ chặn tin nhắn thành công.');
+                toast.success(`Bạn đã bỏ chặn tin nhắn với ${conversation.name}.`);
             }
         } else {
-            alert('Bạn đã hủy chặn tin nhắn thành công.');
+            toast.info(`Bạn không muốn bỏ chặn tin nhắn với ${conversation.name}.`);
         }
     };
 
@@ -443,7 +450,11 @@ function Messenger() {
                                     </button>
                                 </Tippy>
                             )}
+
+                            {/* Show toast status */}
+                            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
                         </div>
+
                         {/* Preview upload Image and Video */}
                         <div className={cx('preview-upload')}>
                             {btnClosePreview && (

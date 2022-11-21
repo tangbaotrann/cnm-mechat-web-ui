@@ -10,20 +10,17 @@ import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faImage } from '@fortawesome/free-solid-svg-icons';
 import { fetchApiCreateReport } from '~/redux/features/report/reportSlice';
-import { getMessageFromUserInGroupFromSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
-function Report() {
+function Report({ message }) {
     const [newMessageText, setNewMessageText] = useState('');
     const [newImageMessage, setNewImageMessage] = useState([]);
     const [btnClosePreview, setBtnClosePreview] = useState(false);
 
     const dispatch = useDispatch();
 
-    const report = useSelector(getMessageFromUserInGroupFromSelector);
-
-    console.log('report', report);
+    console.log('message', message);
     // console.log('message', newMessageText);
 
     // handle change image and preview image
@@ -59,8 +56,8 @@ function Report() {
     const handleConfirmReport = () => {
         dispatch(
             fetchApiCreateReport({
-                messageId: report,
-                fileImage: newImageMessage,
+                messageId: message._id,
+                imageLink: newImageMessage,
                 content: newMessageText,
             }),
         );
@@ -98,6 +95,7 @@ function Report() {
                 <textarea
                     className={cx('message-input')}
                     placeholder="Nhập nội dung báo cáo của bạn..."
+                    value={newMessageText}
                     onChange={handleOnchangeMessageReport}
                 ></textarea>
 

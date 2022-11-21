@@ -2,6 +2,8 @@
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './Message.module.scss';
@@ -18,16 +20,24 @@ function MoveMessage({ message }) {
 
     const user = useSelector(userInfoSelector);
     const conversations = useSelector(listGroupUser);
+    // const conversation = useSelector(conversationSlice);
+
+    console.log('checkedConversation', checkedConversation);
 
     // handle move message
     const handleMoveMessage = () => {
-        dispatch(
-            fetchApiMoveMessage({
-                conversationId: checkedConversation,
-                messageId: message._id,
-                userId: user._id,
-            }),
-        );
+        if (checkedConversation.length === 0) {
+            toast.error('Vui lòng chọn cuộc trò chuyện bên dưới!');
+        } else {
+            dispatch(
+                fetchApiMoveMessage({
+                    conversationId: checkedConversation,
+                    messageId: message._id,
+                    userId: user._id,
+                }),
+            );
+            toast.success('Bạn đã chuyển tiếp tin nhắn thành công.');
+        }
     };
 
     // handle checked conversation
@@ -68,6 +78,9 @@ function MoveMessage({ message }) {
             <button className={cx('btn-move-message')} onClick={handleMoveMessage}>
                 Chuyển tiếp tin nhắn
             </button>
+
+            {/* Show status move message */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </div>
     );
 }

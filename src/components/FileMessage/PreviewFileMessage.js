@@ -39,7 +39,7 @@ function PreviewFileMessage({ newFileMessage }) {
 
                     <div className={cx('display')}>
                         <p className={cx('name-file')}>{newFileMessage.name}</p>
-                        <span className={cx('size')}>{newFileMessage.size}</span>
+                        <span className={cx('size')}>{(newFileMessage.size / 1024 / 1024).toFixed(3)} MB</span>
                     </div>
                 </div>
             ) : newFileMessage?.name.split('.')[newFileMessage?.name.split('.').length - 1] === 'pdf' ? (
@@ -49,7 +49,7 @@ function PreviewFileMessage({ newFileMessage }) {
                     <button className={cx('preview-file')} onClick={handlePreviewFile}>
                         <div className={cx('display')}>
                             <p className={cx('name-file')}>{newFileMessage.name}</p>
-                            <span className={cx('size')}>{newFileMessage.size}</span>
+                            <span className={cx('size')}>{(newFileMessage.size / 1024 / 1024).toFixed(3)} MB</span>
                         </div>
                     </button>
 
@@ -77,7 +77,7 @@ function PreviewFileMessage({ newFileMessage }) {
 
                     <div className={cx('display')}>
                         <p className={cx('name-file')}>{newFileMessage.name}</p>
-                        <span className={cx('size')}>{newFileMessage.size}</span>
+                        <span className={cx('size')}>{(newFileMessage.size / 1024 / 1024).toFixed(3)} MB</span>
                     </div>
                 </div>
             ) : newFileMessage?.name.split('.')[newFileMessage?.name.split('.').length - 1] === 'csv' ? (
@@ -87,7 +87,7 @@ function PreviewFileMessage({ newFileMessage }) {
                     <p className={cx('name-file')}>{newFileMessage.name}</p>
                     <div className={cx('display')}>
                         <p className={cx('name-file')}>{newFileMessage.name}</p>
-                        <span className={cx('size')}>{newFileMessage.size}</span>
+                        <span className={cx('size')}>{(newFileMessage.size / 1024 / 1024).toFixed(3)} MB</span>
                     </div>
                 </div>
             ) : newFileMessage?.name.split('.')[newFileMessage?.name.split('.').length - 1] === 'xlsx' ? (
@@ -96,7 +96,7 @@ function PreviewFileMessage({ newFileMessage }) {
 
                     <div className={cx('display')}>
                         <p className={cx('name-file')}>{newFileMessage.name}</p>
-                        <span className={cx('size')}>{newFileMessage.size}</span>
+                        <span className={cx('size')}>{(newFileMessage.size / 1024 / 1024).toFixed(3)} MB</span>
                     </div>
                 </div>
             ) : newFileMessage?.name.split('.')[newFileMessage?.name.split('.').length - 1] === 'txt' ? (
@@ -105,7 +105,7 @@ function PreviewFileMessage({ newFileMessage }) {
 
                     <div className={cx('display')}>
                         <p className={cx('name-file')}>{newFileMessage?.name}</p>
-                        <span className={cx('size')}>{newFileMessage?.size}</span>
+                        <span className={cx('size')}>{(newFileMessage.size / 1024 / 1024).toFixed(3)} MB</span>
                     </div>
                 </div>
             ) : (

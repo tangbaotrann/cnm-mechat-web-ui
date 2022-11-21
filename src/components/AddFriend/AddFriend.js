@@ -1,8 +1,13 @@
+// lib
 import classNames from 'classnames/bind';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// me
 import styles from './AddFriend.module.scss';
 import { searchFilterFriend, userLogin } from '~/redux/selector';
 import filterSlice from '~/redux/features/filter/filterSlice';
@@ -26,16 +31,18 @@ function AddFriend() {
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchPhone));
     }, [debouncedValue]);
+
     const handleSearch = (e) => {
         e.preventDefault();
+
         if (searchPhone === infoUser.phoneNumber) {
-            alert('Tài Khoản của bạn');
+            toast.info('Số điện thoại này là tài khoản của bạn!');
         } else {
             if (userSearching && userSearching !== 1) {
                 setSearchResult(true);
                 setPhoneNumber(userSearching[0]);
             } else {
-                alert('Tài khoản không tồn tại');
+                toast.error('Số điện thoại này không tồn tại hoặc chưa được đăng ký tài khoản. Vui lòng thử lại!');
             }
         }
     };
@@ -47,14 +54,15 @@ function AddFriend() {
     };
     const handleRequest = () => {
         const data = { senderID: infoUser._id, receiverID: phoneNumber._id };
+
         let tam = dispatch(friendRequests(data));
+
         if (tam) {
-            alert('Gửi lời mời kết bạn thành công');
+            toast.success('Gửi lời mời kết bạn thành công.');
             setSearchPhone('');
             setPhoneNumber('');
             dispatch(filterSlice.actions.searchFilterChange(null));
             setSearchResult(false);
-            //window.location.reload(true);
         }
     };
     return (
@@ -104,6 +112,9 @@ function AddFriend() {
                     </button>
                 </div>
             </div>
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </div>
     );
 }
