@@ -18,7 +18,7 @@ function Middle() {
     const user = useSelector((state) => state.user.data);
     const conversations = useSelector((state) => state.listGroupUser.data);
 
-    console.log('conversations - 25 -', conversations);
+    // console.log('conversations - 25 -', conversations);
 
     // Handle fetch conversation
     useEffect(() => {
@@ -54,7 +54,6 @@ function Middle() {
     // realtime user add group
     useEffect(() => {
         socket.on('send_conversation_group', (conversation) => {
-            console.log('[send_conversation_group]', conversation);
             dispatch(listGroupUsers.actions.arrivalAddMemberFromSocket(conversation));
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps

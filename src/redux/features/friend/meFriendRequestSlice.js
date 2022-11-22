@@ -16,7 +16,8 @@ export const meRequestFriend = createAsyncThunk('user/meRequestFriend', async (a
             const res = await axios.get(
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-of-me/${decodedToken._id}`,
             );
-            return res.data.data;
+            console.log('------------', res.data);
+            return res.data;
         }
     } catch (err) {
         rejectWithValue(err);

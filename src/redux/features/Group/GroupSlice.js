@@ -44,7 +44,7 @@ export const createGroup = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-
+        console.log(jsonData);
         return jsonData;
     },
 );
@@ -229,6 +229,30 @@ export const cancelBlockMember = createAsyncThunk(
         return jsonData;
     },
 );
+//thay doi truong nhom
+export const changeLearder = createAsyncThunk(
+    // Tên action
+    'user/changeLearder ',
+    async (data) => {
+        // Gọi lên API backend
+        const { conversationId } = data;
+        const { userId } = data;
+        const response = await fetch(
+            `${process.env.REACT_APP_BASE_URL}conversations/change-createBy/${conversationId}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
+            },
+        );
+
+        const jsonData = await response.json();
+        console.log(jsonData);
+        return jsonData;
+    },
+);
 const listGroupUsers = createSlice({
     name: 'listGroupUser',
     initialState: {
@@ -354,6 +378,9 @@ const listGroupUsers = createSlice({
                 // state.data = action.payload;
             })
             .addCase(cancelBlockMember.fulfilled, (state, action) => {
+                // state.data = action.payload;
+            })
+            .addCase(changeLearder.fulfilled, (state, action) => {
                 // state.data = action.payload;
             });
     },

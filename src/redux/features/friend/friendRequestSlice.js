@@ -18,9 +18,10 @@ export const friendRequests = createAsyncThunk(
             },
             body: JSON.stringify(data),
         });
-        console.log(data);
+
         // Convert dữ liệu ra json
         const jsonData = await response.json();
+        console.log('---------', jsonData);
         return jsonData;
     },
 );
@@ -36,7 +37,6 @@ const listFriendRequests = createSlice({
     extraReducers: (builder) => {
         builder.addCase(friendRequests.fulfilled, (state, action) => {
             // state.data = action.payload;
-
             // socket
             socket.emit('send_friend_request', {
                 request: action.payload.data,

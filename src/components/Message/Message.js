@@ -153,7 +153,7 @@ function Message({ message, own, conversation, user }) {
                                 ) : (
                                     <img
                                         className={cx('message-top-img')}
-                                        src={user.avatarLink ? user.avatarLink : images.noImg}
+                                        src={user?.avatarLink ? user?.avatarLink : images.noImg}
                                         alt="avatar"
                                     />
                                 )}

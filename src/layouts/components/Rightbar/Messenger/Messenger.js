@@ -12,13 +12,19 @@ import {
     faFaceSmile,
     faFile,
     faImage,
+    faMicrophone,
+    faMicrophoneSlash,
     faPaperclip,
+    faPhone,
     faThumbsUp,
     faUserGroup,
     faVideo,
+    faVideoSlash,
+    faXmark,
 } from '@fortawesome/free-solid-svg-icons';
-import { CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 import EmojiPicker, { SkinTones } from 'emoji-picker-react';
+import Peer from 'simple-peer';
 
 // me
 import styles from './Messenger.module.scss';
@@ -34,6 +40,9 @@ import messagesSlice, {
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
 import { getMessageFromUserInGroupFromSelector, userLogin } from '~/redux/selector';
+import ModelWrapper from '~/components/ModelWrapper';
+import Webcam from 'react-webcam';
+import { infoUserConversation } from '~/redux/features/user/userCurrent';
 
 const cx = classNames.bind(styles);
 
@@ -44,6 +53,7 @@ function Messenger() {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [btnClosePreview, setBtnClosePreview] = useState(false);
     const [previewEmoji, setPreviewEmoji] = useState(false);
+    //
 
     const dispatch = useDispatch();
 
@@ -55,10 +65,10 @@ function Messenger() {
     const preLoading = useSelector((state) => state.messages.preLoading);
 
     const scrollMessenger = useRef();
-    const infoUser = useSelector(userLogin);
-    console.log('[LIST MESSAGES] - ', listMessage);
+
+    // console.log('[LIST MESSAGES] - ', listMessage);
     // console.log('[USER] - ', user);
-    console.log('[CONVERSATION] - ', conversation);
+    // console.log('[CONVERSATION] - ', conversation);
     // console.log('[CONVERSATION.MEMBERS] - ', conversation.members);
 
     // fetch message from conversationId
@@ -93,6 +103,98 @@ function Messenger() {
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    //call video
+    const userCurrent = useSelector((state) => state.userCurrents.data);
+
+    const [openCall, setOpenCall] = useState(false);
+    const [changeIconVideo, setChangeIconVideo] = useState(false);
+    const [changeIconMic, setChangeIconMic] = useState(false);
+    const [stream, setStream] = useState();
+    const [callAccepted, setCallAccepted] = useState(false);
+    const [callEnded, setCallEnded] = useState(false);
+    // console.log('userCurrent.fullName', userCurrent.fullName);
+    // const [name, setName] = useState('');
+
+    // console.log(name);
+
+    const infoUser = useSelector(userLogin);
+    const infoConversation =
+        infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
+
+    const myVideo = useRef();
+    const userVideo = useRef();
+    const connectionRef = useRef();
+    useEffect(() => {
+        socket.on('me', (id) => {
+            console.log(id);
+        });
+        socket.on('endCall', () => {
+            connectionRef.current.destroy();
+            setOpenCall(false);
+            setCallEnded(true);
+        });
+    }, []);
+
+    const handleOpenCallVideo = () => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+            setStream(stream);
+            myVideo.current.srcObject = stream;
+        });
+        const peer = new Peer({
+            initiator: true,
+            trickle: false,
+            stream: stream,
+        });
+        peer.on('signal', (data) => {
+            socket.emit('callUser', {
+                userToCall: infoConversation,
+                signalData: data,
+                from: infoUser._id,
+                name: infoUser.fullName,
+            });
+        });
+        peer.on('stream', (stream) => {
+            console.log(stream);
+            userVideo.current.srcObject = stream;
+        });
+        socket.on('callAccepted', (signal) => {
+            console.log('da nge diejn', signal);
+            setCallAccepted(true);
+
+            peer.signal(signal);
+        });
+
+        connectionRef.current = peer;
+        setOpenCall(true);
+    };
+    const handleModelCloseOpenCallVideo = () => {
+        connectionRef.current.destroy();
+        socket.emit('endCall', { id: infoConversation });
+        setOpenCall(false);
+        setCallEnded(true);
+    };
+
+    const handleChangeIconVideo = () => {
+        const tracks = myVideo.current.srcObject.getTracks();
+        tracks.forEach((track) => track.stop());
+        myVideo.current.srcObject = null;
+        setChangeIconVideo(true);
+    };
+    const handleChangeIconOpenvideo = () => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+            setStream(stream);
+            myVideo.current.srcObject = stream;
+        });
+        setChangeIconVideo(false);
+    };
+
+    const handleChangeIconMic = () => {
+        setChangeIconMic(true);
+    };
+    const handleChangeIconOpenMic = () => {
+        setChangeIconMic(false);
+    };
 
     // handle change message
     const handleChangeMessage = (e) => {
@@ -187,16 +289,16 @@ function Messenger() {
     useEffect(() => {
         conversation && listMessage && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
     }, [conversation, listMessage]);
-
     return (
         <div className={cx('messenger')}>
             <div className={cx('messenger-header')}>
                 {/* Online user (status) */}
+
                 <OnlineStatus onlineUsers={onlineUsers} conversation={conversation} />
 
                 <div>
                     <Tippy className={cx('tool-tip')} content="Cuộc gọi video" delay={[200, 0]}>
-                        <button className={cx('btn-click-icon')}>
+                        <button className={cx('btn-click-icon')} onClick={handleOpenCallVideo}>
                             <FontAwesomeIcon className={cx('icon')} icon={faVideo} />
                         </button>
                     </Tippy>
@@ -207,6 +309,131 @@ function Messenger() {
                     </Tippy>
                 </div>
             </div>
+            {/* Call video */}
+
+            <ModelWrapper className={cx('model-add-friend')} open={openCall} onClose={handleModelCloseOpenCallVideo}>
+                <div className={cx('model-add-group-bg')}>
+                    <div className={cx('add-friend-title')}>
+                        <span className={cx('friend-title')}>Me.Chat Call - {userCurrent?.fullName}</span>
+                        <button className={cx('close-btn')}>
+                            <FontAwesomeIcon
+                                className={cx('friend-close-ic')}
+                                icon={faXmark}
+                                onClick={handleModelCloseOpenCallVideo}
+                            />
+                        </button>
+                    </div>
+                    <div className={cx('camera-callVideo')}>
+                        <div className={cx('video-container')}>
+                            {callAccepted && !callEnded ? (
+                                <>
+                                    <div className={cx('video')}>
+                                        {stream && (
+                                            <video
+                                                className={cx('video-webcam-2')}
+                                                playsInline
+                                                muted
+                                                ref={myVideo}
+                                                autoPlay
+                                            />
+                                        )}
+                                        {stream && (
+                                            <video
+                                                className={cx('video-webcam-2')}
+                                                playsInline
+                                                muted
+                                                ref={userVideo}
+                                                autoPlay
+                                            />
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <div className={cx('video')}>
+                                    {stream && !changeIconVideo ? (
+                                        <div className={cx('avatar-backgroud')}>
+                                            <Webcam
+                                                className={cx('video-webcam')}
+                                                playsInline
+                                                muted
+                                                ref={myVideo}
+                                                autoPlay
+                                            />
+
+                                            <div className={cx('avatar-sub')}>
+                                                <img
+                                                    className={cx('avatar-img-sub')}
+                                                    src={
+                                                        userCurrent?.avatarLink ? userCurrent?.avatarLink : images.noImg
+                                                    }
+                                                    alt="avatar"
+                                                />
+                                            </div>
+                                            <div className={cx('user-call')}>Đang đổ chuông ...</div>
+                                        </div>
+                                    ) : (
+                                        <div className={cx('avatar-backgroud')}>
+                                            <img
+                                                className={cx('avatar-img')}
+                                                src={infoUser?.avatarLink ? infoUser?.avatarLink : images.noImg}
+                                                alt="avatar"
+                                            />
+
+                                            <div className={cx('avatar-sub')}>
+                                                <img
+                                                    className={cx('avatar-img-sub')}
+                                                    src={
+                                                        userCurrent?.avatarLink ? userCurrent?.avatarLink : images.noImg
+                                                    }
+                                                    alt="avatar"
+                                                />
+                                            </div>
+                                            <div className={cx('user-call')}>Đang đổ chuông ...</div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <div className={cx('footer-callVideo')}>
+                        {!changeIconVideo ? (
+                            <FontAwesomeIcon
+                                className={cx('footer-callVideo-icon-2')}
+                                icon={faVideo}
+                                onClick={handleChangeIconVideo}
+                            />
+                        ) : (
+                            <FontAwesomeIcon
+                                className={cx('footer-callVideo-icon-2')}
+                                icon={faVideoSlash}
+                                onClick={handleChangeIconOpenvideo}
+                            />
+                        )}
+
+                        <div className={cx('footer-icon')}>
+                            <FontAwesomeIcon
+                                className={cx('footer-callVideo-icon')}
+                                icon={faPhone}
+                                onClick={handleModelCloseOpenCallVideo}
+                            />
+                        </div>
+
+                        {!changeIconMic ? (
+                            <FontAwesomeIcon
+                                className={cx('footer-callVideo-icon-3')}
+                                icon={faMicrophone}
+                                onClick={handleChangeIconMic}
+                            />
+                        ) : (
+                            <FontAwesomeIcon
+                                className={cx('footer-callVideo-icon-3')}
+                                icon={faMicrophoneSlash}
+                                onClick={handleChangeIconOpenMic}
+                            />
+                        )}
+                    </div>
+                </div>
+            </ModelWrapper>
 
             {/* onScroll={handleLoadingMessagesLast} */}
             <div className={cx('messenger-body')}>

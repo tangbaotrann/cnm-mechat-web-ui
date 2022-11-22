@@ -1,7 +1,7 @@
 // libs
 import classNames from 'classnames/bind';
 import { CircularProgress } from '@material-ui/core';
-
+import Peer from 'simple-peer';
 // me
 import styles from './Home.module.scss';
 import Sidebar from '~/layouts/components/Sidebar';
@@ -12,16 +12,47 @@ import { useEffect } from 'react';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
 import socket from '~/util/socket';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
+import { useState } from 'react';
+import { userCurrent, userInfoSelector, userLogin } from '~/redux/selector';
+import ModelWrapper from '~/components/ModelWrapper';
+import {
+    faMicrophone,
+    faMicrophoneSlash,
+    faPhone,
+    faVideo,
+    faVideoSlash,
+    faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { infoUserConversation } from '~/redux/features/user/userCurrent';
+import images from '~/assets/images';
+import { useRef } from 'react';
+import Webcam from 'react-webcam';
 
 const cx = classNames.bind(styles);
 
 function Home() {
     //Da doi qua ben app.js
     const dispatch = useDispatch();
-
-    const user = useSelector((state) => state.user.data);
+    const [openCall, setOpenCall] = useState(false);
+    const user = useSelector(userInfoSelector);
     const isLoading = useSelector((state) => state.listGroupUser.isLoading);
+    const [caller, setCaller] = useState('');
+    const [name, setName] = useState('');
+    const userCurrents = useSelector((state) => state.userCurrents.data);
+    const connectionRef = useRef();
 
+    const [callAccepted, setCallAccepted] = useState(false);
+    const [stream, setStream] = useState();
+    const userVideo = useRef();
+    const myVideo = useRef();
+    const [callerSignal, setCallerSignal] = useState();
+    const [callEnded, setCallEnded] = useState(false);
+    const [showFooter, setShowFooter] = useState(false);
+    const [changeIconVideo, setChangeIconVideo] = useState(false);
+
+    const [changeIconMic, setChangeIconMic] = useState(false);
+    const infoUser = useSelector(userLogin);
     useEffect(() => {
         document.title = 'Mechat Web';
     }, []);
@@ -35,11 +66,93 @@ function Home() {
         socket.emit('status_user', user._id);
     }, [user?._id]);
 
-    // useEffect(() => {
-    //     dispatch(listGroupUser());
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
+    useEffect(() => {
+        socket.on('callUser', (data) => {
+            if (data) {
+                setOpenCall(true);
+                setCaller(data.from);
+                setName(data.name);
+                setCallerSignal(data.signal);
+                dispatch(
+                    infoUserConversation({
+                        userID: data.from,
+                    }),
+                );
+            } else {
+                alert('loi');
+            }
+        });
+        socket.on('endCall', () => {
+            console.log('okokokokok');
+            connectionRef.current.destroy();
+            setOpenCall(false);
+        });
+    }, []);
+    const handleChangeIconVideo = () => {
+        const tracks = userVideo.current.srcObject.getTracks();
+        tracks.forEach((track) => track.stop());
+        myVideo.current.srcObject = null;
+        setChangeIconVideo(true);
+    };
+    const handleModelCloseOpenCallVideo = () => {
+        if (myVideo.current === null) {
+            connectionRef.current.destroy();
+            socket.emit('endCall', { id: caller });
+            setOpenCall(false);
+        } else {
+            const tracks = myVideo.current.srcObject.getTracks();
+            tracks.forEach((track) => track.stop());
+            myVideo.current.srcObject = null;
+            connectionRef.current.destroy();
+            socket.emit('endCall', { id: caller });
 
+            setOpenCall(false);
+        }
+    };
+    const handleRefuseCall = () => {
+        setOpenCall(false);
+        connectionRef.current.destroy();
+    };
+    const handleReceiveCall = () => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+            setStream(stream);
+            myVideo.current.srcObject = stream;
+        });
+        setCallAccepted(true);
+
+        const peer = new Peer({
+            initiator: false,
+            trickle: false,
+            stream: stream,
+        });
+        peer.on('signal', (data) => {
+            console.log('124-----', data);
+            socket.emit('answerCall', { signal: data, to: caller });
+        });
+        peer.on('stream', (stream) => {
+            userVideo.current.srcObject = stream;
+            console.log('133--------', userVideo.current.srcObject);
+        });
+
+        peer.signal(callerSignal);
+        connectionRef.current = peer;
+
+        setShowFooter(true);
+    };
+    const handleChangeIconOpenvideo = () => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+            setStream(stream);
+            myVideo.current.srcObject = stream;
+        });
+        setChangeIconVideo(false);
+    };
+
+    const handleChangeIconMic = () => {
+        setChangeIconMic(true);
+    };
+    const handleChangeIconOpenMic = () => {
+        setChangeIconMic(false);
+    };
     return (
         <>
             {isLoading ? (
@@ -51,6 +164,107 @@ function Home() {
                     <Rightbar />
                 </div>
             )}
+
+            <ModelWrapper className={cx('model-add-friend')} open={openCall} onClose={handleModelCloseOpenCallVideo}>
+                <div className={cx('model-add-group-bg')}>
+                    <div className={cx('add-friend-title')}>
+                        <span className={cx('friend-title')}>Me.Chat Call - {name}</span>
+                        <button className={cx('close-btn')}>
+                            <FontAwesomeIcon
+                                className={cx('friend-close-ic')}
+                                icon={faXmark}
+                                onClick={handleModelCloseOpenCallVideo}
+                            />
+                        </button>
+                    </div>
+
+                    {callAccepted && !callEnded ? (
+                        <>
+                            {!changeIconVideo ? (
+                                <div className={cx('video')}>
+                                    <Webcam playsInline muted ref={myVideo} autoPlay />
+                                    <Webcam playsInline muted ref={userVideo} autoPlay />
+                                </div>
+                            ) : (
+                                <img
+                                    className={cx('avatar-img')}
+                                    src={infoUser?.avatarLink ? infoUser?.avatarLink : images.noImg}
+                                    alt="avatar"
+                                />
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {' '}
+                            <div className={cx('avatar-sub')}>
+                                <img
+                                    className={cx('avatar-img-sub')}
+                                    src={userCurrents?.avatarLink ? userCurrents?.avatarLink : images.noImg}
+                                    alt="avatar"
+                                />
+                            </div>
+                            <div className={cx('user-call')}>Me-Chat Cuộc gọi video đến</div>
+                        </>
+                    )}
+
+                    {!showFooter ? (
+                        <div className={cx('footer-video')}>
+                            <div className={cx('footer-icon')}>
+                                <FontAwesomeIcon
+                                    className={cx('footer-callVideo-icon')}
+                                    icon={faPhone}
+                                    onClick={handleRefuseCall}
+                                />
+                            </div>
+                            <div className={cx('footer-icon-1')}>
+                                <FontAwesomeIcon
+                                    className={cx('footer-callVideo-icon-1')}
+                                    icon={faVideo}
+                                    onClick={handleReceiveCall}
+                                />
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={cx('footer-callVideo')}>
+                            {!changeIconVideo ? (
+                                <FontAwesomeIcon
+                                    className={cx('footer-callVideo-icon-2')}
+                                    icon={faVideo}
+                                    onClick={handleChangeIconVideo}
+                                />
+                            ) : (
+                                <FontAwesomeIcon
+                                    className={cx('footer-callVideo-icon-2')}
+                                    icon={faVideoSlash}
+                                    onClick={handleChangeIconOpenvideo}
+                                />
+                            )}
+
+                            <div className={cx('footer-icon')}>
+                                <FontAwesomeIcon
+                                    className={cx('footer-callVideo-icon')}
+                                    icon={faPhone}
+                                    onClick={handleModelCloseOpenCallVideo}
+                                />
+                            </div>
+
+                            {!changeIconMic ? (
+                                <FontAwesomeIcon
+                                    className={cx('footer-callVideo-icon-3')}
+                                    icon={faMicrophone}
+                                    onClick={handleChangeIconMic}
+                                />
+                            ) : (
+                                <FontAwesomeIcon
+                                    className={cx('footer-callVideo-icon-3')}
+                                    icon={faMicrophoneSlash}
+                                    onClick={handleChangeIconOpenMic}
+                                />
+                            )}
+                        </div>
+                    )}
+                </div>
+            </ModelWrapper>
         </>
     );
 }

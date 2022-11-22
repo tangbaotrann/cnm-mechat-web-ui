@@ -18,6 +18,7 @@ import conversationSlice from '~/redux/features/conversation/conversationSlice';
 import listGroupUsers, {
     blockMember,
     cancelBlockMember,
+    changeLearder,
     deleteConversation,
     deleteMember,
     fetchApiConversationById,
@@ -181,6 +182,22 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             alert('bạn đã hủy yêu cầu bỏ chặn tin nhắn');
         }
     };
+    const handleChangeLeader = () => {
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chuyển quyền trưởng nhóm không?');
+        if (checkOutGroup === true) {
+            const data = {
+                conversationId: conversationID.id,
+                userId: conversation._id,
+            };
+            dispatch(changeLearder(data));
+            if (changeLearder()) {
+                alert('Bạn đã chuyển quyền trưởng nhóm');
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu chuyển quyền trưởng nhóm');
+        }
+    };
+
     return (
         <>
             {conversationInfo ? (
@@ -245,10 +262,12 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                 <p className={cx('deleteFriend')} onClick={handleDeleteMemberGroup}>
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
                                                 </p>
-
+                                                <p className={cx('deleteFriend')} onClick={handleChangeLeader}>
+                                                    <button className={cx('item-btn')}>Chuyển quyền trưởng Nhóm</button>
+                                                </p>
                                                 {conversationID.blockBy.includes(conversation._id) ? (
                                                     <p className={cx('deleteFriend')} onClick={handleCancelBlockMember}>
-                                                        <button className={cx('item-btn')}>Đã chặn</button>
+                                                        <button className={cx('item-btn')}>Bỏ chặn</button>
                                                     </p>
                                                 ) : (
                                                     <p className={cx('deleteFriend')} onClick={handleBlockMember}>

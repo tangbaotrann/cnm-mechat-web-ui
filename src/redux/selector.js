@@ -6,8 +6,10 @@ export const listFriendAccept = (state) => state.listAccept.data;
 export const conversationSlice = (state) => state.listGroupUser.conversationClick; // state.conversations.conversationClick
 export const listMeRequests = (state) => state.listMeRequest.data;
 export const listGroupUser = (state) => state.listGroupUser.data;
-
+export const listRequestFriend = (state) => state.friendRequests.data;
 export const listMessage = (state) => state.messages.data;
+
+export const userCurrent = (state) => state.userCurrents.data;
 
 // export const member = (state) => state.groupUserSlices.data;
 // console.log('11 - mem -', member);
@@ -20,7 +22,7 @@ export const listMessage = (state) => state.messages.data;
 
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users) {
-        const friends = users.filter((_user) => user.friends.includes(_user._id));
+        const friends = users.filter((_user) => user.friends?.includes(_user._id));
         return friends.map((user) => ({
             _id: user._id,
             name: user.fullName,
@@ -134,7 +136,7 @@ export const searchFilterFriend = createSelector(
 );
 //lọc user theo member
 export const filterUserGroup = createSelector(conversationSlice, userListSelector, (c, users) => {
-    const usersFilter1 = users.filter((_user) => c.members.includes(_user._id));
+    const usersFilter1 = users.filter((_user) => c?.members.includes(_user._id));
 
     if (!usersFilter1.length) {
         return 1;
@@ -148,6 +150,7 @@ export const filterUserGroup = createSelector(conversationSlice, userListSelecto
         isFriend: false,
     }));
 });
+
 ///tim ban trong membergrood
 export const filterFriendGroup = createSelector(conversationSlice, listFriend, (c, lf) => {
     const listFriendFilter = lf.filter((_lf) => c?.members.includes(_lf._id));

@@ -16,6 +16,7 @@ export const friendAccept = createAsyncThunk('user/friendAccept', async (arg, { 
             const res = await axios.get(
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-list-request/${decodedToken._id}`,
             );
+            console.log('19-----', res.data.data);
             return res.data.data;
         }
     } catch (err) {
@@ -83,6 +84,10 @@ const listFriendAccept = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(friendAccept.fulfilled, (state, action) => {
+                // socket
+                // socket.emit('send_friend_request', {
+                //     request: action.payload,
+                //});
                 state.data = action.payload;
             })
             .addCase(accept.fulfilled, (state, action) => {

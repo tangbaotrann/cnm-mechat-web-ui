@@ -29,6 +29,7 @@ function AddGroup({ addMemerber }) {
     const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
+    const filterUserGroups = useSelector(filterUserGroup);
     //bat loi vali
     const [error, setError] = useState(searchPhone);
     const handleBtnClearText = (e) => {
@@ -36,7 +37,7 @@ function AddGroup({ addMemerber }) {
     };
     const dispatch = useDispatch();
 
-    // console.log('39', addMemerber);
+    // console.log('39', conversation);
 
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchPhone));
@@ -46,15 +47,19 @@ function AddGroup({ addMemerber }) {
 
     const handleSummit = () => {
         if (nameGroup === '') {
-            const dataAddMember = {
-                memberAddID: infoUser._id,
-                newMemberID: checked,
-                conversationId: conversation.id,
-            };
-            dispatch(addMember(dataAddMember));
-            if (addMember()) {
-                alert('thêm thành viên thành công');
-                // window.location.reload(true);
+            if (checked.length < 1) {
+                alert('Bạn chưa chọn thành viên');
+            } else {
+                const dataAddMember = {
+                    memberAddID: infoUser._id,
+                    newMemberID: checked,
+                    conversationId: conversation.id,
+                };
+                dispatch(addMember(dataAddMember));
+                if (addMember()) {
+                    alert('thêm thành viên thành công');
+                    // window.location.reload(true);
+                }
             }
         } else {
             const data = { members: checked, createdBy: infoUser._id, name: nameGroup };
@@ -90,7 +95,6 @@ function AddGroup({ addMemerber }) {
                     setError('Tài khoản không tồn tại');
                 }
             }
-            console.log(searchResultShow);
         }
     };
     useEffect(() => {
@@ -162,7 +166,16 @@ function AddGroup({ addMemerber }) {
                     <div className={cx('conversations')}>
                         <div className={cx('list-conversation')}>
                             <div className={cx('input-radio')}>
-                                <input type="checkBox" value={searchResult._id} onChange={handleCheck} />
+                                {addMemerber ? (
+                                    <input
+                                        type="checkBox"
+                                        value={searchResult._id}
+                                        onChange={handleCheck}
+                                        checked={conversation.members.includes(searchResult._id) ? true : false}
+                                    />
+                                ) : (
+                                    <input type="checkBox" value={searchResult._id} onChange={handleCheck} />
+                                )}
                             </div>
 
                             <img

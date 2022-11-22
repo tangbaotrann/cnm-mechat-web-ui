@@ -14,7 +14,7 @@ import Search from '~/components/Search';
 import Conversation from '~/components/Conversation';
 import Sidebar from '~/layouts/components/Sidebar';
 import BoxChat from '~/components/BoxChat';
-import { listFriend, listFriendAccept, listGroupUser, listMeRequests } from '~/redux/selector';
+import { listFriend, listFriendAccept, listGroupUser, listMeRequests, listRequestFriend } from '~/redux/selector';
 import ModelWrapper from '~/components/ModelWrapper';
 import AddFriend from '~/components/AddFriend';
 import FriendRequestList from './FriendRequest_list/FriendRequestList';
@@ -37,8 +37,8 @@ function PhoneBook() {
 
     //const listAccept = useSelector(listFriendAccept);
     const listMeRequest = useSelector(listMeRequests);
-
-    const listRequestFriend = useSelector((state) => state.friendRequests.data);
+    //listRequestFriend
+    const listRequestFriends = useSelector(listFriendAccept);
 
     const dispatch = useDispatch();
 
@@ -144,10 +144,10 @@ function PhoneBook() {
                             <div className={cx('list-FriendRequest')}>
                                 <div className={cx('friendRequest')}>
                                     {/* listAccept */}
-                                    {listRequestFriend?.length === 0 ? null : (
-                                        <h1>Lời mời kết bạn ({listRequestFriend?.length})</h1>
+                                    {listRequestFriends?.length === 0 ? null : (
+                                        <h1>Lời mời kết bạn ({listRequestFriends?.length})</h1>
                                     )}
-                                    {listRequestFriend?.map((user) => {
+                                    {listRequestFriends?.map((user) => {
                                         return <FriendRequestList key={user.idFriendRequest} user={user} isPhoneBook />;
                                     })}
                                 </div>

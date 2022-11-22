@@ -7,41 +7,36 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Radio } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import moment from 'moment';
 import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
+import { userInfoSelector } from '~/redux/selector';
+
 const cx = classNames.bind(styles);
 function AddInfoUser() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
     useEffect(() => {
         dispatch(fetchApiUser());
     }, []);
-    const infoUser = useSelector((state) => state.user.data);
-    console.log(infoUser);
-    const dispatch = useDispatch();
-    console.log(infoUser?.fullName);
-    const navigate = useNavigate();
-    const [fullNamee, setFullNamee] = useState(infoUser?.fullName);
-    const [optionSex, setOptionSex] = useState(infoUser?.gender);
-    const [birthday, setBirthday] = useState(moment(infoUser?.birthday).format('YYYY-MM-DD'));
-    const [avatar, setAvatar] = useState(infoUser?.avatarLink);
-    console.log(infoUser?.fullName);
-    console.log(infoUser?.fullName);
-    console.log(fullNamee);
+    const infoUser = useSelector(userInfoSelector);
+    const userName = location.state.userName;
+    const [fullName, setFullName] = useState(userName);
+    const [optionSex, setOptionSex] = useState('');
+    const [birthday, setBirthday] = useState('');
+    const [avatar, setAvatar] = useState('');
+
     useEffect(() => {
         return () => {
             avatar && URL.revokeObjectURL(avatar.previews);
         };
     }, [avatar]);
 
-    const handleChangeFullName = (e) => {
-        setFullNamee(e.target.value);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
-            fullName: fullNamee,
+            fullName: fullName,
             gender: optionSex,
             birthday: birthday,
             idUser: infoUser._id,
@@ -58,9 +53,6 @@ function AddInfoUser() {
             console.log('ok');
         }
     };
-    const handleChange1 = (e) => {
-        setBirthday(e.target.value);
-    };
     const handleChange = (e) => {
         const sex = e.target.value;
         if (sex === 'male') {
@@ -75,7 +67,7 @@ function AddInfoUser() {
         setAvatar(file);
         console.log(file);
     };
-    const handlecancel = () => {
+    const handleCancel = () => {
         navigate('/me.chat');
     };
     return (
@@ -116,8 +108,8 @@ function AddInfoUser() {
                             <input
                                 className={cx('sub-input-info-acc')}
                                 type="text"
-                                value={fullNamee}
-                                onChange={handleChangeFullName}
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
                             />
                             <span className={cx('sub-desc')}>Sử dụng tên thật để bạn bè dễ dàng nhận diện hơn.</span>
                         </div>
@@ -161,13 +153,13 @@ function AddInfoUser() {
                                     type="date"
                                     name="requested_order_ship_date"
                                     value={birthday}
-                                    onChange={handleChange1}
+                                    onChange={(e) => setBirthday(e.target.value)}
                                 />
                             </div>
                         </div>
                     </div>
                     <div className={cx('model-update-info-acc-footer')}>
-                        <button className={cx('footer-sub-close-btn')} onClick={handlecancel}>
+                        <button className={cx('footer-sub-close-btn')} onClick={handleCancel}>
                             Bỏ qua
                         </button>
                         <button className={cx('footer-sub-update-btn')} onClick={handleSubmit}>
