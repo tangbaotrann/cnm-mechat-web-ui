@@ -17,6 +17,8 @@ import {
 } from '~/redux/selector';
 import useDebounce from '../hooks/useDebounce';
 import styles from './AddGroup.module.scss';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cx = classNames.bind(styles);
 
@@ -49,25 +51,36 @@ function AddGroup({ addMemerber }) {
     const userSearching = useSelector(usersRemainingSelector);
     const filterFriendGroups = useSelector(filterFriendGroup);
 
-    const handleSummit = () => {
-        if (nameGroup === '') {
-            const dataAddMember = {
-                memberAddID: infoUser._id,
-                newMemberID: checked,
-                conversationId: conversation.id,
-            };
-            dispatch(addMember(dataAddMember));
-            if (addMember()) {
-                alert('thêm thành viên thành công');
-                // window.location.reload(true);
-            }
+    // handle add member to group
+    const handleAddMemberToGroup = () => {
+        const dataAddMember = {
+            memberAddID: infoUser._id,
+            newMemberID: checked,
+            conversationId: conversation.id,
+        };
+
+        if (checked.length === 0) {
+            toast.error('Bạn cần chọn ít nhất 1 người để thêm vào nhóm!');
         } else {
-            const data = { members: checked, createdBy: infoUser._id, name: nameGroup };
+            dispatch(addMember(dataAddMember));
+            toast.success(`Thêm thành viên thành công vào nhóm.`);
+        }
+    };
+
+    // handle create group
+    const handleCreateGroup = () => {
+        const data = { members: checked, createdBy: infoUser._id, name: nameGroup };
+
+        if (nameGroup === '') {
+            toast.error('Bạn cần phải đặt tên nhóm để tạo nhóm. Vui lòng thử lại!');
+            return;
+        }
+
+        if (checked.length === 0) {
+            toast.error('Bạn cần chọn ít nhất 1 người để tạo nhóm!');
+        } else {
             dispatch(createGroup(data));
-            if (createGroup()) {
-                alert('Tạo Nhóm thành công');
-                // window.location.reload(true);
-            }
+            toast.success(`Tạo nhóm thành công với tên nhóm là: ${nameGroup}.`);
         }
     };
 
@@ -110,8 +123,8 @@ function AddGroup({ addMemerber }) {
         const data = { senderID: infoUser._id, receiverID: searchResult._id };
         let tam = dispatch(friendRequests(data));
         if (tam) {
-            alert('Gửi lời mời kết bạn thành công');
-            window.location.reload(true);
+            toast.success('Gửi lời mời kết bạn thành công.');
+            // window.location.reload(true);
         }
     };
     const handlCancle = (e) => {
@@ -237,7 +250,7 @@ function AddGroup({ addMemerber }) {
                         <button className={cx('cancel')} onClick={handlCancle}>
                             Hủy
                         </button>
-                        <button className={cx('search')} onClick={handleSummit}>
+                        <button className={cx('search')} onClick={handleAddMemberToGroup}>
                             Thêm
                         </button>
                     </div>
@@ -248,12 +261,15 @@ function AddGroup({ addMemerber }) {
                         <button className={cx('cancel')} onClick={handlCancle}>
                             Hủy
                         </button>
-                        <button className={cx('search')} onClick={handleSummit}>
+                        <button className={cx('search')} onClick={handleCreateGroup}>
                             Tạo
                         </button>
                     </div>
                 </div>
             )}
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </div>
     );
 }
