@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import TippyHeadless from '@tippyjs/react/headless';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './Conversation.module.scss';
@@ -65,10 +67,11 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 status: true,
                 userDeleteId: conversation._id,
             };
+            toast.success('Xóa bạn thành công.');
             dispatch(fetchApiDeleteFriend(data));
-            alert('Xóa bạn thành công.');
         } else {
-            alert('Bạn đã hủy yêu cầu xóa bạn!');
+            toast.error('Bạn đã hủy yêu cầu xóa bạn!');
+            return;
         }
     };
 
@@ -92,10 +95,11 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 memberId: conversation._id,
                 mainId: filterLeaders[0]._id,
             };
+            toast.success('Xóa thành viên thành công.');
             dispatch(deleteMember(data));
-            alert('Xóa thành viên thành công');
         } else {
-            alert('bạn đã hủy yêu cầu xóa bạn');
+            toast.error('Bạn đã hủy yêu cầu!');
+            return;
         }
     };
 
@@ -107,13 +111,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 userId: infoUser._id,
                 conversationId: conversationID.id,
             };
+            toast.success('Bạn đã rời khỏi nhóm thành công.');
             dispatch(outGroup(dataOutGroup));
-            if (outGroup()) {
-                alert('Bạn đã rời khỏi nhóm thành công');
-                // window.location.reload(true);
-            }
+            // if (outGroup()) {
+            // }
         } else {
-            alert('bạn đã hủy yêu cầu rời nhóm');
+            toast.error('Bạn đã hủy yêu cầu rời nhóm!');
+            return;
         }
     };
 
@@ -142,13 +146,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 conversationId: conversationID.id,
                 mainId: filterLeaders[0]._id,
             };
+            toast.success('Bạn đã giải tán nhóm.');
             dispatch(deleteConversation(data));
-            if (deleteConversation()) {
-                alert('Bạn đã giải tán nhóm');
-                // window.location.reload(true);
-            }
+            // if (deleteConversation()) {
+            // }
         } else {
-            alert('bạn đã hủy yêu cầu giải tán nhóm');
+            toast.error('Bạn đã hủy yêu cầu giải tán nhóm!');
+            return;
         }
     };
 
@@ -162,10 +166,11 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             };
             dispatch(blockMember(data));
             if (blockMember()) {
-                alert('Bạn đã chặn tin nhắn');
+                toast.success('Bạn đã chặn tin nhắn.');
             }
         } else {
-            alert('bạn đã hủy yêu cầu chặn tin nhắn');
+            toast.error('Bạn đã hủy yêu cầu chặn tin nhắn!');
+            return;
         }
     };
 
@@ -179,10 +184,11 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             };
             dispatch(cancelBlockMember(data));
             if (cancelBlockMember()) {
-                alert('Bạn đã bỏ chặn tin nhắn');
+                toast.success('Bạn đã bỏ chặn tin nhắn.');
             }
         } else {
-            alert('bạn đã hủy yêu cầu bỏ chặn tin nhắn');
+            toast.error('Bạn đã hủy yêu cầu bỏ chặn tin nhắn!');
+            return;
         }
     };
 
@@ -197,9 +203,10 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     userId: user._id,
                 }),
             );
-            alert('Bạn đã xóa thành công cuộc hội thoại.');
+            toast.success('Bạn đã xóa thành công cuộc hội thoại.');
         } else {
-            alert('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
+            toast.error('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
+            return;
         }
     };
 
@@ -405,6 +412,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     )}
                 </div>
             )}
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </>
     );
 }

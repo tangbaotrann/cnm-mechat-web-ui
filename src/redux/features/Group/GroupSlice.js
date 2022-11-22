@@ -392,6 +392,7 @@ const listGroupUsers = createSlice({
                 const currConversation = state.data.findIndex((con) => con.id === preConversation.id);
 
                 state.data.splice(currConversation, 1);
+                state.conversationClick = null;
             })
             .addCase(createGroup.fulfilled, (state, action) => {
                 if (action.payload) {
@@ -428,7 +429,7 @@ const listGroupUsers = createSlice({
                 // }
             })
             .addCase(outGroup.fulfilled, (state, action) => {
-                state.isLoadingOutGroup = true;
+                state.conversationClick = null;
 
                 // socket
                 socket.emit('user_out_group', {
@@ -452,8 +453,7 @@ const listGroupUsers = createSlice({
                 });
             })
             .addCase(deleteConversation.fulfilled, (state, action) => {
-                // state.data = action.payload;
-                state.isLoadingOutGroup = true;
+                state.conversationClick = null;
 
                 socket.emit('remove_group', {
                     info: action.payload,

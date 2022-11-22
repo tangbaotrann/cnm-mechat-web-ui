@@ -11,8 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './AddInfoUser.module.scss';
 import images from '~/assets/images';
 import moment from 'moment';
-import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
-import { fetchApiUser } from '~/redux/features/user/userSlice';
+import { userUpdate } from '~/redux/features/user/updateUserSlice';
+import { fetchApiUser, updateAvatar } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);

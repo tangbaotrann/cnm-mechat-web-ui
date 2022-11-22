@@ -76,7 +76,7 @@ function Middle() {
                     <>
                         {conversations.map((conversation) => {
                             return (
-                                <div key={conversation.id}>
+                                <>
                                     {conversation.id && !conversation?.deleteBy.includes(user._id) && (
                                         <div
                                             onClick={() =>
@@ -87,7 +87,7 @@ function Middle() {
                                             <Conversation key={conversation.id} conversation={conversation} />
                                         </div>
                                     )}
-                                </div>
+                                </>
                             );
                         })}
                     </>

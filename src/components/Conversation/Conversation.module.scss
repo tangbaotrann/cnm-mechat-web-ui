@@ -101,6 +101,7 @@
 
 .message {
     font-size: 1.4rem;
+    flex: 1;
 }
 
 // Show notification and time
@@ -113,6 +114,7 @@
 .time {
     font-size: 1.1rem;
     margin-bottom: 4px;
+    flex: 1;
 }
 
 .badge {
