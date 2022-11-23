@@ -47,6 +47,11 @@ function Middle() {
             // dispatch(listGroupUsers.actions.arrivalRemoveConversationFromSocket(info));
         });
 
+        socket.on('updated_member_in_group', (info) => {
+            console.log('[updated_member_in_group]', info);
+            dispatch(listGroupUsers.actions.arrivalUpdatedMembersInGroup(info));
+        });
+
         socket.on('update_last_message', (info) => {
             // console.log('[update_last_message]', info);
             dispatch(listGroupUsers.actions.arrivalUpdateLastMessageFromSocket(info));
