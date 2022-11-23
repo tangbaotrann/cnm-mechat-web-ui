@@ -27,6 +27,8 @@ import {
     conversationSlice,
     userInfoSelector,
     listFriendAccept,
+    addFriendRequest,
+    addFriendRequestAccept,
 } from '~/redux/selector';
 import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
@@ -39,13 +41,15 @@ function PhoneBook() {
     const [showConversation, setShowConversation] = useState('');
 
     const listFriends = useSelector(listFriend);
+    const listMeRequest = useSelector(addFriendRequest);
+    const listRequestFriend = useSelector(addFriendRequestAccept);
     const user = useSelector(userInfoSelector);
     const conversation = useSelector(conversationSlice);
     const listGroup = useSelector(listGroupUser);
-    const listMeRequest = useSelector(listMeRequests);
-    const listRequestFriend = useSelector(listFriendAccept);
 
     const dispatch = useDispatch();
+
+    // console.log('listFriends', listFriends);
 
     // realtime socket (fetch user)
     useEffect(() => {
@@ -60,7 +64,7 @@ function PhoneBook() {
     useEffect(() => {
         socket.on('receiver_friend_request', (request) => {
             // console.log('[receiver_friend_request]', request);
-            dispatch(listFriendRequests.actions.arrivalFriendRequestFromSocket(request));
+            dispatch(listFriendRequests.actions.arrivalAcceptFriendRequestFromSocket(request));
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,18 +101,31 @@ function PhoneBook() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // realtime filter friend
     // useEffect(() => {
-    //     // socket.off('send_friends');
-    //     // socket.on('send_friends', (friends) => {
-    //     //     console.log('[send_friends]', friends);
-    //     //     dispatch(listFriendRequests.actions.arrivalFilterFriendFromSocket(friends));
-    //     // });
-    //     // socket.off('send_friends');
-    //     // socket.on('receive_friends', (friends) => {
-    //     //     console.log('[receive_friends]', friends);
-    //     //     dispatch(listFriendRequests.actions.arrivalFilterFriendFromSocket(friends));
-    //     // });
+    //     socket.off('receive_friendss');
+    //     socket.on('receive_friendss', (listFriendsUserDelete) => {
+    //         console.log('[receive_friends]', listFriendsUserDelete);
+    //         dispatch(listFriendRequests.actions.arrivalDeleteFriendFromSocket(listFriendsUserDelete));
+    //     });
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+
+    // realtime exit add friend
+    useEffect(() => {
+        socket.on('remove_request', (friendRequestID) => {
+            // console.log('[remove_request]', friendRequestID);
+            dispatch(listFriendRequests.actions.arrivalExitRequestAddFriendFromSocket(friendRequestID));
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // realtime when accept success -> update conversation
+    // useEffect(() => {
+    //     socket.on('send_friends_give_conversation', (_conversation) => {
+    //         console.log('[send_friends_give_conversation]', _conversation);
+    //         dispatch(listFriendRequests.actions.arrivalUpdateConversationFromSocket(_conversation));
+    //     });
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, []);
 
@@ -202,7 +219,7 @@ function PhoneBook() {
                                     })}
                                 </div>
                                 <div className={cx('meRequestFriend')}>
-                                    {/* listMeRequest */}
+                                    {/* listMeRequest addFriendRequest */}
                                     {listMeRequest?.length === 0 ? null : (
                                         <h1>Yêu cầu kết bạn ({listMeRequest?.length})</h1>
                                     )}

@@ -44,7 +44,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const user = useSelector(userInfoSelector);
     const conversationID = useSelector(conversationSlice);
 
-    // console.log('55 - ', conversation);
+    // useEffect(() => {
+    //     console.log('[CONVERSATION]', conversation);
+    // }, []);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
@@ -88,7 +90,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
 
     //xoa thanh vien khoi nhom
     const handleDeleteMemberGroup = () => {
-        let deletes = window.confirm('Bạn có chắc chắn muốn xóa không?');
+        let deletes = window.confirm('Bạn có chắc chắn muốn xóa thành viên này không?');
         if (deletes === true) {
             const data = {
                 conversationId: conversationID.id,
@@ -166,7 +168,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             };
             dispatch(blockMember(data));
             if (blockMember()) {
-                toast.success('Bạn đã chặn tin nhắn.');
+                toast.success('Bạn đã chặn tin nhắn thành công.');
             }
         } else {
             toast.error('Bạn đã hủy yêu cầu chặn tin nhắn!');
@@ -184,7 +186,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             };
             dispatch(cancelBlockMember(data));
             if (cancelBlockMember()) {
-                toast.success('Bạn đã bỏ chặn tin nhắn.');
+                toast.success('Bạn đã bỏ chặn tin nhắn thành công.');
             }
         } else {
             toast.error('Bạn đã hủy yêu cầu bỏ chặn tin nhắn!');
@@ -216,13 +218,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 <div className={cx('list-conversation')} onClick={handleSeeninfoInGroup}>
                     <img
                         className={cx('avatar-img')}
-                        src={conversation?.imageLinkOfConver ? conversation?.imageLinkOfConver : images.noImg}
+                        src={conversation?.imageLinkOfConver} // conversation?.imageLinkOfConver ? : images.noImg
                         alt="avatar-user"
                     />
 
                     {/* <ModelInfoAccount seenInfoInGroup user={userCurrent} /> */}
 
-                    {filterLeaders[0]._id === conversation._id ? (
+                    {filterLeaders[0]?._id === conversation?._id ? (
                         <div className={cx('key-leader')}>
                             <label htmlFor="file-info" className={cx('option-avatar')}>
                                 <FontAwesomeIcon className={cx('icon-camera')} icon={faKey} />
@@ -233,13 +235,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                         <h4 className={cx('username')}>{conversation?.name} </h4>
                     </div>
 
-                    {!Friend && infoUser._id !== conversation._id ? (
+                    {!Friend && infoUser._id !== conversation?._id ? (
                         <div className={cx('button-addFriend')} onClick={handleAddFriend}>
                             <button>kết bạn</button>
                         </div>
                     ) : null}
 
-                    {filterLeaders[0]._id === conversation._id && infoUser._id === filterLeaders[0]._id ? (
+                    {filterLeaders[0]._id === conversation?._id && infoUser._id === filterLeaders[0]._id ? (
                         <TippyHeadless
                             render={(attrs) => (
                                 <div tabIndex="-1" {...attrs}>
@@ -275,9 +277,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
                                                 </p>
 
-                                                {conversationID.blockBy.includes(conversation._id) ? (
+                                                {conversationID.blockBy.includes(conversation?._id) ? (
                                                     <p className={cx('deleteFriend')} onClick={handleCancelBlockMember}>
-                                                        <button className={cx('item-btn')}>Đã chặn</button>
+                                                        <button className={cx('item-btn')}>Bỏ chặn</button>
                                                     </p>
                                                 ) : (
                                                     <p className={cx('deleteFriend')} onClick={handleBlockMember}>
@@ -300,7 +302,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                 </TippyHeadless>
                             ) : (
                                 <>
-                                    {infoUser._id === conversation._id ? (
+                                    {infoUser._id === conversation?._id ? (
                                         <TippyHeadless
                                             render={(attrs) => (
                                                 <div tabIndex="-1" {...attrs}>
@@ -332,11 +334,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 <div className={cx('container-conversation')}>
                     <div className={cx('list-conversation')}>
                         {/*onClick={tam}  */}
-                        <img
-                            className={cx('avatar-img')}
-                            src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
-                            alt="avatar"
-                        />
+                        <img className={cx('avatar-img')} src={conversation?.imageLinkOfConver} alt="avatar" />
 
                         <div className={cx('content')}>
                             <h4 className={cx('username')}>{conversation?.name} </h4>

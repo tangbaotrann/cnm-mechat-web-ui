@@ -247,10 +247,10 @@ function AddGroup({ addMemerber }) {
             {addMemerber ? (
                 <div className={cx('add-friend-bottom')}>
                     <div className={cx('bottom-button')}>
-                        <button className={cx('cancel')} onClick={handlCancle}>
+                        <button className={cx('btn-cancel-group')} onClick={handlCancle}>
                             Hủy
                         </button>
-                        <button className={cx('search')} onClick={handleAddMemberToGroup}>
+                        <button className={cx('btn-add-group')} onClick={handleAddMemberToGroup}>
                             Thêm
                         </button>
                     </div>
@@ -258,10 +258,10 @@ function AddGroup({ addMemerber }) {
             ) : (
                 <div className={cx('add-friend-bottom')}>
                     <div className={cx('bottom-button')}>
-                        <button className={cx('cancel')} onClick={handlCancle}>
+                        <button className={cx('btn-cancel-group')} onClick={handlCancle}>
                             Hủy
                         </button>
-                        <button className={cx('search')} onClick={handleCreateGroup}>
+                        <button className={cx('btn-add-group')} onClick={handleCreateGroup}>
                             Tạo
                         </button>
                     </div>

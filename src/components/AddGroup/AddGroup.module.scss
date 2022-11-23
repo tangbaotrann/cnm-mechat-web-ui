@@ -56,6 +56,24 @@
     margin-left: 4%;
 }
 
+.btn-add-group {
+    margin-left: 20px;
+    padding: 10px;
+    border-radius: 6px;
+    color: var(--white);
+    background-color: var(--primary);
+
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+.btn-cancel-group {
+    margin-left: 20px;
+    padding: 10px;
+    border-radius: 6px;
+}
+
 // icon search
 .icon-search {
     position: absolute;
