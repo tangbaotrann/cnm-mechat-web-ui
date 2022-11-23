@@ -103,7 +103,7 @@ export const deleteMember = createAsyncThunk(
         });
 
         const jsonData = await response.json();
-        console.log('[json] - ', jsonData);
+        console.log('[json] - deleteMember', jsonData);
         return jsonData;
     },
 );
@@ -354,6 +354,38 @@ const listGroupUsers = createSlice({
                 state.conversationClick = currConversation;
             }
         },
+        arrivalUpdatedWhenAddMemberOtherInGroupFromSocket: (state, action) => {
+            const preConversation = action.payload;
+            const currConversation = state.data.find((con) => con.id === preConversation.id);
+
+            // updated
+            currConversation.id = preConversation.id;
+            currConversation.newMember = preConversation.newMember;
+            currConversation.members = preConversation.members;
+            currConversation.lastMessage = preConversation.lastMessage;
+
+            if (currConversation) {
+                state.conversationClick = currConversation;
+            }
+        },
+        arrivalUpdatedWhenDeleteMemberOtherInGroupFromSocket: (state, action) => {
+            const preConversation = action.payload;
+            const currConversation = state.data.find((con) => con.id === preConversation._id);
+
+            // updated
+            currConversation._id = preConversation._id;
+            currConversation.idMember = preConversation.idMember;
+            currConversation.deleteBy = preConversation.deleteBy;
+            currConversation.members = preConversation.members;
+            currConversation.action = preConversation.action;
+            currConversation.time = preConversation.time;
+
+            // updated
+
+            if (currConversation) {
+                state.conversationClick = currConversation;
+            }
+        },
         arrivalUpdateLastMessageFromSocket: (state, action) => {
             // pre-last message
             const preConversationLastMessage = action.payload;
@@ -446,7 +478,7 @@ const listGroupUsers = createSlice({
             })
             .addCase(deleteMember.fulfilled, (state, action) => {
                 const preMember = action.payload;
-                // console.log('delete member', action.payload);
+                console.log('delete member - act-pay', action.payload);
 
                 const currConversation = state.data.find((con) => con.id === preMember._id);
 
