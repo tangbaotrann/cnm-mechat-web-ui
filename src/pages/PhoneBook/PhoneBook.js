@@ -23,13 +23,10 @@ import socket from '~/util/socket';
 import {
     listFriend,
     listGroupUser,
-    listMeRequests,
     conversationSlice,
     userInfoSelector,
-    listFriendAccept,
     addFriendRequest,
     addFriendRequestAccept,
-    loadFriends,
 } from '~/redux/selector';
 import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
@@ -50,8 +47,6 @@ function PhoneBook() {
     const listGroup = useSelector(listGroupUser);
 
     const dispatch = useDispatch();
-
-    // console.log('listFriends', listFriends);
 
     // realtime socket (fetch user)
     useEffect(() => {
@@ -119,7 +114,6 @@ function PhoneBook() {
     // realtime exit add friend
     useEffect(() => {
         socket.on('remove_request', (friendRequestID) => {
-            // console.log('[remove_request]', friendRequestID);
             dispatch(listFriendRequests.actions.arrivalExitRequestAddFriendFromSocket(friendRequestID));
         });
 

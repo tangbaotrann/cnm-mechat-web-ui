@@ -38,12 +38,6 @@ const listFriendRequests = createSlice({
 
             state.dataSended.splice(currReq, 1);
         },
-        // arrivalDeleteFriendFromSocket: (state, action) => {
-        //     const preReq = action.payload;
-        //     console.log('preReq', preReq);
-
-        //     state.data = action.payload;
-        // },
     },
     extraReducers: (builder) => {
         builder
@@ -60,7 +54,6 @@ const listFriendRequests = createSlice({
             .addCase(fetchApiAcceptRequestFriend.fulfilled, (state, action) => {
                 const { friendRequestID, listFriendsReceiver, listFriendsSender, sender, receiver, conversation } =
                     action.payload;
-                console.log('action.payload - accept friend', action.payload);
                 const del = state.data.findIndex((friend) => friend.idFriendRequest === friendRequestID);
 
                 state.data.splice(del, 1);
@@ -127,10 +120,10 @@ export const friendRequests = createAsyncThunk(
             },
             body: JSON.stringify(data),
         });
-        console.log(data);
+
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        // console.log('friend req - 152', jsonData);
+
         return jsonData;
     },
 );
@@ -153,7 +146,7 @@ export const fetchApiAcceptRequestFriend = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        console.log('id con -', jsonData);
+
         return jsonData;
     },
 );
@@ -188,11 +181,10 @@ export const meRequestFriend = createAsyncThunk('user/meRequestFriend', async (a
         // check token
         if (getToken !== null) {
             const decodedToken = jwt_decode(getToken._token);
-            // console.log(decodedToken);
             const res = await axios.get(
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-of-me/${decodedToken._id}`,
             );
-            console.log('[65]', res.data);
+
             return res.data;
         }
     } catch (err) {
@@ -211,7 +203,7 @@ export const friendAccept = createAsyncThunk('user/friendAccept', async (arg, { 
             const res = await axios.get(
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-list-request/${decodedToken._id}`,
             );
-            console.log('[19] -> ', res.data.data);
+
             return res.data.data;
         }
     } catch (err) {
@@ -224,7 +216,6 @@ export const fetchApiRecallRequestAddFriend = createAsyncThunk(
     // Tên action
     'user/fetchApiRecallRequestAddFriend ',
     async (data) => {
-        console.log('DATA - ', data);
         // Gọi lên API backend
         const { status, senderID, idRequest } = data;
         const response = await fetch(`${process.env.REACT_APP_BASE_URL}friendRequests/${idRequest}`, {
@@ -237,7 +228,7 @@ export const fetchApiRecallRequestAddFriend = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        console.log('[JSON]', jsonData);
+
         return jsonData;
     },
 );
