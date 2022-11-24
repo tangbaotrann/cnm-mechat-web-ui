@@ -5,6 +5,7 @@ export const infoUserConversation = createAsyncThunk(
     async (data) => {
         // Gọi lên API backend
         const { userID } = data;
+        console.log(data);
         const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/${userID}`, {
             method: 'GET',
             headers: {
@@ -14,7 +15,7 @@ export const infoUserConversation = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        //console.log(jsonData);
+        console.log(jsonData);
         return jsonData.data;
     },
 );
@@ -23,6 +24,7 @@ const userCurrents = createSlice({
     initialState: { data: [] },
     extraReducers: (builder) => {
         builder.addCase(infoUserConversation.fulfilled, (state, action) => {
+            console.log(action.payload);
             state.data = action.payload;
         });
     },

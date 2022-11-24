@@ -13,10 +13,11 @@ import images from '~/assets/images';
 import ModelWrapper from '../ModelWrapper';
 import moment from 'moment';
 import { Radio } from '@mui/material';
-import { userLogin } from '~/redux/selector';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { userUpdate } from '~/redux/features/user/updateUserSlice';
 import { updateAvatar } from '~/redux/features/user/userSlice';
+import { userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -25,7 +26,7 @@ function SubModelInfoAccount({ user }) {
     const [optionSex, setOptionSex] = useState(user.gender);
     const [birthday, setBirthday] = useState(moment(user.birthday).format('YYYY-MM-DD'));
     const [fullName, setFullName] = useState(user.fullName);
-    const infoUser = useSelector(userLogin);
+    const infoUser = useSelector(userInfoSelector);
     const [avatar, setAvatar] = useState(user?.avatarLink); //
 
     useEffect(() => {

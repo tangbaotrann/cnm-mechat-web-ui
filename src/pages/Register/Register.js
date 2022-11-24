@@ -1,7 +1,7 @@
 //lib
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { PhoneIphone, Lock, Person, ArrowLeft } from '@material-ui/icons';
+import { PhoneIphone, Lock, Person, ArrowLeft, CheckBox } from '@material-ui/icons';
 import classNames from 'classnames/bind';
 //me
 import styles from './Register.module.scss';
@@ -12,6 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import useDebounce from '~/components/hooks/useDebounce';
 import filterSlice from '~/redux/features/filter/filterSlice';
 import { accountExists } from '~/redux/selector';
+import ModelWrapper from '~/components/ModelWrapper';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const cx = classNames.bind(styles);
 
@@ -34,6 +37,11 @@ function Register() {
     const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
     const [errorConfirmPassword, setErrorConfirmPassword] = useState('');
+
+    //chínhach
+    const [openPolyci, setOpenPolyci] = useState(false);
+    const [checkPolyci, setcheckPolyci] = useState(false);
+
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(phoneNumber));
     }, [debouncedValue]);
@@ -66,6 +74,8 @@ function Register() {
             setErrorConfirmPassword('Vui lòng nhập xác nhận mật khẩu');
         } else if (password !== confirmPassword) {
             setErrorConfirmPassword('Mật khẩu không trùng khớp');
+        } else if (checkPolyci === false) {
+            alert('bạn chưa cam kết chính sách');
         } else {
             generateRecaptcha();
             const phoneNumbers = '+84' + phoneNumber.slice(1);
@@ -123,6 +133,24 @@ function Register() {
             setErrorConfirmPassword('');
         }
     }, [confirmPassword, userName]);
+
+    ///chinh sách
+
+    const handleModelCloseOpenPolyci = () => {
+        setOpenPolyci(false);
+    };
+    const handleModelOpenPolyci = () => {
+        setOpenPolyci(true);
+    };
+    const handleCheck = (e) => {
+        if (e.target.checked === true) {
+            setcheckPolyci(true);
+            console.log(checkPolyci);
+        } else {
+            setcheckPolyci(false);
+            console.log(checkPolyci);
+        }
+    };
     return (
         <div className={cx('body-register')}>
             <div className={cx('wrapper')}>
@@ -185,6 +213,66 @@ function Register() {
                             {/* <Check className={cx('item-check')} /> */}
                         </div>
                         <span className={cx('error')}>{errorConfirmPassword}</span>
+                        <div className={cx('policy')}>
+                            <input type="checkBox" value={checkPolyci} onChange={handleCheck} />
+                            <p onClick={handleModelOpenPolyci}>Bạn đồng ý với chính sách của chúng tôi </p>
+                        </div>
+                        <ModelWrapper
+                            className={cx('model-add-friend')}
+                            open={openPolyci}
+                            onClose={handleModelCloseOpenPolyci}
+                        >
+                            <div className={cx('model-add-group-bg')}>
+                                <div className={cx('add-friend-title')}>
+                                    <span className={cx('friend-title')}>Chính sách Me.Chat</span>
+                                    <button className={cx('close-btn')}>
+                                        <FontAwesomeIcon
+                                            className={cx('friend-close-ic')}
+                                            icon={faXmark}
+                                            onClick={handleModelCloseOpenPolyci}
+                                        />
+                                    </button>
+                                </div>
+                                <div className={cx('content-polyci')}>
+                                    <h5 className={cx('content-polyci-title')}> Chính sách sử dụng của MeChat</h5>
+                                    <p>
+                                        Các chính sách của chúng tôi đóng vai trò quan trọng trong việc duy trì trải
+                                        nghiệm tích cực cho người dùng. Vui lòng tuân thủ các chính sách này khi sử dụng
+                                        Mechat.
+                                    </p>
+                                    <h4>Hành vi gian lận, lừa đảo và các hình thức lừa dối khác</h4>
+                                    <p>
+                                        Không dùng ứng dụng Mechat cho mục đích lừa đảo. Không yêu cầu hoặc thu thập dữ
+                                        liệu nhạy cảm, thông tin tài chính và số an sinh xã hội. Không dùng ứng dụng
+                                        MeChat để lừa những người dùng khác chia sẻ thông tin vì những lý do bịa đặt.
+                                    </p>
+                                    <p>
+                                        Không mạo danh người khác hoặc cung cấp thông tin không đúng về bản thân hoặc về
+                                        nguồn gốc của tin nhắn hay cuộc gọi trong Mechat.
+                                    </p>
+                                    <h4>Hành vi quấy rối </h4>
+                                    <p>
+                                        Không dùng ứng dụng MeChat để quấy rối, đe dọa hoặc dọa dẫm người khác. Không
+                                        xúi giục người khác tham gia thực hiện hành vi này.
+                                    </p>
+                                    <h4>Thông tin cá nhân và thông tin bí mật</h4>
+                                    <p>
+                                        Không phát tán thông tin cá nhân và thông tin bí mật của người khác, chẳng hạn
+                                        như số thẻ tín dụng, số an sinh xã hội hoặc mật khẩu tài khoản, khi họ chưa cho
+                                        phép.
+                                    </p>
+                                    <h4>Hoạt động bất hợp pháp </h4>
+                                    <p>
+                                        Không dùng ứng dụng MeChat để quảng bá, tổ chức hoặc tham gia các hoạt động bất
+                                        hợp pháp
+                                    </p>
+                                    <h4>
+                                        Mọi hành vi trên nếu bị phát hiện hoặc người dùng tố cáo thì sẽ bị cảnh cáo hoặc
+                                        khóa tài khoản. Nên vui lòng cân nhắc mục đích sử dụng ứng dụng trước khi dùng.{' '}
+                                    </h4>
+                                </div>
+                            </div>
+                        </ModelWrapper>
                         <div className={cx('form-button')}>
                             <button type="submit" variant="contained" color="primary">
                                 ĐĂNG KÝ

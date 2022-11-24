@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import {
     blockMember,
     cancelBlockMember,
+    changeLearder,
     deleteConversation,
     deleteMember,
     fetchApiConversationById,
@@ -197,6 +198,22 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         } else {
             toast.error('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
             return;
+        }
+    };
+
+    const handleChangeLeader = () => {
+        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chuyển quyền trưởng nhóm không?');
+        if (checkOutGroup === true) {
+            const data = {
+                conversationId: conversationID.id,
+                userId: conversation._id,
+            };
+            dispatch(changeLearder(data));
+            if (changeLearder()) {
+                alert('Bạn đã chuyển quyền trưởng nhóm');
+            }
+        } else {
+            alert('bạn đã hủy yêu cầu chuyển quyền trưởng nhóm');
         }
     };
 

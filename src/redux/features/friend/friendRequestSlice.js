@@ -47,7 +47,7 @@ const listFriendRequests = createSlice({
 
                 // socket
                 socket.emit('send_friend_request', {
-                    request: action.payload.data,
+                    request: action.payload.dataSended,
                 });
             })
             // accept request friend
@@ -87,13 +87,15 @@ const listFriendRequests = createSlice({
             // accept friend request
             .addCase(friendAccept.fulfilled, (state, action) => {
                 if (action.payload) {
+                    console.log('action.payload----', action.payload);
                     state.data = action.payload;
                 }
             })
             // get request add friend
             .addCase(meRequestFriend.fulfilled, (state, action) => {
                 if (action.payload) {
-                    //state.dataSended = action.payload;
+                    console.log('[91]action.payload----', action.payload);
+                    state.dataSended = action.payload;
                 }
             })
             .addCase(fetchApiRecallRequestAddFriend.fulfilled, (state, action) => {
@@ -210,7 +212,6 @@ export const friendAccept = createAsyncThunk('user/friendAccept', async (arg, { 
         rejectWithValue(err);
     }
 });
-
 // handle re-call request add friend
 export const fetchApiRecallRequestAddFriend = createAsyncThunk(
     // Tên action
@@ -232,5 +233,24 @@ export const fetchApiRecallRequestAddFriend = createAsyncThunk(
         return jsonData;
     },
 );
+// handle get request add friend
+// export const meRequestFriend = createAsyncThunk('user/meRequestFriend', async (arg, { rejectWithValue }) => {
+//     try {
+//         const getToken = JSON.parse(localStorage.getItem('user_login'));
+
+//         // check token
+//         if (getToken !== null) {
+//             const decodedToken = jwt_decode(getToken._token);
+//             // console.log(decodedToken);
+//             const res = await axios.get(
+//                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-of-me/${decodedToken._id}`,
+//             );
+//             console.log('[65]', res.data);
+//             return res.data;
+//         }
+//     } catch (err) {
+//         rejectWithValue(err);
+//     }
+// });
 
 export default listFriendRequests;
