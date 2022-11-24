@@ -1,12 +1,16 @@
 import { createSelector } from '@reduxjs/toolkit';
 
+// search
 export const searchTextSelector = (state) => state.filters.search;
 
+// users
 export const userListSelector = (state) => state.users.data;
 
+// user
 export const userInfoSelector = (state) => state.user.data;
 export const isLoadingInHomePage = (state) => state.user.isLoading;
 
+// group
 export const listGroupUser = (state) => state.listGroupUser.data;
 export const conversationSlice = (state) => state.listGroupUser.conversationClick;
 export const isLoadingOutGroup = (state) => state.listGroupUser.isLoadingOutGroup;
@@ -15,13 +19,16 @@ export const notificationBlockMess = (state) => state.listGroupUser.notification
 export const notificationAddMember = (state) => state.listGroupUser.notificationAddMemberToGroup;
 export const isLoadingConversation = (state) => state.listGroupUser.isLoading;
 
+// friend request
 export const listMeRequests = (state) => state.friendRequests.dataSended;
 export const listFriendAccept = (state) => state.friendRequests.data;
 
+// message
 export const listMessage = (state) => state.messages.data;
 export const notificationsMessage = (state) => state.messages.notifications;
 export const isLoadingMessenger = (state) => state.messages.isLoading;
 
+// report
 export const reportSelector = (state) => state.reportSlice.data;
 
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
@@ -43,38 +50,6 @@ export const listFriend = createSelector(userInfoSelector, userListSelector, (us
     }
     return null;
 });
-
-// load friend
-export const loadFriends = createSelector(
-    userInfoSelector,
-    userListSelector,
-    conversationSlice,
-    (user, users, conversation) => {
-        if (users) {
-            console.log('conversaion - 50', conversation);
-            const friends = users.filter((_user) => user?.friends?.includes(_user?._id));
-
-            // if (conversation?.listFriendsUser > 0) {
-            return friends.map((user) => ({
-                _id: user._id,
-                name: user.fullName,
-                fullName: user.fullName,
-                backgroundLink: user.backgroundLink,
-                imageLinkOfConver: user.avatarLink,
-                avatarLink: user.avatarLink,
-                gender: user.gender,
-                status: user.status,
-                phoneNumber: user.phoneNumber,
-                birthday: user.birthday,
-            }));
-        }
-        // else {
-        //     return null;
-        // }
-        // }
-        return null;
-    },
-);
 
 //Load data
 export const usersRemainingSelector = createSelector(

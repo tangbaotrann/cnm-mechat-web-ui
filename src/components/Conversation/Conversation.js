@@ -43,12 +43,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const user = useSelector(userInfoSelector);
     const conversationID = useSelector(conversationSlice);
 
-    // useEffect(() => {
-    //     console.log('[CONVERSATION]', conversation);
-    // }, []);
-
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user._id]);
 
@@ -114,8 +111,6 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             };
             toast.success('Bạn đã rời khỏi nhóm thành công.');
             dispatch(outGroup(dataOutGroup));
-            // if (outGroup()) {
-            // }
         } else {
             toast.error('Bạn đã hủy yêu cầu rời nhóm!');
             return;
@@ -149,8 +144,6 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             };
             toast.success('Bạn đã giải tán nhóm.');
             dispatch(deleteConversation(data));
-            // if (deleteConversation()) {
-            // }
         } else {
             toast.error('Bạn đã hủy yêu cầu giải tán nhóm!');
             return;
@@ -166,9 +159,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 userId: conversation._id,
             };
             dispatch(blockMember(data));
-            if (blockMember()) {
-                toast.success('Bạn đã chặn tin nhắn thành công.');
-            }
+            toast.success('Bạn đã chặn tin nhắn thành công.');
         } else {
             toast.error('Bạn đã hủy yêu cầu chặn tin nhắn!');
             return;
@@ -184,9 +175,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 userId: conversation._id,
             };
             dispatch(cancelBlockMember(data));
-            if (cancelBlockMember()) {
-                toast.success('Bạn đã bỏ chặn tin nhắn thành công.');
-            }
+            toast.success('Bạn đã bỏ chặn tin nhắn thành công.');
         } else {
             toast.error('Bạn đã hủy yêu cầu bỏ chặn tin nhắn!');
             return;

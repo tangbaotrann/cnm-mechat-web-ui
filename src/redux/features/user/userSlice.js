@@ -70,7 +70,7 @@ export const updateAvatar = createAsyncThunk(
                     'content-type': 'multipart/form-data',
                 },
             });
-            console.log('48 - ', res.data);
+
             return res.data;
         }
     },
@@ -90,7 +90,7 @@ export const fetchApiDeleteFriend = createAsyncThunk('user/fetchApiDeleteFriend 
     });
 
     const jsonData = await response.json();
-    console.log('[API - DEL - FRIEND]', jsonData);
+
     return jsonData;
 });
 
@@ -107,12 +107,12 @@ const userSlice = createSlice({
         },
         arrivalDeleteFriendFromSocket: (state, action) => {
             const preReq = action.payload;
-            console.log('act-pay-del', preReq);
+
             state.data.friends = preReq;
         },
         arrivalSendFriendFromSocket: (state, action) => {
             const preReq = action.payload;
-            console.log('act-pay-sends', preReq);
+
             state.data.friends = preReq;
         },
     },
@@ -131,7 +131,6 @@ const userSlice = createSlice({
             })
             .addCase(fetchApiDeleteFriend.fulfilled, (state, action) => {
                 const preReq = action.payload;
-                console.log('preReq - ', preReq);
 
                 // updated
                 state.data.friends = preReq.listFriendsUser;
