@@ -7,7 +7,7 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import PhoneBook from './pages/PhoneBook/PhoneBook';
 import ConFirmOTP from './pages/ConFirmOTP';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchUsers } from './redux/features/user/usersSlice';
 import { fetchApiUser } from './redux/features/user/userSlice';
@@ -16,8 +16,12 @@ import { meRequestFriend } from './redux/features/friend/friendRequestSlice';
 import ForgetPassWord from './pages/Login/ForgetPassWord';
 import { listGroupUser } from './redux/features/Group/GroupSlice';
 import AddInfoUser from './pages/AddInfoUser';
+import Peer from 'peerjs';
+import { userLogin } from './redux/selector';
 
 function App() {
+    const infoUser = useSelector(userLogin);
+
     const dispatch = useDispatch();
 
     useEffect(() => {

@@ -25,7 +25,6 @@ export const listFriendAccept = (state) => state.friendRequests.data;
 
 // message
 export const listMessage = (state) => state.messages.data;
-export const notificationsMessage = (state) => state.messages.notifications;
 export const isLoadingMessenger = (state) => state.messages.isLoading;
 
 // report
@@ -150,7 +149,7 @@ export const searchFilterFriend = createSelector(
 
 //lọc user theo member
 export const filterUserGroup = createSelector(conversationSlice, userListSelector, (c, users) => {
-    const usersFilter1 = users.filter((_user) => c.members.includes(_user._id));
+    const usersFilter1 = users.filter((_user) => c?.members.includes(_user._id));
 
     if (!usersFilter1.length) {
         return 1;

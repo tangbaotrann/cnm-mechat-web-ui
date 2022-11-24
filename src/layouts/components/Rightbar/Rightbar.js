@@ -11,7 +11,7 @@ import { conversationSlice } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
-function Rightbar() {
+function Rightbar({ peer }) {
     const conversation = useSelector(conversationSlice);
 
     return (
@@ -19,7 +19,7 @@ function Rightbar() {
             {/* Để show ra Chat current -> get theo conversationId */}
             {conversation ? (
                 <div className={cx('container')}>
-                    <Messenger />
+                    <Messenger peer={peer} />
                     <ConversationInfo />
                 </div>
             ) : (

@@ -42,7 +42,7 @@ function AddGroup({ addMemerber }) {
     };
     const dispatch = useDispatch();
 
-    // console.log('39', addMemerber);
+    // console.log('39', conversation);
 
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchPhone));
@@ -108,7 +108,6 @@ function AddGroup({ addMemerber }) {
                     setError('Tài khoản không tồn tại');
                 }
             }
-            console.log(searchResultShow);
         }
     };
     useEffect(() => {
@@ -180,7 +179,16 @@ function AddGroup({ addMemerber }) {
                     <div className={cx('conversations')}>
                         <div className={cx('list-conversation')}>
                             <div className={cx('input-radio')}>
-                                <input type="checkBox" value={searchResult._id} onChange={handleCheck} />
+                                {addMemerber ? (
+                                    <input
+                                        type="checkBox"
+                                        value={searchResult._id}
+                                        onChange={handleCheck}
+                                        checked={conversation.members.includes(searchResult._id) ? true : false}
+                                    />
+                                ) : (
+                                    <input type="checkBox" value={searchResult._id} onChange={handleCheck} />
+                                )}
                             </div>
 
                             <img
