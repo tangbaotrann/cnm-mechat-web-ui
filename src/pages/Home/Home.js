@@ -1,19 +1,18 @@
 // libs
 import classNames from 'classnames/bind';
-import { CircularProgress } from '@material-ui/core';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Peer from 'simple-peer';
 // me
 import styles from './Home.module.scss';
 import Sidebar from '~/layouts/components/Sidebar';
 import Center from '~/layouts/components/Middle';
 import Rightbar from '~/layouts/components/Rightbar';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
 import socket from '~/util/socket';
-import listGroupUsers from '~/redux/features/Group/GroupSlice';
+
 import { useState } from 'react';
-import { userCurrent, userInfoSelector, userLogin } from '~/redux/selector';
+import { userInfoSelector, userLogin } from '~/redux/selector';
 import ModelWrapper from '~/components/ModelWrapper';
 import {
     faMicrophone,
@@ -63,7 +62,7 @@ function Home() {
     }, []);
 
     useEffect(() => {
-        socket.emit('status_user', user._id);
+        socket.emit('status_user', user?._id);
     }, [user?._id]);
 
     useEffect(() => {
@@ -82,12 +81,21 @@ function Home() {
                 alert('loi');
             }
         });
+    }, []);
+
+    useEffect(() => {
         socket.on('endCall', () => {
-            console.log('okokokokok');
-            connectionRef.current.destroy();
+            console.log('okokokokokEncallll');
             setOpenCall(false);
+            setShowFooter(false);
+            setChangeIconVideo(false);
+            setCallAccepted(false);
+            setCallEnded(false);
+
+            connectionRef.current.destroy();
         });
     }, []);
+
     const handleChangeIconVideo = () => {
         const tracks = userVideo.current.srcObject.getTracks();
         tracks.forEach((track) => track.stop());
@@ -95,47 +103,49 @@ function Home() {
         setChangeIconVideo(true);
     };
     const handleModelCloseOpenCallVideo = () => {
-        if (myVideo.current === null) {
-            connectionRef.current.destroy();
-            socket.emit('endCall', { id: caller });
-            setOpenCall(false);
-        } else {
-            const tracks = myVideo.current.srcObject.getTracks();
-            tracks.forEach((track) => track.stop());
-            myVideo.current.srcObject = null;
-            connectionRef.current.destroy();
-            socket.emit('endCall', { id: caller });
-
-            setOpenCall(false);
-        }
+        connectionRef.current.destroy();
+        console.log('caller', caller);
+        socket.emit('endCallToClient', { id: caller });
+        setOpenCall(false);
+        setShowFooter(false);
+        setChangeIconVideo(false);
+        setCallAccepted(false);
+        setCallEnded(false);
     };
     const handleRefuseCall = () => {
         setOpenCall(false);
+        socket.emit('endCallToClient', { id: caller });
+        setOpenCall(false);
+        setShowFooter(false);
+        setChangeIconVideo(false);
+        setCallAccepted(false);
+        setCallEnded(false);
         connectionRef.current.destroy();
     };
     const handleReceiveCall = () => {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+            console.log('peer1111111111111111', stream);
             setStream(stream);
             myVideo.current.srcObject = stream;
         });
-        setCallAccepted(true);
-
         const peer = new Peer({
             initiator: false,
             trickle: false,
             stream: stream,
         });
+        console.log('---------', peer);
         peer.on('signal', (data) => {
-            console.log('124-----', data);
+            console.log('133-----', data);
             socket.emit('answerCall', { signal: data, to: caller });
         });
-        peer.on('stream', (stream) => {
-            userVideo.current.srcObject = stream;
-            console.log('133--------', userVideo.current.srcObject);
+        peer.on('stream', (streams) => {
+            userVideo.current.srcObject = streams;
+            console.log('138--------', streams);
         });
-
-        peer.signal(callerSignal);
         connectionRef.current = peer;
+        peer.signal(callerSignal);
+
+        setCallAccepted(true);
 
         setShowFooter(true);
     };
@@ -155,15 +165,11 @@ function Home() {
     };
     return (
         <>
-            {isLoading ? (
-                <CircularProgress className={cx('loading-messages')} />
-            ) : (
-                <div className={cx('wrapper')}>
-                    <Sidebar />
-                    <Center />
-                    <Rightbar />
-                </div>
-            )}
+            <div className={cx('wrapper')}>
+                <Sidebar />
+                <Center />
+                <Rightbar />
+            </div>
 
             <ModelWrapper className={cx('model-add-friend')} open={openCall} onClose={handleModelCloseOpenCallVideo}>
                 <div className={cx('model-add-group-bg')}>

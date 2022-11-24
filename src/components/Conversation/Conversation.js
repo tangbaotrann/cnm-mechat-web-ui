@@ -2,52 +2,48 @@
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'timeago.js';
+import { MoreHoriz } from '@material-ui/icons';
+import { faEllipsis, faKey } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import TippyHeadless from '@tippyjs/react/headless';
+
 // me
 import styles from './Conversation.module.scss';
 import images from '~/assets/images';
-import { MoreHoriz } from '@material-ui/icons';
-import { filterFriendGroup, filterLeader, userLogin } from '~/redux/selector';
 import Popper from '../Popper';
-import { friendDelete } from '~/redux/features/friend/friendAcceptSlice';
+import { fetchApiDeleteFriend } from '~/redux/features/friend/friendRequestSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
-import conversationSlice from '~/redux/features/conversation/conversationSlice';
-import listGroupUsers, {
+import {
     blockMember,
     cancelBlockMember,
     changeLearder,
     deleteConversation,
     deleteMember,
     fetchApiConversationById,
-    listGroupUser,
+    fetchApiDeleteConversationSingle,
     outGroup,
 } from '~/redux/features/Group/GroupSlice';
-import { faKey, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
+import { filterFriendGroup, filterLeader, userInfoSelector, userLogin, conversationSlice } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
-    const infoUser = useSelector(userLogin);
-
-    const user = useSelector((state) => state.user.data);
-    const filterLeaders = useSelector(filterLeader);
-    const listFriendFilters = useSelector(filterFriendGroup);
     const [Friend, setFriend] = useState(false);
 
     const dispatch = useDispatch();
 
-    const conversationID = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
-    const conversations = useSelector((state) => state.listGroupUser.data);
+    const infoUser = useSelector(userLogin);
+    const filterLeaders = useSelector(filterLeader);
+    const listFriendFilters = useSelector(filterFriendGroup);
+    const user = useSelector(userInfoSelector);
+    const conversationID = useSelector(conversationSlice);
 
-    // console.log('[INFO-USER]', infoUser);
-    // console.log('[USER]', user);
-    // console.log('[CONVERSION]', conversation);
+    // console.log('55 - ', conversation);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
@@ -61,31 +57,32 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             }
         });
     }, []);
+
     const handleCancel = () => {
-        let deletes = window.confirm('Bạn có chắc chắn muốn sửa không?');
+        let deletes = window.confirm('Bạn có chắc chắn muốn xóa không?');
         if (deletes === true) {
             const data = {
                 idUser: infoUser._id,
                 status: true,
                 userDeleteId: conversation._id,
             };
-            dispatch(friendDelete(data));
-            alert('Xóa bạn thành công');
+            dispatch(fetchApiDeleteFriend(data));
+            alert('Xóa bạn thành công.');
         } else {
-            alert('bạn đã hủy yêu cầu xóa bạn');
+            alert('Bạn đã hủy yêu cầu xóa bạn!');
         }
     };
 
-    //
-    const tam = () => {
-        conversations.map((c) => {
-            if (c.members.includes(conversation._id)) {
-                if (c.isGroup === false) {
-                    return dispatch(conversationSlice.actions.clickConversation(c));
-                }
-            }
-        });
-    };
+    // Sai
+    // const tam = () => {
+    //     conversations.map((c) => {
+    //         if (c.members.includes(conversation._id)) {
+    //             if (c.isGroup === false) {
+    //                 return dispatch(conversationSlice.actions.clickConversation(c));
+    //             }
+    //         }
+    //     });
+    // };
 
     //xoa thanh vien khoi nhom
     const handleDeleteMemberGroup = () => {
@@ -120,6 +117,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             alert('bạn đã hủy yêu cầu rời nhóm');
         }
     };
+
     //kết bạn
     const handleAddFriend = () => {
         const data = { senderID: infoUser._id, receiverID: conversation._id };
@@ -129,6 +127,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             window.location.reload(true);
         }
     };
+
     const handleSeeninfoInGroup = () => {
         dispatch(
             infoUserConversation({
@@ -136,6 +135,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             }),
         );
     };
+
     const handleDeleteGroup = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn giải tán nhóm không?');
         if (checkOutGroup === true) {
@@ -146,12 +146,14 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             dispatch(deleteConversation(data));
             if (deleteConversation()) {
                 alert('Bạn đã giải tán nhóm');
-                window.location.reload(true);
+                // window.location.reload(true);
             }
         } else {
             alert('bạn đã hủy yêu cầu giải tán nhóm');
         }
     };
+
+    // handle block message user
     const handleBlockMember = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chặn tin nhắn không?');
         if (checkOutGroup === true) {
@@ -167,6 +169,8 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             alert('bạn đã hủy yêu cầu chặn tin nhắn');
         }
     };
+
+    // handle un-block message user
     const handleCancelBlockMember = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn bỏ chặn tin nhắn không?');
         if (checkOutGroup === true) {
@@ -182,6 +186,24 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             alert('bạn đã hủy yêu cầu bỏ chặn tin nhắn');
         }
     };
+
+    // handle delete conversation single
+    const handleDeleteConversationSingle = () => {
+        const choice = window.confirm('Bạn có chắc chắn muốn xóa cuộc hội thoại này không?');
+
+        if (choice === true) {
+            dispatch(
+                fetchApiDeleteConversationSingle({
+                    conversationId: conversation.id,
+                    userId: user._id,
+                }),
+            );
+            alert('Bạn đã xóa thành công cuộc hội thoại.');
+        } else {
+            alert('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
+        }
+    };
+
     const handleChangeLeader = () => {
         let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chuyển quyền trưởng nhóm không?');
         if (checkOutGroup === true) {
@@ -205,7 +227,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     <img
                         className={cx('avatar-img')}
                         src={conversation?.imageLinkOfConver ? conversation?.imageLinkOfConver : images.noImg}
-                        alt="avatar"
+                        alt="avatar-user"
                     />
 
                     {/* <ModelInfoAccount seenInfoInGroup user={userCurrent} /> */}
@@ -246,7 +268,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                             placement="bottom-start"
                             offset={[4, 4]}
                         >
-                            <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                            <Tippy className={cx('tool-tip')} content="Lựa chọn" delay={[200, 0]}>
                                 <div>
                                     <MoreHoriz className={cx('item')} />
                                 </div>
@@ -282,7 +304,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                     placement="bottom-start"
                                     offset={[4, 4]}
                                 >
-                                    <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                                    <Tippy className={cx('tool-tip')} content="Lựa chọn" delay={[200, 0]}>
                                         <div>
                                             <MoreHoriz className={cx('item')} />
                                         </div>
@@ -306,7 +328,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                             placement="bottom-start"
                                             offset={[4, 4]}
                                         >
-                                            <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
+                                            <Tippy className={cx('tool-tip')} content="Lựa chọn" delay={[200, 0]}>
                                                 <div>
                                                     <MoreHoriz className={cx('item')} />
                                                 </div>
@@ -319,51 +341,86 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     )}
                 </div>
             ) : (
-                <div className={cx('list-conversation')} onClick={tam}>
-                    <img
-                        className={cx('avatar-img')}
-                        src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
-                        alt="avatar"
-                    />
+                <div className={cx('container-conversation')}>
+                    <div className={cx('list-conversation')}>
+                        {/*onClick={tam}  */}
+                        <img
+                            className={cx('avatar-img')}
+                            src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
+                            alt="avatar"
+                        />
 
-                    <div className={cx('content')}>
-                        <h4 className={cx('username')}>{conversation?.name} </h4>
+                        <div className={cx('content')}>
+                            <h4 className={cx('username')}>{conversation?.name} </h4>
+                            {isPhoneBook ? null : (
+                                <p className={cx('message')}>{conversation?.content || conversation?.lastMessage}</p>
+                            )}
+                        </div>
+
+                        {isPhoneBook && !Group ? (
+                            <TippyHeadless
+                                render={(attrs) => (
+                                    <div tabIndex="-1" {...attrs}>
+                                        <Popper className={cx('own-menu-list-children')}>
+                                            <p className={cx('deleteFriend')}>
+                                                <ModelInfoAccount yourProfile friend user={conversation} />
+                                            </p>
+                                            <p className={cx('deleteFriend')} onClick={handleCancel}>
+                                                <button className={cx('item-btn')}> Xóa Bạn</button>
+                                            </p>
+                                        </Popper>
+                                    </div>
+                                )}
+                                interactive
+                                trigger="click"
+                                placement="bottom-start"
+                                offset={[4, 4]}
+                            >
+                                <Tippy className={cx('tool-tip')} content="Lựa chọn" delay={[200, 0]}>
+                                    <div>
+                                        <MoreHoriz className={cx('item')} />
+                                    </div>
+                                </Tippy>
+                            </TippyHeadless>
+                        ) : null}
+
                         {isPhoneBook ? null : (
-                            <p className={cx('message')}>{conversation?.content || conversation?.lastMessage}</p>
+                            <div className={cx('notification')}>
+                                <span className={cx('time')}>{format(conversation?.time)}</span>
+                                {/* {conversationID?.id === conversation?.id ? (
+                                    <>
+                                        {notifications.length > 0 && (
+                                            <span className={cx('badge')}>{notifications.length}</span>
+                                        )}
+                                    </>
+                                ) : null} */}
+                            </div>
                         )}
                     </div>
 
-                    {isPhoneBook && !Group ? (
-                        <TippyHeadless
-                            render={(attrs) => (
-                                <div tabIndex="-1" {...attrs}>
-                                    <Popper className={cx('own-menu-list-children')}>
-                                        <p className={cx('deleteFriend')}>
-                                            <ModelInfoAccount yourProfile friend user={conversation} />
-                                        </p>
-                                        <p className={cx('deleteFriend')} onClick={handleCancel}>
-                                            <button className={cx('item-btn')}> Xóa Bạn</button>
-                                        </p>
-                                    </Popper>
-                                </div>
-                            )}
-                            interactive
-                            trigger="click"
-                            placement="bottom-start"
-                            offset={[4, 4]}
-                        >
-                            <Tippy className={cx('tool-tip')} content="" delay={[200, 0]}>
-                                <div>
-                                    <MoreHoriz className={cx('item')} />
-                                </div>
-                            </Tippy>
-                        </TippyHeadless>
-                    ) : null}
                     {isPhoneBook ? null : (
-                        <div className={cx('notification')}>
-                            <span className={cx('time')}>{format(conversation?.time)}</span>
-                            {/* <span className={cx('badge')}>5+</span> */}
-                        </div>
+                        <button className={cx('option-remove-conversation')}>
+                            <TippyHeadless
+                                render={(attrs) => (
+                                    <div tabIndex="-1" {...attrs} className={cx('tippy-remove-conversation')}>
+                                        <Popper className={cx('popper-remove-conversation')}>
+                                            <button
+                                                className={cx('btn-remove')}
+                                                onClick={handleDeleteConversationSingle}
+                                            >
+                                                Xóa cuộc hội thoại
+                                            </button>
+                                        </Popper>
+                                    </div>
+                                )}
+                                delay={[0, 100]}
+                                placement="bottom-end"
+                                // offset={[0, 0]}
+                                interactive
+                            >
+                                <FontAwesomeIcon className={cx('option-del')} icon={faEllipsis} />
+                            </TippyHeadless>
+                        </button>
                     )}
                 </div>
             )}

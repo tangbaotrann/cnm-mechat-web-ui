@@ -12,23 +12,24 @@ import {
     faFaceSmile,
     faFile,
     faImage,
+    faLock,
     faMicrophone,
     faMicrophoneSlash,
     faPaperclip,
     faPhone,
     faThumbsUp,
-    faUserGroup,
     faVideo,
     faVideoSlash,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { Button, CircularProgress } from '@material-ui/core';
 import EmojiPicker, { SkinTones } from 'emoji-picker-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Peer from 'simple-peer';
 
 // me
 import styles from './Messenger.module.scss';
-import images from '~/assets/images';
 import Message from '~/components/Message';
 import Popper from '~/components/Popper';
 import OnlineStatus from '~/components/OnlineStatus';
@@ -38,11 +39,19 @@ import messagesSlice, {
     fetchApiMessagesByConversationId,
 } from '~/redux/features/messages/messagesSlice';
 import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
-import listGroupUsers from '~/redux/features/Group/GroupSlice';
-import { getMessageFromUserInGroupFromSelector, userLogin } from '~/redux/selector';
+import {
+    userLogin,
+    userInfoSelector,
+    conversationSlice,
+    isLoadingMessenger,
+    getMessageFromUserInGroupFromSelector,
+    findUserOtherInConversationSingle,
+} from '~/redux/selector';
+import listGroupUsers, { blockMember, cancelBlockMember } from '~/redux/features/Group/GroupSlice';
 import ModelWrapper from '~/components/ModelWrapper';
 import Webcam from 'react-webcam';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
+import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
@@ -57,25 +66,39 @@ function Messenger() {
 
     const dispatch = useDispatch();
 
-    const user = useSelector((state) => state.user.data);
-    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
-    // const listMessage = useSelector((state) => state.messages.data); //sai
-    const listMessage = useSelector(getMessageFromUserInGroupFromSelector); //sai
-    const isLoading = useSelector((state) => state.messages.isLoading);
-    const preLoading = useSelector((state) => state.messages.preLoading);
+    const infoUser = useSelector(userLogin);
+    const userBlock = useSelector(findUserOtherInConversationSingle);
+    const listMessage = useSelector(getMessageFromUserInGroupFromSelector);
+    const user = useSelector(userInfoSelector);
+    const conversation = useSelector(conversationSlice);
+    const isLoading = useSelector(isLoadingMessenger);
 
     const scrollMessenger = useRef();
-
-    // console.log('[LIST MESSAGES] - ', listMessage);
-    // console.log('[USER] - ', user);
-    // console.log('[CONVERSATION] - ', conversation);
-    // console.log('[CONVERSATION.MEMBERS] - ', conversation.members);
 
     // fetch message from conversationId
     useEffect(() => {
         dispatch(fetchApiMessagesByConversationId(conversation.id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversation.id]);
+
+    // realtime with notification message
+    useEffect(() => {
+        socket.on('get_notification_message', (message) => {
+            if (message) {
+                dispatch(messagesSlice.actions.arrivalNotificationsMessageFromSocket(message));
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // realtime with block message user in group
+    useEffect(() => {
+        socket.on('blocked_message_user', (arrBlocked) => {
+            // console.log('[blocked_message_user]', arrBlocked);
+            dispatch(listGroupUsers.actions.arrivalBlockMessageUserInGroupFromSocket(arrBlocked));
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // user join room
     useEffect(() => {
@@ -118,7 +141,6 @@ function Messenger() {
 
     // console.log(name);
 
-    const infoUser = useSelector(userLogin);
     const infoConversation =
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
 
@@ -129,10 +151,15 @@ function Messenger() {
         socket.on('me', (id) => {
             console.log(id);
         });
-        socket.on('endCall', () => {
-            connectionRef.current.destroy();
+    }, []);
+
+    useEffect(() => {
+        socket.on('endCallToClient', () => {
+            console.log('ok----------------', connectionRef);
             setOpenCall(false);
             setCallEnded(true);
+            setChangeIconVideo(false);
+            connectionRef.current.destroy();
         });
     }, []);
 
@@ -170,6 +197,7 @@ function Messenger() {
     };
     const handleModelCloseOpenCallVideo = () => {
         connectionRef.current.destroy();
+
         socket.emit('endCall', { id: infoConversation });
         setOpenCall(false);
         setCallEnded(true);
@@ -218,7 +246,6 @@ function Messenger() {
         });
 
         setNewImageMessage(listImg);
-
         setBtnClosePreview(!btnClosePreview);
     };
 
@@ -229,7 +256,6 @@ function Messenger() {
         file.previewFile = URL.createObjectURL(file);
 
         setNewFileMessage(file);
-        // dispatch(messagesSlice.actions.changeFileMessage(file));
         setBtnClosePreview(!btnClosePreview);
     };
 
@@ -262,6 +288,12 @@ function Messenger() {
     const handleSendMessage = async (e) => {
         e.preventDefault();
 
+        // check size file
+        if (newFileMessage?.size / 1024 / 1024 > 5 || newImageMessage?.size / 1024 / 1024 > 5) {
+            toast.error('Xin lỗi, file của bạn vượt quá 5 MB. Vui lòng chọn file khác để gửi!');
+            return;
+        }
+
         dispatch(
             fetchApiSendMessage({
                 conversationID: conversation.id,
@@ -289,6 +321,47 @@ function Messenger() {
     useEffect(() => {
         conversation && listMessage && scrollMessenger.current?.scrollIntoView({ behavior: 'smooth' });
     }, [conversation, listMessage]);
+
+    // handle blocked message user
+    const handleBlockedSingle = () => {
+        let choice = window.confirm(`Bạn có chắc chắn muốn chặn tin nhắn của ${conversation.name} không?`);
+
+        if (choice === true) {
+            const data = {
+                conversationId: conversation.id,
+                userId: userBlock.find((block) => block !== user._id), // userBlock
+            };
+
+            dispatch(blockMember(data));
+
+            if (blockMember()) {
+                toast.success(`Bạn đã chặn tin nhắn với ${conversation.name}.`);
+            }
+        } else {
+            toast.info('Bạn đã hủy chặn tin nhắn.');
+        }
+    };
+
+    // handle un-blocked message user
+    const handleUnBlockedSingle = () => {
+        let choice = window.confirm(`Bạn có chắc chắn muốn bỏ chặn tin nhắn của ${conversation.name} không?`);
+
+        if (choice === true) {
+            const data = {
+                conversationId: conversation.id,
+                userId: userBlock.find((block) => block !== user._id),
+            };
+
+            dispatch(cancelBlockMember(data));
+
+            if (cancelBlockMember()) {
+                toast.success(`Bạn đã bỏ chặn tin nhắn với ${conversation.name}.`);
+            }
+        } else {
+            toast.info(`Bạn không muốn bỏ chặn tin nhắn với ${conversation.name}.`);
+        }
+    };
+
     return (
         <div className={cx('messenger')}>
             <div className={cx('messenger-header')}>
@@ -302,11 +375,27 @@ function Messenger() {
                             <FontAwesomeIcon className={cx('icon')} icon={faVideo} />
                         </button>
                     </Tippy>
-                    <Tippy className={cx('tool-tip')} content="Thêm bạn vào trò chuyện" delay={[200, 0]}>
-                        <button className={cx('btn-click-icon')}>
-                            <FontAwesomeIcon className={cx('icon')} icon={faUserGroup} />
-                        </button>
-                    </Tippy>
+
+                    {/* block single */}
+                    {conversation.isGroup ? null : (
+                        <>
+                            {conversation?.blockBy?.includes(userBlock.find((block) => block !== user._id)) ? (
+                                <button className={cx('un-blocked-single')} onClick={handleUnBlockedSingle}>
+                                    Bỏ chặn
+                                </button>
+                            ) : (
+                                <Tippy
+                                    className={cx('tool-tip')}
+                                    content={`Chặn tin nhắn của ${conversation.name}`}
+                                    delay={[200, 0]}
+                                >
+                                    <button className={cx('blocked-single')} onClick={handleBlockedSingle}>
+                                        <FontAwesomeIcon icon={faLock} />
+                                    </button>
+                                </Tippy>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
             {/* Call video */}
@@ -329,7 +418,7 @@ function Messenger() {
                                 <>
                                     <div className={cx('video')}>
                                         {stream && (
-                                            <video
+                                            <Webcam
                                                 className={cx('video-webcam-2')}
                                                 playsInline
                                                 muted
@@ -338,7 +427,7 @@ function Messenger() {
                                             />
                                         )}
                                         {stream && (
-                                            <video
+                                            <Webcam
                                                 className={cx('video-webcam-2')}
                                                 playsInline
                                                 muted
@@ -437,7 +526,6 @@ function Messenger() {
 
             {/* onScroll={handleLoadingMessagesLast} */}
             <div className={cx('messenger-body')}>
-                {preLoading && <img className={cx('prev-loading')} src={images.preLoadingMessage} alt="prev-loading" />}
                 {/* Messages */}
                 {isLoading ? (
                     <CircularProgress className={cx('loading-messages')} />
@@ -445,10 +533,10 @@ function Messenger() {
                     <>
                         {listMessage.map((message) => {
                             return (
-                                <div key={message._id} ref={scrollMessenger}>
+                                <div key={message?._id} ref={scrollMessenger}>
                                     <Message
                                         message={message}
-                                        own={message.senderID === user._id}
+                                        own={message?.senderID === user?._id}
                                         conversation={conversation}
                                         // user={user}
                                     />
@@ -459,8 +547,8 @@ function Messenger() {
                 )}
             </div>
 
-            {/* Message */}
-            {conversation.blockBy.includes(infoUser._id) ? (
+            {/* Message conversation */}
+            {conversation?.blockBy?.includes(infoUser._id) ? (
                 <div className={cx('Block')}>
                     <h2>Bạn đã bị chặn nhắn tin...</h2>
                 </div>
@@ -596,7 +684,11 @@ function Messenger() {
                                     </button>
                                 </Tippy>
                             )}
+
+                            {/* Show toast status */}
+                            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
                         </div>
+
                         {/* Preview upload Image and Video */}
                         <div className={cx('preview-upload')}>
                             {btnClosePreview && (
@@ -604,10 +696,6 @@ function Messenger() {
                                     <FontAwesomeIcon icon={faClose} className={cx('close-icon')} />
                                 </button>
                             )}
-
-                            {/* {newImageMessage[0]?.name.split('.')[newImageMessage[0]?.name.split('.').length - 1] === 'mp4' && (
-                    <video className={cx('image-upload')} src={newImageMessage[0].preview} alt="video" controls />
-                )} */}
 
                             {newImageMessage.length > 0 ? (
                                 <div>

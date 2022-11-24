@@ -5,14 +5,11 @@ import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 // me
 import styles from './ItemStored.module.scss';
-import images from '~/assets/images';
-import { useSelector } from 'react-redux';
 import FileMessage from '../FileMessage';
 
 const cx = classNames.bind(styles);
 
 function ItemStored({ message, isLink }) {
-    // const listMessage = useSelector((state) => state.messages.data);
     return (
         <div className={cx('list-item-stored')}>
             <div className={cx('header')}>

@@ -1,12 +1,16 @@
-import styles from './FriendRequestList.module.scss';
+// lib
 import classNames from 'classnames/bind';
-import images from '~/assets/images';
-import { useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+// me
+import styles from './FriendRequestList.module.scss';
+import images from '~/assets/images';
 import { useDispatch, useSelector } from 'react-redux';
-import { accept } from '~/redux/features/friend/friendAcceptSlice';
 import { userLogin } from '~/redux/selector';
-import { callBack } from '~/redux/features/friend/meFriendRequestSlice';
+import { fetchApiAcceptRequestFriend, fetchApiExitRequestFriend } from '~/redux/features/friend/friendRequestSlice';
+import { fetchApiRecallRequestAddFriend } from '~/redux/features/friend/friendRequestSlice';
+
 const cx = classNames.bind(styles);
 
 function FriendRequestList({ user, isPhoneBook }) {
@@ -14,7 +18,7 @@ function FriendRequestList({ user, isPhoneBook }) {
     const infoUser = useSelector(userLogin);
 
     // realtime socket
-    useEffect(() => {}, []);
+    // useEffect(() => {}, []);
 
     const handleAccept = () => {
         const data = {
@@ -23,12 +27,13 @@ function FriendRequestList({ user, isPhoneBook }) {
             receiverID: infoUser._id,
             idRequest: user.idFriendRequest,
         };
-        dispatch(accept(data));
-        if (accept()) {
-            alert('chấp nhận kết bạn thành công');
-            //window.location.reload(true);
+
+        dispatch(fetchApiAcceptRequestFriend(data));
+
+        if (fetchApiAcceptRequestFriend()) {
+            toast.success('Chấp nhận kết bạn thành công.');
         } else {
-            alert('Số điện thoại chưa đăng ký tài khoảng');
+            toast.error('Số điện thoại chưa đăng ký tài khoản!');
         }
     };
 
@@ -39,12 +44,13 @@ function FriendRequestList({ user, isPhoneBook }) {
             receiverID: infoUser._id,
             idRequest: user.idFriendRequest,
         };
-        dispatch(accept(data));
-        if (accept()) {
-            alert('Từ chối kết bạn thành công');
-            window.location.reload(true);
+
+        dispatch(fetchApiExitRequestFriend(data));
+
+        if (fetchApiExitRequestFriend()) {
+            toast.success('Từ chối kết bạn thành công.');
         } else {
-            alert('Từ chối kết bạn thất bại');
+            toast.error('Từ chối kết bạn thất bại');
         }
     };
 
@@ -54,8 +60,9 @@ function FriendRequestList({ user, isPhoneBook }) {
             senderID: infoUser._id,
             idRequest: user.idFriendRequest,
         };
-        dispatch(callBack(data));
-        // window.location.reload(true);
+
+        dispatch(fetchApiRecallRequestAddFriend(data));
+        toast.success('Bạn đã thu hồi lời mời kết bạn.');
     };
     return (
         <div className={cx('content')}>
@@ -79,6 +86,9 @@ function FriendRequestList({ user, isPhoneBook }) {
                     </div>
                 )}
             </div>
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" closeOnClick={false} />
         </div>
     );
 }

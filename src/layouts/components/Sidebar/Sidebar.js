@@ -14,18 +14,18 @@ import {
     faToolbox,
     faCloud,
 } from '@fortawesome/free-solid-svg-icons';
-// import { UserIcon } from 'outline-icons';
 
 // me
 import styles from './Sidebar.module.scss';
 import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
 import { MenuSetting } from './Menu';
+import { userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
-    const user = useSelector((state) => state.user.data);
+    const user = useSelector(userInfoSelector);
 
     return (
         <div className={cx('wrapper')}>

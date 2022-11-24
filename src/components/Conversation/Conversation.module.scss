@@ -1,13 +1,80 @@
+.container-conversation {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    &:hover {
+        .time, .badge {
+            display: none;
+        }
+
+        .option-remove-conversation {
+            display: block;
+            z-index: 9999;
+        }
+    }
+
+}
+
 // List conversation
 .list-conversation {
     display: flex;
     align-items: center;
+    width: 100%;
     padding: 10px;
+
     &:hover {
         cursor: pointer;
         background-color: var(--grey-400);
         transition: background-color ease-in-out 200ms;
+
+        .time, .badge {
+            display: none;
+        }
+
+        .option-remove-conversation {
+            display: block;
+            z-index: 9999;
+        }
     }
+}
+
+.tippy-remove-conversation {
+    z-index: 9999;
+}
+
+.popper-remove-conversation {
+    width: 140px;
+    z-index: 9999;
+}
+
+.btn-remove {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    z-index: 9999;
+
+    &:hover {
+        opacity: 0.6;
+        cursor: pointer;
+    }
+}
+
+.option-remove-conversation {
+    position: absolute;
+    margin: auto;
+    right: 0;  
+    border: none;
+    outline: none;
+    display: none;
+    background-color: transparent;
+    z-index: 9999;
+}
+
+.option-del {
+    margin-right: 6px;
+    z-index: 9999;
 }
 
 // Avatar
@@ -99,8 +166,8 @@
 .icon-camera {
     position: absolute;
     margin: auto;
-    font-size: 1.8rem;
-    color: yellow;
+    font-size: 1.5rem;
+    color: var(--primary);
     bottom: -22px;
     right: 2px;
 

@@ -1,4 +1,4 @@
-import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
@@ -8,8 +8,8 @@ import filterSlice from '~/redux/features/filter/filterSlice';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { addMember, createGroup } from '~/redux/features/Group/GroupSlice';
 import {
+    conversationSlice,
     filterFriendGroup,
-    filterUserGroup,
     listFriend,
     searchFilterFriend,
     userLogin,
@@ -17,21 +17,24 @@ import {
 } from '~/redux/selector';
 import useDebounce from '../hooks/useDebounce';
 import styles from './AddGroup.module.scss';
+
 const cx = classNames.bind(styles);
+
 function AddGroup({ addMemerber }) {
     const [searchPhone, setSearchPhone] = useState('');
     const [nameGroup, setNameGroup] = useState('');
-    const [searchResultShow, setSearchResultShow] = useState(false);
     const [searchResult, setSearchResult] = useState([]);
-    const debouncedValue = useDebounce(searchPhone, 500);
-    const listFriends = useSelector(listFriend);
+    const [searchResultShow, setSearchResultShow] = useState(false);
     const [checked, setChecked] = useState([]);
-    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
+    const [error, setError] = useState(searchPhone);
+
+    const debouncedValue = useDebounce(searchPhone, 500);
+
+    const listFriends = useSelector(listFriend);
+    const conversation = useSelector(conversationSlice);
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
-    const filterUserGroups = useSelector(filterUserGroup);
-    //bat loi vali
-    const [error, setError] = useState(searchPhone);
+
     const handleBtnClearText = (e) => {
         setNameGroup('');
     };
@@ -41,6 +44,7 @@ function AddGroup({ addMemerber }) {
 
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchPhone));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue]);
     const userSearching = useSelector(usersRemainingSelector);
     const filterFriendGroups = useSelector(filterFriendGroup);

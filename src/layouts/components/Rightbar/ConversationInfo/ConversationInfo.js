@@ -1,7 +1,9 @@
 // libs
 import classNames from 'classnames/bind';
+import { ArrowBackIos } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+    faCamera,
     faCaretDown,
     faClock,
     faNoteSticky,
@@ -12,46 +14,49 @@ import {
     faUserPlus,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 // me
 import styles from './ConversationInfo.module.scss';
 import images from '~/assets/images';
 import ItemStored from '~/components/ItemStored';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-
-import { ArrowBackIos } from '@material-ui/icons';
 import FileMessage from '~/components/FileMessage';
-import { filterUserGroup, userLogin } from '~/redux/selector';
 import useDebounce from '~/components/hooks/useDebounce';
 import ModelInfoAccount from '~/components/ModelWrapper/ModelInfoAccount';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
 import ModelWrapper from '~/components/ModelWrapper';
 import Conversation from '~/components/Conversation';
 import AddGroup from '~/components/AddGroup';
-import { changeNameGroups, outGroup } from '~/redux/features/Group/GroupSlice';
+import { changeNameGroups, fetchApiUpdateAvatarOfGroup, outGroup } from '~/redux/features/Group/GroupSlice';
+import { filterUserGroup, userLogin, conversationSlice, listMessage } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function ConversationInfo() {
-    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
-    const listMessage = useSelector((state) => state.messages.data);
+    const infoUser = useSelector(userLogin);
+    const filterUser = useSelector(filterUserGroup);
+    const userCurrent = useSelector((state) => state.userCurrents.data); // hỏi Nhớ (trùng hàm).
+    const conversation = useSelector(conversationSlice);
+    const listMessages = useSelector(listMessage);
+
+    const dispatch = useDispatch();
+
     const [show, setShow] = useState(true);
     const [showAddMembers, setShowAddMembers] = useState(true);
     const [showFile, setShowFile] = useState(true);
-    const infoUser = useSelector(userLogin);
-    const filterUser = useSelector(filterUserGroup);
-    const userCurrent = useSelector((state) => state.userCurrents.data);
     const [showPreview, setShowPreview] = useState(false);
     const [openAddGroup, setOpenAddGroup] = useState(false);
     const [modelChangeName, setModelChangeName] = useState(false);
-
     const [showImg, setShowImg] = useState();
     const [changeNameGroup, setChangeNameGroup] = useState(conversation?.name);
+    const [avatarGroup, setAvatarGroup] = useState(null);
+
     const infoConversation =
         infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
-    const dispatch = useDispatch();
+
+    // console.log('conversation - avt', conversation);
 
     useEffect(() => {
         dispatch(
@@ -59,12 +64,14 @@ function ConversationInfo() {
                 userID: infoConversation,
             }),
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue]);
 
     const handleOpen = () => {
         setShow(false);
         setShowFile(true);
     };
+
     const handleClose = () => {
         setShow(true);
         setShowAddMembers(true);
@@ -85,28 +92,57 @@ function ConversationInfo() {
     const handleHidePreviewImageAndVideo = () => {
         setShowPreview(false);
     };
+
     const handleAddMemberGroup = () => {
         setShow(false);
         setShowAddMembers(false);
         // console.log(showAddMembers);
     };
+
     //them thanh vien
     const handleModelOpenAddGroup = () => {
         setOpenAddGroup(true);
     };
+
     const handleModelCloseOpenAddGroup = () => {
         setOpenAddGroup(false);
     };
+
     // mo dong model doi ten nhom
     const openModelChangeName = () => {
         setModelChangeName(true);
     };
+
     const closerModelChangeName = () => {
         setModelChangeName(false);
     };
+
     const handleChangeNameGroup = (e) => {
         setChangeNameGroup(e.target.value);
     };
+
+    // handle change avatar
+    const handleChangeAvatar = (e) => {
+        const file = e.target.files[0];
+
+        file.previews = URL.createObjectURL(file);
+
+        setAvatarGroup(file);
+    };
+
+    // handle update avatar
+    const handleUpdateAvatarGroup = () => {
+        dispatch(
+            fetchApiUpdateAvatarOfGroup({
+                userId: infoUser._id,
+                imageLink: avatarGroup,
+                conversationId: conversation.id,
+            }),
+        );
+
+        setAvatarGroup(null);
+    };
+
     const submitChangeNameGroup = () => {
         const dataChangeGroup = {
             userId: infoUser._id,
@@ -115,8 +151,8 @@ function ConversationInfo() {
         };
         dispatch(changeNameGroups(dataChangeGroup));
         if (changeNameGroups()) {
-            alert('Đổi tên nhóm thành cônng');
-            window.location.reload(true);
+            alert('Đổi tên nhóm thành công');
+            // window.location.reload(true);
         }
     };
 
@@ -146,17 +182,38 @@ function ConversationInfo() {
                         <h2 className={cx('title-name')}>Thông tin hội thoại</h2>
                         <div className={cx('separator')}></div>
                         <div className={cx('info')}>
+                            {/* button update avatar group */}
+                            {avatarGroup && (
+                                <button className={cx('btn-update-avatar-group')} onClick={handleUpdateAvatarGroup}>
+                                    Cập nhật
+                                </button>
+                            )}
+
                             <div className={cx('info-avatar')}>
                                 {conversation.createdBy !== null ? (
-                                    <img
-                                        className={cx('avatar')}
-                                        src={
-                                            conversation?.imageLinkOfConver
-                                                ? conversation.imageLinkOfConver
-                                                : images.noImg
-                                        }
-                                        alt="avatar"
-                                    />
+                                    <>
+                                        <img
+                                            className={cx('avatar')}
+                                            src={
+                                                avatarGroup?.previews
+                                                    ? avatarGroup?.previews
+                                                    : conversation?.imageLinkOfConver
+                                            }
+                                            alt="avatar"
+                                        />
+
+                                        {/* Option change avatar update */}
+                                        <label htmlFor="file-info-group" className={cx('option-avatar')}>
+                                            <FontAwesomeIcon className={cx('icon-camera')} icon={faCamera} />
+                                            <input
+                                                className={cx('hide')}
+                                                type="file"
+                                                id="file-info-group"
+                                                accept=".png, .jpg, .jpeg"
+                                                onChange={handleChangeAvatar}
+                                            />
+                                        </label>
+                                    </>
                                 ) : (
                                     <div className={cx('avatar')}>
                                         <ModelInfoAccount ConversationInfo user={userCurrent} />
@@ -270,7 +327,7 @@ function ConversationInfo() {
                             <div className={cx('body')}>
                                 {/* render image (map) after */}
                                 <div className={cx('body-list-image')}>
-                                    {listMessage.map((message) => {
+                                    {listMessages.map((message) => {
                                         return (
                                             <div key={message._id}>
                                                 {message.imageLink && message.imageLink.length > 0 ? (
@@ -364,7 +421,7 @@ function ConversationInfo() {
                                 {/* render image (map) after */}
                                 <div className={cx('body-list-item-stored')}>
                                     <div className={cx('right-container')}>
-                                        {listMessage.map((message) => {
+                                        {listMessages.map((message) => {
                                             return (
                                                 <div key={message._id}>
                                                     {message.fileLink ? (
@@ -448,7 +505,7 @@ function ConversationInfo() {
                                         <div className={cx('body-show')}>
                                             {/* render image (map) after */}
                                             <div className={cx('body-list-image-show')}>
-                                                {listMessage.map((message) => {
+                                                {listMessages.map((message) => {
                                                     return (
                                                         <div key={message._id}>
                                                             {message.imageLink && message.imageLink.length > 0 ? (
@@ -564,7 +621,7 @@ function ConversationInfo() {
                                         {/* render image (map) after */}
                                         <div className={cx('body-list-item-stored')}>
                                             <div className={cx('right-container')}>
-                                                {listMessage.map((message) => {
+                                                {listMessages.map((message) => {
                                                     return (
                                                         <div key={message._id}>
                                                             {message.fileLink ? (

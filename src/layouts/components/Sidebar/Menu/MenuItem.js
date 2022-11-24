@@ -25,8 +25,10 @@ const cx = classNames.bind(styles);
 
 function MenuItem({ user }) {
     const [openIntroVersion, setOpenIntroVersion] = useState(false);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     // Handle open/ close model intro version
     const handleModelOpenIntroVersion = () => {
         setOpenIntroVersion(true);

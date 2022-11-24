@@ -4,10 +4,19 @@ import TippyHeadless from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import moment from 'moment';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
-import { faCopy, faEllipsis, faQuoteRight, faRepeat, faShare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCopy,
+    faEllipsis,
+    faQuoteRight,
+    faRepeat,
+    faShare,
+    faTrash,
+    faFlag,
+} from '@fortawesome/free-solid-svg-icons';
 
 // me
 import styles from './Message.module.scss';
@@ -15,25 +24,28 @@ import images from '~/assets/images';
 import Popper from '../Popper';
 import MessageItem from './MessageItem';
 import { fetchApiDeleteMessage, fetchApiRecallMessage } from '~/redux/features/messages/messagesSlice';
+import ModelWrapper from '../ModelWrapper';
+import MoveMessage from './MoveMessage';
+import Report from '../Report';
 
 const cx = classNames.bind(styles);
 
-function Message({ message, own, conversation, user }) {
+function Message({ message, own, conversation }) {
+    const [showConversations, setShowConversation] = useState(false);
+    const [openReport, setOpenReport] = useState(false);
+
     const dispatch = useDispatch();
 
-    // console.log('member - 29 -', member);
-    // console.log('[USER - 25] - ', user);
-    console.log('[message] - 25 -', message);
-    // console.log('[conversation] - 26 ', conversation);
-    // console.log('memberFriend._id === message.senderID', memberFriend._id);
-    // console.log('user', user._id, memberFriend._id);
+    //console.log('[MESSAGE - ACTION] - ', message?.action);
+    //console.log('[CONVERSATION] - ', conversation);
+    // console.log('[MESSAGE - ACTION] - ', message);
 
     // handle delete message
     const handleDeleteMessage = async () => {
         dispatch(
             fetchApiDeleteMessage({
                 messageId: message._id,
-                userId: user._id,
+                userId: message.user._id, // thêm message
             }),
         );
     };
@@ -43,9 +55,23 @@ function Message({ message, own, conversation, user }) {
         dispatch(
             fetchApiRecallMessage({
                 messageId: message._id,
-                conversationID: conversation.id,
+                conversationID: conversation.id, // conversation.id
             }),
         );
+    };
+
+    // show model conversation
+    const handleShowModelConversation = () => {
+        setShowConversation(true);
+    };
+
+    // handle report clicked
+    const handleReportClick = () => {
+        setOpenReport(true);
+    };
+
+    const handleModelCloseReport = () => {
+        setOpenReport(false);
     };
 
     return (
@@ -59,20 +85,46 @@ function Message({ message, own, conversation, user }) {
                                 <div tabIndex="-1" {...attrs}>
                                     <Popper className={cx('own-menu-list')}>
                                         <div className={cx('options')}>
-                                            <Tippy className={cx('tool-tip')} content="Trả lời" delay={[200, 0]}>
-                                                <button className={cx('option-btn')}>
-                                                    <FontAwesomeIcon
-                                                        className={cx('option-icon')}
-                                                        icon={faQuoteRight}
-                                                    />
+                                            <Tippy
+                                                className={cx('tool-tip')}
+                                                content="Báo cáo tin nhắn"
+                                                delay={[200, 0]}
+                                            >
+                                                <button className={cx('option-btn')} onClick={handleReportClick}>
+                                                    <FontAwesomeIcon className={cx('option-icon')} icon={faFlag} />
                                                 </button>
                                             </Tippy>
 
+                                            {/* Show report */}
+                                            <ModelWrapper
+                                                className={cx('model-report')}
+                                                open={openReport}
+                                                onClose={handleModelCloseReport}
+                                            >
+                                                <>
+                                                    <Report message={message} />
+                                                </>
+                                            </ModelWrapper>
+
                                             <Tippy className={cx('tool-tip')} content="Chia sẻ" delay={[200, 0]}>
-                                                <button className={cx('option-btn')}>
+                                                <button
+                                                    className={cx('option-btn')}
+                                                    onClick={handleShowModelConversation}
+                                                >
                                                     <FontAwesomeIcon className={cx('option-icon')} icon={faShare} />
                                                 </button>
                                             </Tippy>
+                                            {/* show model conversations */}
+                                            <ModelWrapper
+                                                className={cx('model-conversations')}
+                                                open={showConversations}
+                                                onClose={() => setShowConversation(!showConversations)}
+                                            >
+                                                <>
+                                                    <MoveMessage message={message} />
+                                                </>
+                                            </ModelWrapper>
+
                                             {/* Menu children */}
                                             <TippyHeadless
                                                 render={(attrs) => (
@@ -134,52 +186,66 @@ function Message({ message, own, conversation, user }) {
                                 </div>
                             )}
                             interactive
-                            placement="bottom-start"
-                            offset={[-74, -18]} // 10 4
+                            placement="bottom-end"
+                            offset={[-90, -18]} // -74, -18
                             delay={[200, 100]}
                             appendTo={() => document.body}
                         >
                             {/* render message (sender) */}
-                            {message.deleteBy.length === 0 && (
-                                <div className={cx('display-group-preview-image')}>
-                                    <MessageItem message={message} own={own} />
-                                </div>
-                            )}
-                        </TippyHeadless>
-                        {message.deleteBy.length === 0 && (
-                            <>
-                                {conversation.isGroup === true ? (
-                                    <img className={cx('message-top-img')} src={message.user.avatarLink} alt="avatar" />
+                            <div className={cx('display-container')}>
+                                {message?.action ? (
+                                    <div className={cx('display-action')}>
+                                        <p className={cx('text-action')}>
+                                            {message?.action} lúc:
+                                            {moment(message.createdAt).format('h:mm a - DD/MM/YYYY')}
+                                        </p>
+                                    </div>
                                 ) : (
-                                    <img
-                                        className={cx('message-top-img')}
-                                        src={user?.avatarLink ? user?.avatarLink : images.noImg}
-                                        alt="avatar"
-                                    />
+                                    <div className={cx('display-action-none')}>
+                                        {message?.deleteBy.length === 0 && (
+                                            <div className={cx('display-group-preview-image')}>
+                                                <MessageItem message={message} own={own} />
+                                            </div>
+                                        )}
+                                        {message?.deleteBy.length === 0 && (
+                                            <>
+                                                {conversation.isGroup === true ? (
+                                                    <img
+                                                        className={cx('message-top-img')}
+                                                        src={message.user.avatarLink}
+                                                        alt="avatar"
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        className={cx('message-top-img')}
+                                                        src={
+                                                            message.user?.avatarLink
+                                                                ? message.user?.avatarLink
+                                                                : images.noImg
+                                                        }
+                                                        alt="avatar"
+                                                    />
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
                                 )}
-                            </>
-                        )}
+                            </div>
+                        </TippyHeadless>
                     </div>
-                    {message.deleteBy.length === 0 && (
-                        <span className={cx('message-bottom')}>{moment(message.createdAt).format('h:mm a')}</span>
+                    {message?.deleteBy.length === 0 && (
+                        <>
+                            {!message?.action && (
+                                <span className={cx('message-bottom')}>
+                                    {moment(message.createdAt).format('h:mm a')}
+                                </span>
+                            )}
+                        </>
                     )}
                 </div>
             ) : (
                 <div className={cx('wrapper')}>
                     <div className={cx('message-top')}>
-                        {message.deleteBy.length === 0 && (
-                            <>
-                                {conversation.isGroup === true ? (
-                                    <img className={cx('message-top-img')} src={message.user.avatarLink} alt="avatar" />
-                                ) : (
-                                    <img
-                                        className={cx('message-top-img')}
-                                        src={conversation.imageLinkOfConver || images.noImg}
-                                        alt="avatar"
-                                    />
-                                )}
-                            </>
-                        )}
                         {/* Menu parent */}
                         <TippyHeadless
                             render={(attrs) => (
@@ -196,10 +262,24 @@ function Message({ message, own, conversation, user }) {
                                             </Tippy>
 
                                             <Tippy className={cx('tool-tip')} content="Chia sẻ" delay={[200, 0]}>
-                                                <button className={cx('option-btn')}>
+                                                <button
+                                                    className={cx('option-btn')}
+                                                    onClick={handleShowModelConversation}
+                                                >
                                                     <FontAwesomeIcon className={cx('option-icon')} icon={faShare} />
                                                 </button>
                                             </Tippy>
+                                            {/* show model conversations */}
+                                            <ModelWrapper
+                                                className={cx('model-conversations')}
+                                                open={showConversations}
+                                                onClose={() => setShowConversation(!showConversations)}
+                                            >
+                                                <>
+                                                    <MoveMessage message={message} />
+                                                </>
+                                            </ModelWrapper>
+
                                             {/* Menu children */}
                                             <TippyHeadless
                                                 render={(attrs) => (
@@ -255,21 +335,63 @@ function Message({ message, own, conversation, user }) {
                                 </div>
                             )}
                             interactive
-                            placement="bottom-end"
-                            offset={[74, -18]}
+                            placement="bottom-start"
+                            offset={[90, -20]} // 74, -18
                             delay={[200, 100]}
                             appendTo={() => document.body}
                         >
                             {/* render message (sender) */}
-                            {message.deleteBy.length === 0 && (
-                                <div className={cx('display-group-preview-image-receiver')}>
-                                    <MessageItem message={message} own={own} />
-                                </div>
-                            )}
+                            <div className={cx('display-container')}>
+                                {message?.action ? (
+                                    <div className={cx('display-action')}>
+                                        <p className={cx('text-action')}>
+                                            {message?.action} lúc:
+                                            {moment(message.createdAt).format('h:mm a - DD/MM/YYYY')}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className={cx('display-action-none-receiver')}>
+                                        {message?.deleteBy.length === 0 && (
+                                            <>
+                                                {conversation.isGroup === true ? (
+                                                    <img
+                                                        className={cx('message-top-img')}
+                                                        src={message.user.avatarLink}
+                                                        alt="avatar"
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        className={cx('message-top-img')}
+                                                        src={
+                                                            message.user?.avatarLink
+                                                                ? message.user?.avatarLink
+                                                                : images.noImg
+                                                        }
+                                                        alt="avatar"
+                                                    />
+                                                )}
+                                            </>
+                                        )}
+                                        <div>
+                                            {message?.deleteBy.length === 0 && (
+                                                <div className={cx('display-group-preview-image-receiver')}>
+                                                    <MessageItem message={message} own={own} />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </TippyHeadless>
                     </div>
-                    {message.deleteBy.length === 0 && (
-                        <span className={cx('message-bottom-left')}>{moment(message.createdAt).format('h:mm a')}</span>
+                    {message?.deleteBy.length === 0 && (
+                        <>
+                            {!message.action && (
+                                <span className={cx('message-bottom-left')}>
+                                    {moment(message.createdAt).format('h:mm a')}
+                                </span>
+                            )}
+                        </>
                     )}
                 </div>
             )}

@@ -144,3 +144,9 @@
     margin-top: 5px;
     font-family: var(--font-family);
 }
+
+.isLoading {
+    &:disabled {
+        cursor: not-allowed;
+    }
+}

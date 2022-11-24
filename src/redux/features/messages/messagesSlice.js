@@ -12,6 +12,7 @@ const messagesSlice = createSlice({
         isLoading: false,
         preLoading: false,
         clickSendMessage: null,
+        notifications: [],
     },
     reducers: {
         messageCurrent: (state, action) => {
@@ -39,6 +40,17 @@ const messagesSlice = createSlice({
 
             state.data = messages;
         },
+        arrivalNotificationsMessageFromSocket: (state, action) => {
+            const newMessage = action.payload;
+            const messageId = state.data.find((message) => message._id === newMessage._id);
+
+            if (messageId) {
+                state.notifications.push(action.payload);
+            } else {
+                console.log('Notification error!');
+                return;
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -48,11 +60,6 @@ const messagesSlice = createSlice({
             .addCase(fetchApiMessagesByConversationId.fulfilled, (state, action) => {
                 state.data = action.payload;
                 state.isLoading = false;
-
-                //const sortMessages = action.payload;
-                //console.log('SORT - ', sortMessages);
-                // const messages = sortMessages.includes((mess) => mess._id === sortMessages._id);
-                // const _sort = sortMessages.sort((a, b) => b.createdAt?.localeCompare(a.createdAt));
             })
             .addCase(fetchApiMessagesByConversationId.rejected, (state, action) => {
                 console.log('Error!');
@@ -97,6 +104,17 @@ const messagesSlice = createSlice({
             })
             .addCase(fetchApiRecallMessage.rejected, (state, action) => {
                 console.log('Error!');
+            })
+            // move message
+            .addCase(fetchApiMoveMessage.fulfilled, (state, action) => {
+                // console.log('action.payload - ', action.payload.newMessage);
+                const newMessages = action.payload.newMessage;
+                // console.log('newMessages - ', newMessages);
+                newMessages.forEach((message) => {
+                    socket.emit('send_message', {
+                        message: message,
+                    });
+                });
             });
     },
 });
@@ -148,7 +166,7 @@ export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessag
             },
         });
 
-        console.log('resFormData', resFormData.data);
+        // console.log('resFormData', resFormData.data);
 
         return resFormData.data;
     }
@@ -187,5 +205,24 @@ export const fetchApiRecallMessage = createAsyncThunk(
         }
     },
 );
+
+// move message
+export const fetchApiMoveMessage = createAsyncThunk('messages/fetchApiMoveMessage', async (data) => {
+    try {
+        console.log('[fetchApiMoveMessage - data]', data);
+        const { conversationId, messageId, userId } = data;
+        const res = await axios.post(`${process.env.REACT_APP_BASE_URL}messages/move-message/${messageId}`, {
+            conversationId: conversationId,
+            userId: userId,
+            headers: { Authorization: '***' },
+        });
+
+        console.log('res -', res.data);
+
+        return res.data;
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 export default messagesSlice;

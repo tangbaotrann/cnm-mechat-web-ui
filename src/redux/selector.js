@@ -1,15 +1,17 @@
 import { createSelector } from '@reduxjs/toolkit';
+
 export const searchTextSelector = (state) => state.filters.search;
 export const userListSelector = (state) => state.users.data;
 export const userInfoSelector = (state) => state.user.data;
-export const listFriendAccept = (state) => state.listAccept.data;
-export const conversationSlice = (state) => state.listGroupUser.conversationClick; // state.conversations.conversationClick
-export const listMeRequests = (state) => state.listMeRequest.data;
+export const isLoadingInHomePage = (state) => state.user.isLoading;
 export const listGroupUser = (state) => state.listGroupUser.data;
-export const listRequestFriend = (state) => state.friendRequests.data;
+export const conversationSlice = (state) => state.listGroupUser.conversationClick;
+export const isLoadingOutGroup = (state) => state.listGroupUser.isLoadingOutGroup;
+export const isLoadingConversation = (state) => state.listGroupUser.isLoading;
+export const listMeRequests = (state) => state.friendRequests.dataSended;
+export const listFriendAccept = (state) => state.friendRequests.data;
 export const listMessage = (state) => state.messages.data;
-
-export const userCurrent = (state) => state.userCurrents.data;
+export const isLoadingMessenger = (state) => state.messages.isLoading;
 
 // export const member = (state) => state.groupUserSlices.data;
 // console.log('11 - mem -', member);
@@ -22,7 +24,7 @@ export const userCurrent = (state) => state.userCurrents.data;
 
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users) {
-        const friends = users.filter((_user) => user.friends?.includes(_user._id));
+        const friends = users.filter((_user) => user?.friends?.includes(_user?._id));
         return friends.map((user) => ({
             _id: user._id,
             name: user.fullName,
@@ -38,6 +40,7 @@ export const listFriend = createSelector(userInfoSelector, userListSelector, (us
     }
     return null;
 });
+
 //Load data
 export const usersRemainingSelector = createSelector(
     userListSelector,
@@ -88,7 +91,6 @@ export const usersRemainingSelector = createSelector(
         return false;
     },
 );
-//
 
 //tim ban da gui loi moi ket hay chua
 export const accountExists = createSelector(userListSelector, searchTextSelector, (users, search) => {
@@ -106,6 +108,7 @@ export const accountExists = createSelector(userListSelector, searchTextSelector
     }
     return false;
 });
+
 //user login
 export const userLogin = createSelector(userInfoSelector, (user) => {
     return user;
@@ -134,6 +137,7 @@ export const searchFilterFriend = createSelector(
         return false;
     },
 );
+
 //lọc user theo member
 export const filterUserGroup = createSelector(conversationSlice, userListSelector, (c, users) => {
     const usersFilter1 = users.filter((_user) => c?.members.includes(_user._id));
@@ -151,6 +155,22 @@ export const filterUserGroup = createSelector(conversationSlice, userListSelecto
     }));
 });
 
+// find user other
+export const findUserOtherInConversationSingle = createSelector(
+    conversationSlice,
+    userListSelector,
+    (conversation, users) => {
+        const user = users.map((us) => {
+            const _u = conversation?.members.find((u) => u !== us._id);
+            // console.log('_u', _u);
+
+            return _u;
+        });
+
+        return user;
+    },
+);
+
 ///tim ban trong membergrood
 export const filterFriendGroup = createSelector(conversationSlice, listFriend, (c, lf) => {
     const listFriendFilter = lf.filter((_lf) => c?.members.includes(_lf._id));
@@ -166,6 +186,7 @@ export const filterFriendGroup = createSelector(conversationSlice, listFriend, (
         isFriend: true,
     }));
 });
+
 //tim nhom truong
 export const filterLeader = createSelector(conversationSlice, userListSelector, (c, users) => {
     const usersFilter1 = users.filter((_user) => _user._id.includes(c?.createdBy));
@@ -212,6 +233,7 @@ export const allSearch = createSelector(
     },
 );
 
+// get message of user
 export const getMessageFromUserInGroupFromSelector = createSelector(
     userInfoSelector,
     userListSelector,
@@ -223,7 +245,7 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
                 return message.deleteBy.includes(userInfo._id)
                     ? null
                     : {
-                          _id: message._id,
+                          _id: message?._id,
                           action: message.action,
                           content: message.content,
                           imageLink: message.imageLink,
@@ -232,7 +254,7 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
                           deleteBy: message.deleteBy,
                           senderID: message.senderID,
                           user: {
-                              id: user?._id,
+                              _id: user?._id,
                               name: user?.fullName,
                               avatarLink: user?.avatarLink,
                           },

@@ -14,15 +14,22 @@ import Search from '~/components/Search';
 import Conversation from '~/components/Conversation';
 import Sidebar from '~/layouts/components/Sidebar';
 import BoxChat from '~/components/BoxChat';
-import { listFriend, listFriendAccept, listGroupUser, listMeRequests, listRequestFriend } from '~/redux/selector';
 import ModelWrapper from '~/components/ModelWrapper';
 import AddFriend from '~/components/AddFriend';
 import FriendRequestList from './FriendRequest_list/FriendRequestList';
-
 import Messenger from '~/layouts/components/Rightbar/Messenger';
 import ConversationInfo from '~/layouts/components/Rightbar/ConversationInfo';
 import socket from '~/util/socket';
+import {
+    listFriend,
+    listGroupUser,
+    listMeRequests,
+    conversationSlice,
+    userInfoSelector,
+    listFriendAccept,
+} from '~/redux/selector';
 import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
+import listGroupUsers from '~/redux/features/Group/GroupSlice';
 
 const cx = classNames.bind(styles);
 
@@ -32,18 +39,14 @@ function PhoneBook() {
     const [showConversation, setShowConversation] = useState('');
 
     const listFriends = useSelector(listFriend);
-    const conversation = useSelector((state) => state.listGroupUser.conversationClick); // state.conversations.conversationClick
+    const user = useSelector(userInfoSelector);
+    const conversation = useSelector(conversationSlice);
     const listGroup = useSelector(listGroupUser);
-
-    //const listAccept = useSelector(listFriendAccept);
     const listMeRequest = useSelector(listMeRequests);
-    //listRequestFriend
-    const listRequestFriends = useSelector(listFriendAccept);
-
+    console.log('listMeRequest---', listMeRequest);
+    const listRequestFriend = useSelector(listFriendAccept);
+    console.log('listRequestFriend---', listRequestFriend);
     const dispatch = useDispatch();
-
-    const user = useSelector((state) => state.user.data);
-    console.log('user - ', user._id);
 
     // realtime socket (fetch user)
     useEffect(() => {
@@ -52,39 +55,87 @@ function PhoneBook() {
         socket.on('get_users', (users) => {
             console.log('USER - ONLINE -', users);
         });
-    }, [user._id]);
+    }, [user?._id]);
 
-    // realtime with socket
+    // realtime with socket (wait accept)
     useEffect(() => {
         socket.on('receiver_friend_request', (request) => {
-            console.log('[receiver_friend_request]', request);
-            dispatch(listFriendRequests.actions.friendRequestArrivalFromSocket(request));
+            // console.log('[receiver_friend_request]', request);
+            dispatch(listFriendRequests.actions.arrivalFriendRequestFromSocket(request));
         });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // realtime with socket (list accept)
+    useEffect(() => {
+        socket.on('me_friend', (request) => {
+            // console.log('[me_friend]', request);
+            dispatch(listFriendRequests.actions.arrivalAcceptFriendRequestFromSocket(request));
+        });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // re-call add friend
-    useEffect(() => {}, []);
+    useEffect(() => {
+        socket.on('delete_friend_request', (requestId) => {
+            // console.log('[delete_friend_request]', requestId);
+            dispatch(listFriendRequests.actions.arrivalRecallRequestAddFriendFromSocket(requestId));
+        });
 
-    //
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // realtime delete friend // arrivalDeleteConversationOutGroupFromSocket
+    // listFriendRequests.actions.arrivalDeleteFriendFromSocket(conversationDeleted)
+    useEffect(() => {
+        socket.on('remove_conversation_block_group', (conversationDeleted) => {
+            console.log('[remove_conversation_block_group]', conversationDeleted);
+            dispatch(listGroupUsers.actions.arrivalDeleteConversationOutGroupFromSocket(conversationDeleted));
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // realtime filter friend
+    // useEffect(() => {
+    //     // socket.off('send_friends');
+    //     // socket.on('send_friends', (friends) => {
+    //     //     console.log('[send_friends]', friends);
+    //     //     dispatch(listFriendRequests.actions.arrivalFilterFriendFromSocket(friends));
+    //     // });
+    //     // socket.off('send_friends');
+    //     // socket.on('receive_friends', (friends) => {
+    //     //     console.log('[receive_friends]', friends);
+    //     //     dispatch(listFriendRequests.actions.arrivalFilterFriendFromSocket(friends));
+    //     // });
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+
     const handleModelOpenInfoAccount = () => {
         setOpenInfoAccount(true);
     };
+
     const handleModelCloseInfoAccount = () => {
         setOpenInfoAccount(false);
     };
+
     const handleRequesfriend = () => {
         setShowConversation('');
         setChangeLayout(false);
     };
+
     const handleGroupChat = () => {
         setShowConversation('');
         setChangeLayout(true);
     };
+
     const tam = () => {
         console.log('60---', conversation);
         setShowConversation(conversation);
     };
+
     return (
         <div className={cx('wrapper')}>
             <Sidebar />
@@ -114,7 +165,7 @@ function PhoneBook() {
                         {listFriends?.map((user) => {
                             return (
                                 <div key={user?._id}>
-                                    <Conversation conversation={user} isPhoneBook />;
+                                    <Conversation conversation={user} isPhoneBook />
                                 </div>
                             );
                         })}
@@ -144,10 +195,10 @@ function PhoneBook() {
                             <div className={cx('list-FriendRequest')}>
                                 <div className={cx('friendRequest')}>
                                     {/* listAccept */}
-                                    {listRequestFriends?.length === 0 ? null : (
-                                        <h1>Lời mời kết bạn ({listRequestFriends?.length})</h1>
+                                    {listRequestFriend?.length === 0 ? null : (
+                                        <h1>Lời mời kết bạn ({listRequestFriend?.length})</h1>
                                     )}
-                                    {listRequestFriends?.map((user) => {
+                                    {listRequestFriend?.map((user) => {
                                         return <FriendRequestList key={user.idFriendRequest} user={user} isPhoneBook />;
                                     })}
                                 </div>
@@ -156,8 +207,14 @@ function PhoneBook() {
                                     {listMeRequest?.length === 0 ? null : (
                                         <h1>Yêu cầu kết bạn ({listMeRequest?.length})</h1>
                                     )}
-                                    {listMeRequest?.map((user) => {
-                                        return <FriendRequestList key={user.idFriendRequest} user={user} />;
+                                    {listMeRequest?.map((_user) => {
+                                        return (
+                                            <>
+                                                {_user?.receiverId === user?._id ? null : (
+                                                    <FriendRequestList key={_user.idFriendRequest} user={_user} />
+                                                )}
+                                            </>
+                                        );
                                     })}
                                 </div>
                             </div>

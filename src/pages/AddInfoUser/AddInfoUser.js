@@ -1,18 +1,22 @@
+// lib
 import classNames from 'classnames/bind';
+import { Radio } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+
 //me
 import styles from './AddInfoUser.module.scss';
 import images from '~/assets/images';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Radio } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
 import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchApiUser } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
+
 function AddInfoUser() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -61,6 +65,7 @@ function AddInfoUser() {
             setOptionSex(1);
         }
     };
+
     const handleChangeAvatar = (e) => {
         const file = e.target.files[0];
         file.previews = URL.createObjectURL(file);
@@ -70,6 +75,7 @@ function AddInfoUser() {
     const handleCancel = () => {
         navigate('/me.chat');
     };
+
     return (
         <div className={cx('body-info')}>
             <div className={cx('wrapper')}>

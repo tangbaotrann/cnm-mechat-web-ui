@@ -145,11 +145,8 @@ function MessageItem({ message, own }) {
                             )}
                         </>
                     )}
-                    {message.action ? (
-                        <p className={cx('message-top-text')}>{message.action}</p>
-                    ) : (
-                        (message.imageLink === null || message.imageLink.length === 0) &&
-                        message.fileLink === null && <p className={cx('message-top-text')}>{message.content}</p>
+                    {(message.imageLink === null || message.imageLink.length === 0) && message.fileLink === null && (
+                        <p className={cx('message-top-text')}>{message.content}</p>
                     )}
                 </>
             ) : (
@@ -271,11 +268,8 @@ function MessageItem({ message, own }) {
                             )}
                         </>
                     )}
-                    {message.action ? (
-                        <p className={cx('message-top-text')}>{message.action}</p>
-                    ) : (
-                        (message.imageLink === null || message.imageLink.length === 0) &&
-                        message.fileLink === null && <p className={cx('message-top-text')}>{message.content}</p>
+                    {(message.imageLink === null || message.imageLink.length === 0) && message.fileLink === null && (
+                        <p className={cx('message-top-text')}>{message.content}</p>
                     )}
                 </>
             )}
