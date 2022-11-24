@@ -29,9 +29,11 @@ import {
     listFriendAccept,
     addFriendRequest,
     addFriendRequestAccept,
+    loadFriends,
 } from '~/redux/selector';
 import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
+import userSlice from '~/redux/features/user/userSlice';
 
 const cx = classNames.bind(styles);
 
@@ -40,7 +42,7 @@ function PhoneBook() {
     const [changeLayout, setChangeLayout] = useState(false);
     const [showConversation, setShowConversation] = useState('');
 
-    const listFriends = useSelector(listFriend);
+    const listFriends = useSelector(listFriend); // loadFriends
     const listMeRequest = useSelector(addFriendRequest);
     const listRequestFriend = useSelector(addFriendRequestAccept);
     const user = useSelector(userInfoSelector);
@@ -60,10 +62,27 @@ function PhoneBook() {
         });
     }, [user?._id]);
 
+    // realtime update list friend user side arrival
+    useEffect(() => {
+        socket.on('receive_friends', (listFriendsUserDelete) => {
+            dispatch(userSlice.actions.arrivalDeleteFriendFromSocket(listFriendsUserDelete));
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // realtime update list friend user side sender
+    useEffect(() => {
+        socket.on('send_friends', (listFriendsSender) => {
+            dispatch(userSlice.actions.arrivalSendFriendFromSocket(listFriendsSender));
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // realtime with socket (wait accept)
     useEffect(() => {
         socket.on('receiver_friend_request', (request) => {
-            // console.log('[receiver_friend_request]', request);
             dispatch(listFriendRequests.actions.arrivalAcceptFriendRequestFromSocket(request));
         });
 
@@ -73,7 +92,6 @@ function PhoneBook() {
     // realtime with socket (list accept)
     useEffect(() => {
         socket.on('me_friend', (request) => {
-            // console.log('[me_friend]', request);
             dispatch(listFriendRequests.actions.arrivalAcceptFriendRequestFromSocket(request));
         });
 
@@ -83,32 +101,20 @@ function PhoneBook() {
     // re-call add friend
     useEffect(() => {
         socket.on('delete_friend_request', (requestId) => {
-            // console.log('[delete_friend_request]', requestId);
             dispatch(listFriendRequests.actions.arrivalRecallRequestAddFriendFromSocket(requestId));
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // realtime delete friend // arrivalDeleteConversationOutGroupFromSocket
-    // listFriendRequests.actions.arrivalDeleteFriendFromSocket(conversationDeleted)
+    // realtime delete friend
     useEffect(() => {
         socket.on('remove_conversation_block_group', (conversationDeleted) => {
-            console.log('[remove_conversation_block_group]', conversationDeleted);
             dispatch(listGroupUsers.actions.arrivalDeleteConversationOutGroupFromSocket(conversationDeleted));
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    // useEffect(() => {
-    //     socket.off('receive_friendss');
-    //     socket.on('receive_friendss', (listFriendsUserDelete) => {
-    //         console.log('[receive_friends]', listFriendsUserDelete);
-    //         dispatch(listFriendRequests.actions.arrivalDeleteFriendFromSocket(listFriendsUserDelete));
-    //     });
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
 
     // realtime exit add friend
     useEffect(() => {
@@ -119,15 +125,6 @@ function PhoneBook() {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    // realtime when accept success -> update conversation
-    // useEffect(() => {
-    //     socket.on('send_friends_give_conversation', (_conversation) => {
-    //         console.log('[send_friends_give_conversation]', _conversation);
-    //         dispatch(listFriendRequests.actions.arrivalUpdateConversationFromSocket(_conversation));
-    //     });
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
 
     const handleModelOpenInfoAccount = () => {
         setOpenInfoAccount(true);

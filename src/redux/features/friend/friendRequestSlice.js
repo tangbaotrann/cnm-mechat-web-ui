@@ -110,20 +110,6 @@ const listFriendRequests = createSlice({
                 socket.emit('recall_friend_request', {
                     deleted: action.payload.deleted,
                 });
-            })
-            .addCase(fetchApiDeleteFriend.fulfilled, (state, action) => {
-                const preReq = action.payload;
-                console.log('111 - ', preReq);
-
-                state.delFriends = preReq.listFriendsUser;
-                console.log('114 - ', preReq.listFriendsUser);
-
-                // console.log('[delete_friend]', action.payload);
-
-                // socket
-                socket.emit('delete_friend', {
-                    request: action.payload,
-                });
             });
     },
 });
@@ -255,36 +241,5 @@ export const fetchApiRecallRequestAddFriend = createAsyncThunk(
         return jsonData;
     },
 );
-
-// handle delete friend
-export const fetchApiDeleteFriend = createAsyncThunk('user/fetchApiDeleteFriend ', async (data) => {
-    // Gọi lên API backend
-    const { idUser } = data;
-    const { status, userDeleteId } = data;
-    const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/delete-friend/${idUser}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status, userDeleteId }),
-    });
-    // .then((res) => res.json())
-    // .then((resData) => {
-    //     if (resData.status === 'success') {
-    //         console.log('RES - ', resData);
-    //         return resData;
-    //     } else {
-    //         return Promise.reject(new Error('404 else'));
-    //     }
-    // })
-    // .catch((err) => {
-    //     return Promise.reject(new Error('404 else'));
-    // });
-
-    // // Convert dữ liệu ra json
-    const jsonData = await response.json();
-    console.log('[API]', jsonData);
-    return jsonData;
-});
 
 export default listFriendRequests;

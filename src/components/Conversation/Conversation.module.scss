@@ -171,14 +171,15 @@
     align-items: center;
 }
 .button-addFriend button {
-    font-size: 13px;
-    height: 20px;
-    width: 70px;
+    font-size: 1.2rem;
+    padding: 10px;
     border: 0;
     margin-right: 5px;
     border-radius: 5px;
+    color: var(--white);
     background-color: var(--primary);
     cursor: pointer;
+
     &:hover {
         opacity: 0.6;
         background-color: var(--primary);

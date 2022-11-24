@@ -13,9 +13,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './Conversation.module.scss';
-import images from '~/assets/images';
 import Popper from '../Popper';
-import { fetchApiDeleteFriend } from '~/redux/features/friend/friendRequestSlice';
+import { fetchApiDeleteFriend } from '~/redux/features/user/userSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
 import {
@@ -237,7 +236,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
 
                     {!Friend && infoUser._id !== conversation?._id ? (
                         <div className={cx('button-addFriend')} onClick={handleAddFriend}>
-                            <button>kết bạn</button>
+                            <button>Kết bạn</button>
                         </div>
                     ) : null}
 

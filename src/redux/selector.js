@@ -27,7 +27,7 @@ export const reportSelector = (state) => state.reportSlice.data;
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users) {
         const friends = users.filter((_user) => user?.friends?.includes(_user?._id));
-        // console.log('friends', friends);
+
         return friends.map((user) => ({
             _id: user._id,
             name: user.fullName,
@@ -43,6 +43,38 @@ export const listFriend = createSelector(userInfoSelector, userListSelector, (us
     }
     return null;
 });
+
+// load friend
+export const loadFriends = createSelector(
+    userInfoSelector,
+    userListSelector,
+    conversationSlice,
+    (user, users, conversation) => {
+        if (users) {
+            console.log('conversaion - 50', conversation);
+            const friends = users.filter((_user) => user?.friends?.includes(_user?._id));
+
+            // if (conversation?.listFriendsUser > 0) {
+            return friends.map((user) => ({
+                _id: user._id,
+                name: user.fullName,
+                fullName: user.fullName,
+                backgroundLink: user.backgroundLink,
+                imageLinkOfConver: user.avatarLink,
+                avatarLink: user.avatarLink,
+                gender: user.gender,
+                status: user.status,
+                phoneNumber: user.phoneNumber,
+                birthday: user.birthday,
+            }));
+        }
+        // else {
+        //     return null;
+        // }
+        // }
+        return null;
+    },
+);
 
 //Load data
 export const usersRemainingSelector = createSelector(

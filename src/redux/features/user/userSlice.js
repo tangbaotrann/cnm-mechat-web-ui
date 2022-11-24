@@ -76,6 +76,24 @@ export const updateAvatar = createAsyncThunk(
     },
 );
 
+// handle delete friend
+export const fetchApiDeleteFriend = createAsyncThunk('user/fetchApiDeleteFriend ', async (data) => {
+    // Gọi lên API backend
+    const { idUser } = data;
+    const { status, userDeleteId } = data;
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/delete-friend/${idUser}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status, userDeleteId }),
+    });
+
+    const jsonData = await response.json();
+    console.log('[API - DEL - FRIEND]', jsonData);
+    return jsonData;
+});
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -86,6 +104,16 @@ const userSlice = createSlice({
     reducers: {
         resetUserInfo: (state, action) => {
             state.data = action.payload;
+        },
+        arrivalDeleteFriendFromSocket: (state, action) => {
+            const preReq = action.payload;
+            console.log('act-pay-del', preReq);
+            state.data.friends = preReq;
+        },
+        arrivalSendFriendFromSocket: (state, action) => {
+            const preReq = action.payload;
+            console.log('act-pay-sends', preReq);
+            state.data.friends = preReq;
         },
     },
     extraReducers: (builder) => {
@@ -98,6 +126,18 @@ const userSlice = createSlice({
 
                 // socket
                 socket.emit('change_avatar_single', {
+                    request: action.payload,
+                });
+            })
+            .addCase(fetchApiDeleteFriend.fulfilled, (state, action) => {
+                const preReq = action.payload;
+                console.log('preReq - ', preReq);
+
+                // updated
+                state.data.friends = preReq.listFriendsUser;
+
+                // socket
+                socket.emit('delete_friend', {
                     request: action.payload,
                 });
             });
