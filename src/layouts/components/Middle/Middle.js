@@ -95,22 +95,29 @@ function Middle() {
                     <CircularProgress />
                 ) : (
                     <>
-                        {conversations.map((conversation) => {
-                            return (
-                                <>
-                                    {conversation.id && !conversation?.deleteBy.includes(user._id) && (
-                                        <div
-                                            onClick={() =>
-                                                dispatch(listGroupUsers.actions.clickConversation(conversation))
-                                            }
-                                            key={conversation.id}
-                                        >
-                                            <Conversation key={conversation.id} conversation={conversation} />
-                                        </div>
-                                    )}
-                                </>
-                            );
-                        })}
+                        {conversations.length > 0 ? (
+                            conversations.map((conversation) => {
+                                return (
+                                    <>
+                                        {conversation.id && !conversation?.deleteBy.includes(user._id) && (
+                                            <div
+                                                onClick={() =>
+                                                    dispatch(listGroupUsers.actions.clickConversation(conversation))
+                                                }
+                                                key={conversation.id}
+                                            >
+                                                <Conversation key={conversation.id} conversation={conversation} />
+                                            </div>
+                                        )}
+                                    </>
+                                );
+                            })
+                        ) : (
+                            <p className={cx('conversation-none')}>
+                                Bạn chưa có cuộc trò chuyện nào. Bạn có thể kết bạn để trò chuyện trực tuyến trên{' '}
+                                <b> Mechat</b>.
+                            </p>
+                        )}
                     </>
                 )}
             </div>

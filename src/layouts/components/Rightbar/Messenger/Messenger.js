@@ -63,7 +63,6 @@ function Messenger() {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [btnClosePreview, setBtnClosePreview] = useState(false);
     const [previewEmoji, setPreviewEmoji] = useState(false);
-    //
 
     const dispatch = useDispatch();
 
@@ -263,7 +262,7 @@ function Messenger() {
         });
 
         setNewImageMessage(listImg);
-        setBtnClosePreview(!btnClosePreview);
+        setBtnClosePreview(true); // !btnClosePreview
     };
 
     // handle change file
@@ -273,7 +272,7 @@ function Messenger() {
         file.previewFile = URL.createObjectURL(file);
 
         setNewFileMessage(file);
-        setBtnClosePreview(!btnClosePreview);
+        setBtnClosePreview(true); // !btnClosePreview
     };
 
     // cleanup func
@@ -419,7 +418,7 @@ function Messenger() {
                 <div className={cx('model-add-group-bg')}>
                     <div className={cx('add-friend-title')}>
                         <span className={cx('friend-title')}>Me.Chat Call - {userCurrent?.fullName}</span>
-                        <button className={cx('close-btn')}>
+                        <button className={cx('close-btn-close-video-call')}>
                             <FontAwesomeIcon
                                 className={cx('friend-close-ic')}
                                 icon={faXmark}
