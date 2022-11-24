@@ -1,23 +1,40 @@
 import { createSelector } from '@reduxjs/toolkit';
 
+// search
 export const searchTextSelector = (state) => state.filters.search;
+
+// users
 export const userListSelector = (state) => state.users.data;
+
+// user
 export const userInfoSelector = (state) => state.user.data;
 export const isLoadingInHomePage = (state) => state.user.isLoading;
+
+// group
 export const listGroupUser = (state) => state.listGroupUser.data;
 export const conversationSlice = (state) => state.listGroupUser.conversationClick;
 export const isLoadingOutGroup = (state) => state.listGroupUser.isLoadingOutGroup;
+export const notificationOut = (state) => state.listGroupUser.notificationOutGroup;
+export const notificationBlockMess = (state) => state.listGroupUser.notificationBlockMessage;
+export const notificationAddMember = (state) => state.listGroupUser.notificationAddMemberToGroup;
 export const isLoadingConversation = (state) => state.listGroupUser.isLoading;
+
+// friend request
 export const listMeRequests = (state) => state.friendRequests.dataSended;
 export const listFriendAccept = (state) => state.friendRequests.data;
+
+// message
 export const listMessage = (state) => state.messages.data;
 export const notificationsMessage = (state) => state.messages.notifications;
 export const isLoadingMessenger = (state) => state.messages.isLoading;
+
+// report
 export const reportSelector = (state) => state.reportSlice.data;
 
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users) {
         const friends = users.filter((_user) => user?.friends?.includes(_user?._id));
+
         return friends.map((user) => ({
             _id: user._id,
             name: user.fullName,
@@ -258,5 +275,37 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
         } catch (err) {
             console.log('[getMessageFromUserInGroup]', err);
         }
+    },
+);
+
+// add friend
+export const addFriendRequestAccept = createSelector(userInfoSelector, listFriendAccept, (user, requests) => {
+    const _requests = requests.filter((req) => req.senderId !== user._id);
+
+    return _requests;
+});
+
+// add friend
+export const addFriendRequest = createSelector(
+    userListSelector,
+    userInfoSelector,
+    listMeRequests,
+    (users, user, requests) => {
+        try {
+            const _requests = requests.filter((req) => req.senderId === user._id);
+            if (_requests.length > 0) {
+                const __requests = _requests.map((req) => {
+                    const _user = users.find((user) => user._id === req.receiverId);
+
+                    return { ...req, fullName: _user.fullName, imageLink: _user.avatarLink };
+                });
+
+                return __requests;
+            }
+        } catch (err) {
+            console.log('[addFriendRequest]', err);
+        }
+
+        return requests;
     },
 );

@@ -8,7 +8,7 @@ import socket from '~/util/socket';
 // store
 const listFriendRequests = createSlice({
     name: 'friendRequest',
-    initialState: { data: [], dataSended: [], dataAccepted: [] },
+    initialState: { data: [], dataSended: [], dataAccepted: [], delFriends: [] },
     reducers: {
         arrivalFriendRequestFromSocket: (state, action) => {
             const preReq = action.payload;
@@ -21,6 +21,7 @@ const listFriendRequests = createSlice({
         arrivalAcceptFriendRequestFromSocket: (state, action) => {
             const preReq = action.payload;
             const currReq = state.data.some((req) => req.idFriendRequest === preReq.idFriendRequest);
+
             if (!currReq) {
                 state.data.push(action.payload);
             }
@@ -28,7 +29,14 @@ const listFriendRequests = createSlice({
         arrivalRecallRequestAddFriendFromSocket: (state, action) => {
             const preReq = action.payload;
             const currReq = state.data.findIndex((req) => req.idFriendRequest === preReq);
+
             state.data.splice(currReq, 1);
+        },
+        arrivalExitRequestAddFriendFromSocket: (state, action) => {
+            const preReq = action.payload;
+            const currReq = state.dataSended.findIndex((req) => req.idFriendRequest === preReq);
+
+            state.dataSended.splice(currReq, 1);
         },
     },
     extraReducers: (builder) => {
@@ -41,41 +49,39 @@ const listFriendRequests = createSlice({
                 socket.emit('send_friend_request', {
                     request: action.payload.data,
                 });
-                // socket
-                socket.emit('me_friend_request', {
-                    request: action.payload.data,
-                });
             })
             // accept request friend
             .addCase(fetchApiAcceptRequestFriend.fulfilled, (state, action) => {
-                const { listFriendsReceiver, listFriendsSender, friendRequestID, sender, receiver, conversation } =
+                const { friendRequestID, listFriendsReceiver, listFriendsSender, sender, receiver, conversation } =
                     action.payload;
                 const del = state.data.findIndex((friend) => friend.idFriendRequest === friendRequestID);
+
                 state.data.splice(del, 1);
 
                 // socket accept friend
-                socket.emit('accept_friend_request', {
-                    listFriendsReceiver,
-                    listFriendsSender,
-                    sender,
-                    receiver,
-                    conversation,
+                if (listFriendsReceiver && listFriendsSender && sender && receiver && conversation) {
+                    socket.emit('accept_friend_request', {
+                        listFriendsReceiver,
+                        listFriendsSender,
+                        sender,
+                        receiver,
+                        conversation,
+                    });
+                }
+
+                socket.emit('cancel_friend_request', {
+                    data: action.payload,
                 });
             })
             // exit request friend
             .addCase(fetchApiExitRequestFriend.fulfilled, (state, action) => {
-                const { listFriendsReceiver, listFriendsSender, friendRequestID, sender, receiver, conversation } =
-                    action.payload;
+                const { friendRequestID } = action.payload;
                 const del = state.data.findIndex((friend) => friend.idFriendRequest === friendRequestID);
+
                 state.data.splice(del, 1);
 
-                // socket accept friend
-                socket.emit('accept_friend_request', {
-                    listFriendsReceiver,
-                    listFriendsSender,
-                    sender,
-                    receiver,
-                    conversation,
+                socket.emit('cancel_friend_request', {
+                    data: action.payload,
                 });
             })
             // accept friend request
@@ -91,26 +97,11 @@ const listFriendRequests = createSlice({
                 }
             })
             .addCase(fetchApiRecallRequestAddFriend.fulfilled, (state, action) => {
-                // state.data = action.payload;
-                console.log('action.payload - ', action.payload.deleted);
-
-                // // socket
-                socket.emit('recall_friend_request', {
-                    deleted: action.payload.deleted,
-                });
-            })
-            .addCase(fetchApiDeleteFriend.fulfilled, (state, action) => {
-                //console.log('111 - ', action.payload);
-                // const preReq = action.payload;
-
-                // state.data = preReq.listFriendsUser;
-                // console.log('114 - ', preReq.listFriendsUser);
-
-                // console.log('[delete_friend]', action.payload);
+                state.dataSended = action.payload.data;
 
                 // socket
-                socket.emit('delete_friend', {
-                    request: action.payload,
+                socket.emit('recall_friend_request', {
+                    deleted: action.payload.deleted,
                 });
             });
     },
@@ -129,7 +120,7 @@ export const friendRequests = createAsyncThunk(
             },
             body: JSON.stringify(data),
         });
-        console.log(data);
+
         // Convert dữ liệu ra json
         const jsonData = await response.json();
 
@@ -155,7 +146,7 @@ export const fetchApiAcceptRequestFriend = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        console.log('id con -', jsonData);
+
         return jsonData;
     },
 );
@@ -190,11 +181,10 @@ export const meRequestFriend = createAsyncThunk('user/meRequestFriend', async (a
         // check token
         if (getToken !== null) {
             const decodedToken = jwt_decode(getToken._token);
-            // console.log(decodedToken);
             const res = await axios.get(
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-of-me/${decodedToken._id}`,
             );
-            // console.log('[65]', res.data);
+
             return res.data;
         }
     } catch (err) {
@@ -213,7 +203,7 @@ export const friendAccept = createAsyncThunk('user/friendAccept', async (arg, { 
             const res = await axios.get(
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-list-request/${decodedToken._id}`,
             );
-            console.log('[19] -> ', res.data.data);
+
             return res.data.data;
         }
     } catch (err) {
@@ -226,7 +216,6 @@ export const fetchApiRecallRequestAddFriend = createAsyncThunk(
     // Tên action
     'user/fetchApiRecallRequestAddFriend ',
     async (data) => {
-        console.log('DATA - ', data);
         // Gọi lên API backend
         const { status, senderID, idRequest } = data;
         const response = await fetch(`${process.env.REACT_APP_BASE_URL}friendRequests/${idRequest}`, {
@@ -243,36 +232,5 @@ export const fetchApiRecallRequestAddFriend = createAsyncThunk(
         return jsonData;
     },
 );
-
-// handle delete friend
-export const fetchApiDeleteFriend = createAsyncThunk('user/fetchApiDeleteFriend ', async (data) => {
-    // Gọi lên API backend
-    const { idUser } = data;
-    const { status, userDeleteId } = data;
-    const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/delete-friend/${idUser}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status, userDeleteId }),
-    });
-    // .then((res) => res.json())
-    // .then((resData) => {
-    //     if (resData.status === 'success') {
-    //         console.log('RES - ', resData);
-    //         return resData;
-    //     } else {
-    //         return Promise.reject(new Error('404 else'));
-    //     }
-    // })
-    // .catch((err) => {
-    //     return Promise.reject(new Error('404 else'));
-    // });
-
-    // // Convert dữ liệu ra json
-    const jsonData = await response.json();
-    console.log('[API]', jsonData);
-    return jsonData;
-});
 
 export default listFriendRequests;

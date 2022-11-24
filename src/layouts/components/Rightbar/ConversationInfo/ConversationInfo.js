@@ -16,6 +16,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './ConversationInfo.module.scss';
@@ -132,13 +134,18 @@ function ConversationInfo() {
 
     // handle update avatar
     const handleUpdateAvatarGroup = () => {
-        dispatch(
-            fetchApiUpdateAvatarOfGroup({
-                userId: infoUser._id,
-                imageLink: avatarGroup,
-                conversationId: conversation.id,
-            }),
-        );
+        if (avatarGroup === null) {
+            toast.error('Bạn cần chọn 1 ảnh để thay đổi avatar nhóm!');
+        } else {
+            dispatch(
+                fetchApiUpdateAvatarOfGroup({
+                    userId: infoUser._id,
+                    imageLink: avatarGroup,
+                    conversationId: conversation.id,
+                }),
+            );
+            toast.success('Bạn đã thay đổi avatar nhóm thành công.');
+        }
 
         setAvatarGroup(null);
     };
@@ -149,10 +156,12 @@ function ConversationInfo() {
             newName: changeNameGroup,
             conversationId: conversation.id,
         };
-        dispatch(changeNameGroups(dataChangeGroup));
-        if (changeNameGroups()) {
-            alert('Đổi tên nhóm thành công');
-            // window.location.reload(true);
+
+        if (changeNameGroup === '') {
+            toast.error('Bạn cần phải nhập tên nhóm!');
+        } else {
+            dispatch(changeNameGroups(dataChangeGroup));
+            toast.success(`Bạn đã đổi tên nhóm thành: ${changeNameGroup}.`);
         }
     };
 
@@ -166,11 +175,10 @@ function ConversationInfo() {
             };
             dispatch(outGroup(dataOutGroup));
             if (outGroup()) {
-                alert('Bạn đã rời khỏi nhóm thành công');
-                window.location.reload(true);
+                toast.success('Bạn đã rời khỏi nhóm thành công.');
             }
         } else {
-            alert('bạn đã hủy yêu cầu rời nhóm');
+            toast.error('Bạn đã hủy yêu cầu rời nhóm!');
         }
     };
 
@@ -261,11 +269,11 @@ function ConversationInfo() {
                                     </div>
                                     <div className={cx('model-change-name-bottom')}>
                                         <div className={cx('bottom-button')}>
-                                            <button className={cx('cancel')} onClick={closerModelChangeName}>
+                                            <button className={cx('btn-cancel')} onClick={closerModelChangeName}>
                                                 Hủy
                                             </button>
-                                            <button className={cx('search')} onClick={submitChangeNameGroup}>
-                                                Xác Nhận
+                                            <button className={cx('btn-confirm')} onClick={submitChangeNameGroup}>
+                                                Xác nhận
                                             </button>
                                         </div>
                                     </div>
@@ -645,7 +653,7 @@ function ConversationInfo() {
                             </h2>
                             <div className={cx('separator')}></div>
                             <div className={cx('button-addMembers')}>
-                                <button onClick={handleModelOpenAddGroup}>
+                                <button onClick={handleModelOpenAddGroup} className={cx('btn-add-member')}>
                                     <FontAwesomeIcon className={cx('item')} icon={faUserPlus} />
                                     Thêm thành viên
                                 </button>
@@ -683,6 +691,9 @@ function ConversationInfo() {
                 </>
                 ////
             )}
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </div>
     );
 }

@@ -175,7 +175,7 @@
     text-align: center;
     font-size: 1.8rem;
     margin-bottom: 10px;
-    margin-left: 70px;
+    // margin-left: 70px;
 }
 .title-name-show .item-back {
     font-size: 2.5rem;
@@ -312,21 +312,30 @@ image .info-show .info-show-3 {
     font-size: 17px;
     font-family: var(--font-family);
 }
+
+.button-addMembers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 //them thanh vien
-.button-addMembers button {
-    border: 0;
-    border-radius: 10px;
-    width: 310px;
-    height: 40px;
-    margin-top: 10px;
-    font-size: 17px;
-    font-weight: bold;
-    color: black;
-    font-family: var(--font-family);
-    background-color: #d3d3d3;
-    cursor: pointer;
+.btn-add-member {
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--black);
+    background-color: var(--not-active);
+
     &:hover {
         opacity: 0.6;
+        cursor: pointer;
+        color: var(--white);
+        background-color: var(--primary);
     }
 }
 .button-addMembers .item {
@@ -434,12 +443,13 @@ image .info-show .info-show-3 {
 }
 ///@at-root
 .model-change-name-bottom {
-    height: 70px;
+    // height: 70px;
 }
 .bottom-button {
-    margin-left: 50%;
-    width: 150px;
+    // margin-left: 50%;
+    // width: 150px;
     display: flex;
+    justify-content: flex-end;
 }
 .model-change-name-bottom button {
     margin-top: 15px;
@@ -501,5 +511,34 @@ image .info-show .info-show-3 {
     &:hover {
         opacity: 0.6;
         cursor: pointer;
+    }
+}
+
+.btn-cancel {
+    border-radius: 6px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    
+    &:hover {
+        opacity: 0.6;
+        cursor: pointer;
+        color: var(--white);
+        background-color: var(--primary);
+    }
+}
+
+.btn-confirm {
+    border-radius: 6px;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 36px;
+    font-size: 1.3rem;
+    font-weight: 500;
+
+    &:hover {
+        opacity: 0.6;
+        cursor: pointer;
+        color: var(--white);
+        background-color: var(--primary);
     }
 }
