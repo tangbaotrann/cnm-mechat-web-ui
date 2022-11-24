@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 // import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPenToSquare, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './ModelInfoAccount.module.scss';
@@ -13,7 +15,8 @@ import moment from 'moment';
 import { Radio } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
+import { userUpdate } from '~/redux/features/user/updateUserSlice';
+import { updateAvatar } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
@@ -31,7 +34,9 @@ function SubModelInfoAccount({ user }) {
             avatar && URL.revokeObjectURL(avatar.previews);
         };
     }, [avatar]);
+
     const dispatch = useDispatch();
+
     // Handle open/ close model update info account
     const handleModelOpenUpdateInfoAccount = () => {
         setOpenUpdateInfoAccount(true);
@@ -44,6 +49,7 @@ function SubModelInfoAccount({ user }) {
     const handleChangeFullName = (e) => {
         setFullName(e.target.value);
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
@@ -60,12 +66,14 @@ function SubModelInfoAccount({ user }) {
             }),
         );
         if (userUpdate() || updateAvatar()) {
-            alert('Cập nhật thông tin thành công');
+            toast.success('Cập nhật thông tin thành công');
         }
     };
+
     const handleChange1 = (e) => {
         setBirthday(e.target.value);
     };
+
     const handleChange = (e) => {
         const sex = e.target.value;
         if (sex === 'male') {
@@ -82,6 +90,7 @@ function SubModelInfoAccount({ user }) {
         setAvatar(file);
         console.log(file);
     };
+
     return (
         <>
             <button className={cx('footer-update-btn')} onClick={handleModelOpenUpdateInfoAccount}>
@@ -198,6 +207,9 @@ function SubModelInfoAccount({ user }) {
                     </div>
                 </div>
             </ModelWrapper>
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </>
     );
 }

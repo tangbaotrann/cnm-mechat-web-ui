@@ -20,9 +20,6 @@ function MoveMessage({ message }) {
 
     const user = useSelector(userInfoSelector);
     const conversations = useSelector(listGroupUser);
-    // const conversation = useSelector(conversationSlice);
-
-    console.log('checkedConversation', checkedConversation);
 
     // handle move message
     const handleMoveMessage = () => {

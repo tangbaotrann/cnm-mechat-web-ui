@@ -103,7 +103,7 @@ export const deleteMember = createAsyncThunk(
         });
 
         const jsonData = await response.json();
-        console.log(jsonData);
+        console.log('[json] - deleteMember', jsonData);
         return jsonData;
     },
 );
@@ -154,7 +154,7 @@ export const outGroup = createAsyncThunk(
         );
 
         const jsonData = await response.json();
-        console.log('134 ---> ', jsonData);
+        console.log('[out - gr - json - data]', jsonData);
 
         return jsonData;
     },
@@ -178,7 +178,7 @@ export const changeNameGroups = createAsyncThunk(
         });
 
         const jsonData = await response.json();
-
+        console.log('change name group - json', jsonData);
         return jsonData;
     },
 );
@@ -326,6 +326,9 @@ const listGroupUsers = createSlice({
         isLoading: false,
         isLoadingOutGroup: false,
         conversationClick: null,
+        notificationOutGroup: false,
+        notificationBlockMessage: false,
+        notificationAddMemberToGroup: false,
         arrBlocked: [],
     },
     reducers: {
@@ -359,6 +362,52 @@ const listGroupUsers = createSlice({
             const _con = state.data.findIndex((con) => con.id === action.payload);
 
             state.data.splice(_con, 1);
+            state.conversationClick = null;
+        },
+        arrivalUpdatedMembersInGroup: (state, action) => {
+            const preConversation = action.payload;
+            const currConversation = state.data.find((con) => con.id === preConversation._id);
+
+            // updated
+            currConversation._id = preConversation._id;
+            currConversation.idMember = preConversation.idMember;
+            currConversation.members = preConversation.members;
+
+            if (currConversation) {
+                state.conversationClick = currConversation;
+            }
+        },
+        arrivalUpdatedWhenAddMemberOtherInGroupFromSocket: (state, action) => {
+            const preConversation = action.payload;
+            const currConversation = state.data.find((con) => con.id === preConversation.id);
+
+            // updated
+            currConversation.id = preConversation.id;
+            currConversation.newMember = preConversation.newMember;
+            currConversation.members = preConversation.members;
+            currConversation.lastMessage = preConversation.lastMessage;
+
+            if (currConversation) {
+                state.conversationClick = currConversation;
+            }
+        },
+        arrivalUpdatedWhenDeleteMemberOtherInGroupFromSocket: (state, action) => {
+            const preConversation = action.payload;
+            const currConversation = state.data.find((con) => con.id === preConversation._id);
+
+            // updated
+            currConversation._id = preConversation._id;
+            currConversation.idMember = preConversation.idMember;
+            currConversation.deleteBy = preConversation.deleteBy;
+            currConversation.members = preConversation.members;
+            currConversation.action = preConversation.action;
+            currConversation.time = preConversation.time;
+
+            // updated
+
+            if (currConversation) {
+                state.conversationClick = currConversation;
+            }
         },
         arrivalUpdateLastMessageFromSocket: (state, action) => {
             // pre-last message
@@ -390,9 +439,32 @@ const listGroupUsers = createSlice({
 
             if (currConversation) {
                 state.conversationClick = currConversation;
+                state.notificationBlockMessage = true;
             } else {
                 console.log('Error blocked message user!');
                 return;
+            }
+        },
+        arrivalChangeNameConversationOfGroupFromSocket: (state, action) => {
+            const preNameGroup = action.payload;
+            const currNameGroup = state.data.find((con) => con.id === preNameGroup.conversationID);
+
+            currNameGroup.conversationID = preNameGroup.conversationID;
+            currNameGroup.name = preNameGroup.name;
+
+            if (currNameGroup) {
+                state.conversationClick = currNameGroup;
+            }
+        },
+        arrivalChangeAvatarConversationOfGroupFromSocket: (state, action) => {
+            const preAvatarGroup = action.payload;
+            const currAvatarGroup = state.data.find((con) => con.id === preAvatarGroup.conversationID);
+
+            currAvatarGroup.conversationID = preAvatarGroup.conversationID;
+            currAvatarGroup.imageLinkOfConver = preAvatarGroup.imageLink;
+
+            if (currAvatarGroup) {
+                state.conversationClick = currAvatarGroup;
             }
         },
     },
@@ -415,6 +487,7 @@ const listGroupUsers = createSlice({
                 const currConversation = state.data.findIndex((con) => con.id === preConversation.id);
 
                 state.data.splice(currConversation, 1);
+                state.conversationClick = null;
             })
             .addCase(createGroup.fulfilled, (state, action) => {
                 if (action.payload) {
@@ -428,10 +501,18 @@ const listGroupUsers = createSlice({
             })
             .addCase(deleteMember.fulfilled, (state, action) => {
                 const preMember = action.payload;
-                const currMember = state.data.findIndex((mem) => mem === preMember.idMember);
+                console.log('delete member - act-pay', action.payload);
 
-                if (currMember) {
-                    state.data.splice(currMember, 1);
+                const currConversation = state.data.find((con) => con.id === preMember._id);
+
+                // updated
+                currConversation.deleteBy = preMember.deleteBy;
+                currConversation.idMember = preMember.idMember;
+                currConversation._id = preMember._id;
+                currConversation.members = preMember.members;
+
+                if (currConversation) {
+                    state.conversationClick = currConversation;
                 }
 
                 socket.emit('block_user_in_group', {
@@ -440,6 +521,19 @@ const listGroupUsers = createSlice({
             })
             .addCase(addMember.fulfilled, (state, action) => {
                 console.log('[add_user_to_group]', action.payload);
+                const preConversation = action.payload;
+                const currConversation = state.data.find((con) => (con.id = preConversation.id));
+
+                // updated
+                currConversation.id = preConversation.id;
+                currConversation.newMember = preConversation.newMember;
+                currConversation.members = preConversation.members;
+                currConversation.lastMessage = preConversation.lastMessage;
+
+                if (currConversation) {
+                    state.conversationClick = currConversation;
+                    state.notificationAddMemberToGroup = true;
+                }
 
                 socket.emit('add_user_to_group', {
                     info: action.payload,
@@ -451,7 +545,8 @@ const listGroupUsers = createSlice({
                 // }
             })
             .addCase(outGroup.fulfilled, (state, action) => {
-                state.isLoadingOutGroup = true;
+                state.conversationClick = null;
+                console.log('[out - gr]', action.payload);
 
                 // socket
                 socket.emit('user_out_group', {
@@ -475,15 +570,24 @@ const listGroupUsers = createSlice({
                 });
             })
             .addCase(deleteConversation.fulfilled, (state, action) => {
-                // state.data = action.payload;
-                state.isLoadingOutGroup = true;
+                state.conversationClick = null;
 
                 socket.emit('remove_group', {
                     info: action.payload,
                 });
             })
             .addCase(blockMember.fulfilled, (state, action) => {
-                // console.log('[block_message_user_in_group]', action.payload);
+                console.log('[block_message_user_in_group]', action.payload);
+                const preConversation = action.payload;
+                const currConversation = state.data.find((con) => con.id === preConversation.id);
+
+                // updated blocked
+                currConversation.blockBy = preConversation.blockBy;
+                currConversation.conversationId = preConversation.conversationId;
+
+                if (currConversation) {
+                    state.conversationClick = currConversation;
+                }
 
                 socket.emit('block_message_user_in_group', {
                     info: action.payload,
@@ -494,9 +598,18 @@ const listGroupUsers = createSlice({
                 // console.log('[preConversation]', preConversation);
 
                 const currConversation = state.data.findIndex((con) => con.id === preConversation.conversationId);
+                const currBlockedConversation = state.data.find((con) => con.id === preConversation.id);
+
+                // updated un-block
+                currBlockedConversation.blockBy = preConversation.blockBy;
+                currBlockedConversation.conversationId = preConversation.conversationId;
 
                 if (currConversation) {
                     state.data.splice(currConversation, 1);
+                }
+
+                if (currBlockedConversation) {
+                    state.conversationClick = currBlockedConversation;
                 }
 
                 socket.emit('block_message_user_in_group', {

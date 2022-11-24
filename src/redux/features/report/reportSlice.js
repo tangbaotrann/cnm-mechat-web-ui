@@ -19,25 +19,24 @@ const reportSlice = createSlice({
 
 // create form data
 const createFormData = (reported) => {
-    const { messageId, imageLink, content } = reported;
+    const { messageId, imageLink, content, senderID } = reported;
 
     console.log('data - 17', reported);
 
     const dataForm = new FormData();
 
-    // if (messageId.length === 1) {
-    //     console.log('message id', messageId[0]._id);
-    //     dataForm.append('messageId', messageId[0]._id);
-    // } else if (messageId.length > 1) {
-    //     messageId.forEach((mess) => {
-    //         dataForm.append('messageId', mess);
-    //     });
-    // }
-
     dataForm.append('messageId', messageId);
-    dataForm.append('fileImage', imageLink[0].data);
-    console.log('fileImage - 39', imageLink[0].data);
+
+    if (imageLink.length === 1) {
+        dataForm.append('fileImage', imageLink[0].data);
+    } else if (imageLink.length > 1) {
+        imageLink.forEach((img) => {
+            dataForm.append('fileImage', img.data);
+        });
+    }
+
     dataForm.append('content', content);
+    dataForm.append('senderID', senderID);
 
     return dataForm;
 };
@@ -45,7 +44,7 @@ const createFormData = (reported) => {
 // create report
 export const fetchApiCreateReport = createAsyncThunk('reportSlice/fetchApiCreateReport', async (reported) => {
     try {
-        console.log('47 - data - fetch -', reported);
+        // console.log('47 - data - fetch -', reported);
         let formData = createFormData(reported);
         console.log('49 - form-data -', formData);
         const res = await axios.post(`${process.env.REACT_APP_BASE_URL}reports`, formData, {
@@ -54,7 +53,7 @@ export const fetchApiCreateReport = createAsyncThunk('reportSlice/fetchApiCreate
             },
         });
 
-        console.log('[28 - res]', res.data);
+        // console.log('[28 - res]', res.data);
 
         return res.data;
     } catch (err) {

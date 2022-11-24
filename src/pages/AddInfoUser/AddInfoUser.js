@@ -10,10 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 //me
 import styles from './AddInfoUser.module.scss';
 import images from '~/assets/images';
-import { updateAvatar, userUpdate } from '~/redux/features/user/updateUserSlice';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { fetchApiUser } from '~/redux/features/user/userSlice';
+import moment from 'moment';
+import { userUpdate } from '~/redux/features/user/updateUserSlice';
+import { fetchApiUser, updateAvatar } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 

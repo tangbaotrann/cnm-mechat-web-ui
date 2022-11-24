@@ -34,11 +34,11 @@ import Message from '~/components/Message';
 import Popper from '~/components/Popper';
 import OnlineStatus from '~/components/OnlineStatus';
 import socket from '~/util/socket';
+import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
 import messagesSlice, {
     fetchApiSendMessage,
     fetchApiMessagesByConversationId,
 } from '~/redux/features/messages/messagesSlice';
-import PreviewFileMessage from '~/components/FileMessage/PreviewFileMessage';
 import {
     userLogin,
     userInfoSelector,
@@ -46,6 +46,7 @@ import {
     isLoadingMessenger,
     getMessageFromUserInGroupFromSelector,
     findUserOtherInConversationSingle,
+    notificationBlockMess,
 } from '~/redux/selector';
 import listGroupUsers, { blockMember, cancelBlockMember } from '~/redux/features/Group/GroupSlice';
 import ModelWrapper from '~/components/ModelWrapper';
@@ -72,31 +73,45 @@ function Messenger() {
     const user = useSelector(userInfoSelector);
     const conversation = useSelector(conversationSlice);
     const isLoading = useSelector(isLoadingMessenger);
+    const notificationBlockedMessage = useSelector(notificationBlockMess);
 
     const scrollMessenger = useRef();
+
+    // console.log('[CONVERSATION] - ', conversation);
+    // console.log('notificationBlockedMessage', notificationBlockedMessage);
 
     // fetch message from conversationId
     useEffect(() => {
         dispatch(fetchApiMessagesByConversationId(conversation.id));
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversation.id]);
 
-    // realtime with notification message
+    // realtime change name conversation of group
     useEffect(() => {
-        socket.on('get_notification_message', (message) => {
-            if (message) {
-                dispatch(messagesSlice.actions.arrivalNotificationsMessageFromSocket(message));
-            }
+        socket.on('change_name_conversation_of_group', (_conversation) => {
+            dispatch(listGroupUsers.actions.arrivalChangeNameConversationOfGroupFromSocket(_conversation));
         });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    //realtime change avatar conversation of group
+    useEffect(() => {
+        socket.on('change_avatar_conversation_of_group', (_conversation) => {
+            console.log('[change_avatar_conversation_of_group]', _conversation);
+            dispatch(listGroupUsers.actions.arrivalChangeAvatarConversationOfGroupFromSocket(_conversation));
+        });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // realtime with block message user in group
     useEffect(() => {
         socket.on('blocked_message_user', (arrBlocked) => {
-            // console.log('[blocked_message_user]', arrBlocked);
             dispatch(listGroupUsers.actions.arrivalBlockMessageUserInGroupFromSocket(arrBlocked));
         });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -116,6 +131,7 @@ function Messenger() {
         socket.on('receiver_message', (message) => {
             dispatch(messagesSlice.actions.arrivalMessageFromSocket(message));
         });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -124,6 +140,7 @@ function Messenger() {
         socket.on('receiver_recall_message', (message) => {
             dispatch(messagesSlice.actions.recallMessageFromSocket(message));
         });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -333,10 +350,7 @@ function Messenger() {
             };
 
             dispatch(blockMember(data));
-
-            if (blockMember()) {
-                toast.success(`Bạn đã chặn tin nhắn với ${conversation.name}.`);
-            }
+            toast.success(`Bạn đã chặn tin nhắn với ${conversation.name}.`);
         } else {
             toast.info('Bạn đã hủy chặn tin nhắn.');
         }
@@ -353,14 +367,15 @@ function Messenger() {
             };
 
             dispatch(cancelBlockMember(data));
-
-            if (cancelBlockMember()) {
-                toast.success(`Bạn đã bỏ chặn tin nhắn với ${conversation.name}.`);
-            }
+            toast.success(`Bạn đã bỏ chặn tin nhắn với ${conversation.name}.`);
         } else {
             toast.info(`Bạn không muốn bỏ chặn tin nhắn với ${conversation.name}.`);
         }
     };
+
+    useEffect(() => {
+        notificationBlockedMessage && toast.info('Bạn đã bị chặn tin nhắn trong cuộc trò chuyện này!');
+    }, [notificationBlockedMessage]);
 
     return (
         <div className={cx('messenger')}>
@@ -549,9 +564,17 @@ function Messenger() {
 
             {/* Message conversation */}
             {conversation?.blockBy?.includes(infoUser._id) ? (
-                <div className={cx('Block')}>
-                    <h2>Bạn đã bị chặn nhắn tin...</h2>
-                </div>
+                <>
+                    {conversation.isGroup ? (
+                        <div className={cx('Block')}>
+                            <h2>Bạn đã bị chặn nhắn tin bởi Trưởng nhóm...</h2>
+                        </div>
+                    ) : (
+                        <div className={cx('Block')}>
+                            <h2>Bạn đã bị chặn nhắn tin bởi {conversation.name}...</h2>
+                        </div>
+                    )}
+                </>
             ) : (
                 <>
                     <div className={cx('messenger-footer')}>

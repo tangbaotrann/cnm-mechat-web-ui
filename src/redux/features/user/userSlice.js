@@ -2,6 +2,7 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import socket from '~/util/socket';
 
 // fetch api user
 export const fetchApiUser = createAsyncThunk('user/fetchApiUser', async (arg, { rejectWithValue }) => {
@@ -44,7 +45,54 @@ export const forgetPassWord = createAsyncThunk(
         return jsonData;
     },
 );
-//
+
+const createFormData = (data) => {
+    const { _id, avatarLink } = data;
+    //console.log(data);
+    const dataForm = new FormData();
+
+    dataForm.append('_id', _id);
+    dataForm.append('avatarLink', avatarLink);
+
+    return dataForm;
+};
+
+// update info single
+export const updateAvatar = createAsyncThunk(
+    // Tên action
+    'user/updateAvatar ',
+    async (data) => {
+        if (data) {
+            let formData = createFormData(data);
+
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}users/update-avatar/${data._id}`, formData, {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                },
+            });
+
+            return res.data;
+        }
+    },
+);
+
+// handle delete friend
+export const fetchApiDeleteFriend = createAsyncThunk('user/fetchApiDeleteFriend ', async (data) => {
+    // Gọi lên API backend
+    const { idUser } = data;
+    const { status, userDeleteId } = data;
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/delete-friend/${idUser}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status, userDeleteId }),
+    });
+
+    const jsonData = await response.json();
+
+    return jsonData;
+});
 
 const userSlice = createSlice({
     name: 'user',
@@ -54,23 +102,44 @@ const userSlice = createSlice({
         isLoading: false,
     },
     reducers: {
-        resetUserInfo: (state, { payload }) => {
-            state.data = payload;
+        resetUserInfo: (state, action) => {
+            state.data = action.payload;
+        },
+        arrivalDeleteFriendFromSocket: (state, action) => {
+            const preReq = action.payload;
+
+            state.data.friends = preReq;
+        },
+        arrivalSendFriendFromSocket: (state, action) => {
+            const preReq = action.payload;
+
+            state.data.friends = preReq;
         },
     },
-    extraReducers: {
-        [fetchApiUser.pending]: (state, { payload }) => {
-            state.isLoading = true;
-        },
-        [fetchApiUser.fulfilled]: (state, { payload }) => {
-            state.data = payload;
-            state.isSuccess = true;
-            state.isLoading = false;
-        },
-        [fetchApiUser.rejected]: (state, { payload }) => {
-            state.isSuccess = false;
-            state.isLoading = false;
-        },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchApiUser.fulfilled, (state, action) => {
+                state.data = action.payload;
+            })
+            .addCase(updateAvatar.fulfilled, (state, action) => {
+                state.data = action.payload;
+
+                // socket
+                socket.emit('change_avatar_single', {
+                    request: action.payload,
+                });
+            })
+            .addCase(fetchApiDeleteFriend.fulfilled, (state, action) => {
+                const preReq = action.payload;
+
+                // updated
+                state.data.friends = preReq.listFriendsUser;
+
+                // socket
+                socket.emit('delete_friend', {
+                    request: action.payload,
+                });
+            });
     },
 });
 

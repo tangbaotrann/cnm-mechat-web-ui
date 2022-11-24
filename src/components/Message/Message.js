@@ -252,14 +252,26 @@ function Message({ message, own, conversation }) {
                                 <div tabIndex="-1" {...attrs}>
                                     <Popper className={cx('own-menu-list')}>
                                         <div className={cx('options')}>
-                                            <Tippy className={cx('tool-tip')} content="Trả lời" delay={[200, 0]}>
-                                                <button className={cx('option-btn')}>
-                                                    <FontAwesomeIcon
-                                                        className={cx('option-icon')}
-                                                        icon={faQuoteRight}
-                                                    />
+                                            <Tippy
+                                                className={cx('tool-tip')}
+                                                content="Báo cáo tin nhắn"
+                                                delay={[200, 0]}
+                                            >
+                                                <button className={cx('option-btn')} onClick={handleReportClick}>
+                                                    <FontAwesomeIcon className={cx('option-icon')} icon={faFlag} />
                                                 </button>
                                             </Tippy>
+
+                                            {/* Show report */}
+                                            <ModelWrapper
+                                                className={cx('model-report')}
+                                                open={openReport}
+                                                onClose={handleModelCloseReport}
+                                            >
+                                                <>
+                                                    <Report message={message} />
+                                                </>
+                                            </ModelWrapper>
 
                                             <Tippy className={cx('tool-tip')} content="Chia sẻ" delay={[200, 0]}>
                                                 <button

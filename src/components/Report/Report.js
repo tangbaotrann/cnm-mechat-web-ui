@@ -2,6 +2,8 @@
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './Report.module.scss';
@@ -10,6 +12,7 @@ import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faImage } from '@fortawesome/free-solid-svg-icons';
 import { fetchApiCreateReport } from '~/redux/features/report/reportSlice';
+import { userInfoSelector } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -20,7 +23,9 @@ function Report({ message }) {
 
     const dispatch = useDispatch();
 
-    console.log('message', message);
+    const user = useSelector(userInfoSelector);
+
+    // console.log('message', message);
     // console.log('message', newMessageText);
 
     // handle change image and preview image
@@ -54,13 +59,19 @@ function Report({ message }) {
 
     // handle confirm report
     const handleConfirmReport = () => {
-        dispatch(
-            fetchApiCreateReport({
-                messageId: message._id,
-                imageLink: newImageMessage,
-                content: newMessageText,
-            }),
-        );
+        if (newImageMessage.length === 0) {
+            toast.error('Bạn cần chọn ít nhất 1 hình để báo cáo tin nhắn!');
+        } else {
+            dispatch(
+                fetchApiCreateReport({
+                    messageId: message._id,
+                    imageLink: newImageMessage,
+                    content: newMessageText,
+                    senderID: user._id,
+                }),
+            );
+            toast.success('Bạn đã gửi báo thành công. Cám ơn, chúng tôi sẽ xem xét báo cáo tin nhắn của bạn.');
+        }
 
         setNewMessageText('');
         setNewImageMessage([]);
@@ -122,6 +133,9 @@ function Report({ message }) {
                     Gửi
                 </button>
             </div>
+
+            {/* Show status report */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </div>
     );
 }

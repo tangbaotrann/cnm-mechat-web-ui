@@ -2,6 +2,9 @@
 import classNames from 'classnames/bind';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Peer from 'simple-peer';
 // me
 import styles from './Home.module.scss';
@@ -50,6 +53,8 @@ function Home() {
     const [showFooter, setShowFooter] = useState(false);
     const [changeIconVideo, setChangeIconVideo] = useState(false);
 
+    // console.log('notificationOutGroup', notificationOutGroup);
+
     const [changeIconMic, setChangeIconMic] = useState(false);
     const infoUser = useSelector(userLogin);
     useEffect(() => {
@@ -64,6 +69,10 @@ function Home() {
     useEffect(() => {
         socket.emit('status_user', user?._id);
     }, [user?._id]);
+
+    // useEffect(() => {
+    //     notificationAddMemberInGroup && toast.info('Bạn đã được thêm vào nhóm.');
+    // }, [notificationAddMemberInGroup]);
 
     useEffect(() => {
         socket.on('callUser', (data) => {

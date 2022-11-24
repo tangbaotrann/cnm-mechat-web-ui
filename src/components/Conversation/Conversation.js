@@ -8,12 +8,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import TippyHeadless from '@tippyjs/react/headless';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './Conversation.module.scss';
-import images from '~/assets/images';
 import Popper from '../Popper';
-import { fetchApiDeleteFriend } from '~/redux/features/friend/friendRequestSlice';
+import { fetchApiDeleteFriend } from '~/redux/features/user/userSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
 import {
@@ -43,10 +44,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const user = useSelector(userInfoSelector);
     const conversationID = useSelector(conversationSlice);
 
-    // console.log('55 - ', conversation);
-
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user._id]);
 
@@ -66,10 +66,11 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 status: true,
                 userDeleteId: conversation._id,
             };
+            toast.success('Xóa bạn thành công.');
             dispatch(fetchApiDeleteFriend(data));
-            alert('Xóa bạn thành công.');
         } else {
-            alert('Bạn đã hủy yêu cầu xóa bạn!');
+            toast.error('Bạn đã hủy yêu cầu xóa bạn!');
+            return;
         }
     };
 
@@ -86,17 +87,18 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
 
     //xoa thanh vien khoi nhom
     const handleDeleteMemberGroup = () => {
-        let deletes = window.confirm('Bạn có chắc chắn muốn xóa không?');
+        let deletes = window.confirm('Bạn có chắc chắn muốn xóa thành viên này không?');
         if (deletes === true) {
             const data = {
                 conversationId: conversationID.id,
                 memberId: conversation._id,
                 mainId: filterLeaders[0]._id,
             };
+            toast.success('Xóa thành viên thành công.');
             dispatch(deleteMember(data));
-            alert('Xóa thành viên thành công');
         } else {
-            alert('bạn đã hủy yêu cầu xóa bạn');
+            toast.error('Bạn đã hủy yêu cầu!');
+            return;
         }
     };
 
@@ -108,13 +110,11 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 userId: infoUser._id,
                 conversationId: conversationID.id,
             };
+            toast.success('Bạn đã rời khỏi nhóm thành công.');
             dispatch(outGroup(dataOutGroup));
-            if (outGroup()) {
-                alert('Bạn đã rời khỏi nhóm thành công');
-                // window.location.reload(true);
-            }
         } else {
-            alert('bạn đã hủy yêu cầu rời nhóm');
+            toast.error('Bạn đã hủy yêu cầu rời nhóm!');
+            return;
         }
     };
 
@@ -143,13 +143,11 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 conversationId: conversationID.id,
                 mainId: filterLeaders[0]._id,
             };
+            toast.success('Bạn đã giải tán nhóm.');
             dispatch(deleteConversation(data));
-            if (deleteConversation()) {
-                alert('Bạn đã giải tán nhóm');
-                // window.location.reload(true);
-            }
         } else {
-            alert('bạn đã hủy yêu cầu giải tán nhóm');
+            toast.error('Bạn đã hủy yêu cầu giải tán nhóm!');
+            return;
         }
     };
 
@@ -162,11 +160,10 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 userId: conversation._id,
             };
             dispatch(blockMember(data));
-            if (blockMember()) {
-                alert('Bạn đã chặn tin nhắn');
-            }
+            toast.success('Bạn đã chặn tin nhắn thành công.');
         } else {
-            alert('bạn đã hủy yêu cầu chặn tin nhắn');
+            toast.error('Bạn đã hủy yêu cầu chặn tin nhắn!');
+            return;
         }
     };
 
@@ -179,11 +176,10 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 userId: conversation._id,
             };
             dispatch(cancelBlockMember(data));
-            if (cancelBlockMember()) {
-                alert('Bạn đã bỏ chặn tin nhắn');
-            }
+            toast.success('Bạn đã bỏ chặn tin nhắn thành công.');
         } else {
-            alert('bạn đã hủy yêu cầu bỏ chặn tin nhắn');
+            toast.error('Bạn đã hủy yêu cầu bỏ chặn tin nhắn!');
+            return;
         }
     };
 
@@ -198,9 +194,10 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     userId: user._id,
                 }),
             );
-            alert('Bạn đã xóa thành công cuộc hội thoại.');
+            toast.success('Bạn đã xóa thành công cuộc hội thoại.');
         } else {
-            alert('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
+            toast.error('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
+            return;
         }
     };
 
@@ -226,13 +223,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 <div className={cx('list-conversation')} onClick={handleSeeninfoInGroup}>
                     <img
                         className={cx('avatar-img')}
-                        src={conversation?.imageLinkOfConver ? conversation?.imageLinkOfConver : images.noImg}
+                        src={conversation?.imageLinkOfConver} // conversation?.imageLinkOfConver ? : images.noImg
                         alt="avatar-user"
                     />
 
                     {/* <ModelInfoAccount seenInfoInGroup user={userCurrent} /> */}
 
-                    {filterLeaders[0]._id === conversation._id ? (
+                    {filterLeaders[0]?._id === conversation?._id ? (
                         <div className={cx('key-leader')}>
                             <label htmlFor="file-info" className={cx('option-avatar')}>
                                 <FontAwesomeIcon className={cx('icon-camera')} icon={faKey} />
@@ -243,13 +240,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                         <h4 className={cx('username')}>{conversation?.name} </h4>
                     </div>
 
-                    {!Friend && infoUser._id !== conversation._id ? (
+                    {!Friend && infoUser._id !== conversation?._id ? (
                         <div className={cx('button-addFriend')} onClick={handleAddFriend}>
-                            <button>kết bạn</button>
+                            <button>Kết bạn</button>
                         </div>
                     ) : null}
 
-                    {filterLeaders[0]._id === conversation._id && infoUser._id === filterLeaders[0]._id ? (
+                    {filterLeaders[0]._id === conversation?._id && infoUser._id === filterLeaders[0]._id ? (
                         <TippyHeadless
                             render={(attrs) => (
                                 <div tabIndex="-1" {...attrs}>
@@ -284,10 +281,8 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                 <p className={cx('deleteFriend')} onClick={handleDeleteMemberGroup}>
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
                                                 </p>
-                                                <p className={cx('deleteFriend')} onClick={handleChangeLeader}>
-                                                    <button className={cx('item-btn')}>Chuyển quyền trưởng Nhóm</button>
-                                                </p>
-                                                {conversationID.blockBy.includes(conversation._id) ? (
+
+                                                {conversationID.blockBy.includes(conversation?._id) ? (
                                                     <p className={cx('deleteFriend')} onClick={handleCancelBlockMember}>
                                                         <button className={cx('item-btn')}>Bỏ chặn</button>
                                                     </p>
@@ -312,7 +307,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                 </TippyHeadless>
                             ) : (
                                 <>
-                                    {infoUser._id === conversation._id ? (
+                                    {infoUser._id === conversation?._id ? (
                                         <TippyHeadless
                                             render={(attrs) => (
                                                 <div tabIndex="-1" {...attrs}>
@@ -344,11 +339,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                 <div className={cx('container-conversation')}>
                     <div className={cx('list-conversation')}>
                         {/*onClick={tam}  */}
-                        <img
-                            className={cx('avatar-img')}
-                            src={conversation?.imageLinkOfConver ? conversation.imageLinkOfConver : images.noImg}
-                            alt="avatar"
-                        />
+                        <img className={cx('avatar-img')} src={conversation?.imageLinkOfConver} alt="avatar" />
 
                         <div className={cx('content')}>
                             <h4 className={cx('username')}>{conversation?.name} </h4>
@@ -424,6 +415,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     )}
                 </div>
             )}
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </>
     );
 }

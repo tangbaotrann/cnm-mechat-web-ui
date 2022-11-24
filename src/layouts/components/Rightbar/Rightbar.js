@@ -7,20 +7,17 @@ import styles from './Rightbar.module.scss';
 import images from '~/assets/images';
 import Messenger from './Messenger';
 import ConversationInfo from './ConversationInfo';
-import { conversationSlice, isLoadingOutGroup } from '~/redux/selector';
+import { conversationSlice } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function Rightbar({ peer }) {
     const conversation = useSelector(conversationSlice);
-    const isLoading = useSelector(isLoadingOutGroup);
-
-    // console.log('conversation - 18', conversation);
 
     return (
         <div className={cx('wrapper')}>
             {/* Để show ra Chat current -> get theo conversationId */}
-            {conversation && isLoading === false ? (
+            {conversation ? (
                 <div className={cx('container')}>
                     <Messenger peer={peer} />
                     <ConversationInfo />

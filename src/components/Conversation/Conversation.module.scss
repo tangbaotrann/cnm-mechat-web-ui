@@ -5,7 +5,8 @@
     width: 100%;
 
     &:hover {
-        .time, .badge {
+        .time,
+        .badge {
             display: none;
         }
 
@@ -14,7 +15,6 @@
             z-index: 9999;
         }
     }
-
 }
 
 // List conversation
@@ -29,7 +29,8 @@
         background-color: var(--grey-400);
         transition: background-color ease-in-out 200ms;
 
-        .time, .badge {
+        .time,
+        .badge {
             display: none;
         }
 
@@ -64,7 +65,7 @@
 .option-remove-conversation {
     position: absolute;
     margin: auto;
-    right: 0;  
+    right: 0;
     border: none;
     outline: none;
     display: none;
@@ -101,6 +102,7 @@
 
 .message {
     font-size: 1.4rem;
+    flex: 1;
 }
 
 // Show notification and time
@@ -113,6 +115,7 @@
 .time {
     font-size: 1.1rem;
     margin-bottom: 4px;
+    flex: 1;
 }
 
 .badge {
@@ -129,23 +132,16 @@
 //@at-root phone book
 .own-menu-list-children {
     display: flex;
+    justify-content: center;
     flex-direction: column;
-    padding: 4px;
-    width: 220px;
     flex: 1;
 }
 .deleteFriend {
     color: black;
     font-size: 1.4rem;
     font-family: var(--font-family);
-    margin-left: 10px;
-    margin-top: 10px;
     border-bottom: solid 0.5px #d3d3d3;
-    // &:hover {
-    //     cursor: pointer;
-    //     background-color: var(--grey-400);
-    //     transition: background-color ease-in-out 200ms;
-    // }
+    border-top: solid 0.5px #d3d3d3;
 }
 .item-btn {
     text-align: left;
@@ -165,12 +161,10 @@
 }
 .icon-camera {
     position: absolute;
-    margin: auto;
     font-size: 1.5rem;
     color: var(--primary);
-    bottom: -22px;
-    right: 2px;
-
+    bottom: -26px;
+    right: 34px;
     cursor: pointer;
 }
 .option-avatar {
@@ -178,14 +172,15 @@
     align-items: center;
 }
 .button-addFriend button {
-    font-size: 13px;
-    height: 30px;
-    width: 70px;
+    font-size: 1.2rem;
+    padding: 10px;
     border: 0;
     margin-right: 5px;
     border-radius: 5px;
+    color: var(--white);
     background-color: var(--primary);
     cursor: pointer;
+
     &:hover {
         opacity: 0.6;
         background-color: var(--primary);
