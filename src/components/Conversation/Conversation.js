@@ -29,7 +29,14 @@ import {
 } from '~/redux/features/Group/GroupSlice';
 import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
-import { filterFriendGroup, filterLeader, userInfoSelector, userLogin, conversationSlice } from '~/redux/selector';
+import {
+    filterFriendGroup,
+    filterLeader,
+    userInfoSelector,
+    userLogin,
+    conversationSlice,
+    getConversationId,
+} from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
@@ -42,13 +49,16 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const filterLeaders = useSelector(filterLeader);
     const listFriendFilters = useSelector(filterFriendGroup);
     const user = useSelector(userInfoSelector);
-    const conversationID = useSelector(conversationSlice);
+    const conversationID = useSelector(getConversationId);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user._id]);
+
+    // console.log('conversation', conversation);
+    // console.log('conversationID', conversationID);
 
     useEffect(() => {
         listFriendFilters?.map((key) => {
@@ -123,8 +133,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         const data = { senderID: infoUser._id, receiverID: conversation._id };
         let tam = dispatch(friendRequests(data));
         if (tam) {
-            alert('Gửi lời mời kết bạn thành công');
-            window.location.reload(true);
+            toast.success('Gửi lời mời kết bạn thành công.');
         }
     };
 
