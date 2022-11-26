@@ -27,6 +27,7 @@ import {
     userInfoSelector,
     addFriendRequest,
     addFriendRequestAccept,
+    getConversationId,
 } from '~/redux/selector';
 import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
@@ -37,23 +38,26 @@ const cx = classNames.bind(styles);
 function PhoneBook() {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const [changeLayout, setChangeLayout] = useState(false);
-    const [showConversation, setShowConversation] = useState('');
+    const [showConversation, setShowConversation] = useState(null);
 
     const listFriends = useSelector(listFriend); // loadFriends
     const listMeRequest = useSelector(addFriendRequest);
     const listRequestFriend = useSelector(addFriendRequestAccept);
     const user = useSelector(userInfoSelector);
-    const conversation = useSelector(conversationSlice);
+    const conversation = useSelector(getConversationId);
     const listGroup = useSelector(listGroupUser);
 
     const dispatch = useDispatch();
+
+    console.log('conversation - phone', conversation);
+    // console.log('listFriends - phone', listFriends);
 
     // realtime socket (fetch user)
     useEffect(() => {
         socket.emit('status_user', user._id);
 
         socket.on('get_users', (users) => {
-            console.log('USER - ONLINE -', users);
+            // console.log('USER - ONLINE -', users);
         });
     }, [user?._id]);
 
@@ -120,6 +124,10 @@ function PhoneBook() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        setShowConversation(conversation);
+    }, [conversation]);
+
     const handleModelOpenInfoAccount = () => {
         setOpenInfoAccount(true);
     };
@@ -138,9 +146,10 @@ function PhoneBook() {
         setChangeLayout(true);
     };
 
-    const tam = () => {
-        console.log('60---', conversation);
-        setShowConversation(conversation);
+    const tam = (user) => {
+        // console.log('60---', conversation);
+        console.log('user - ', user);
+        dispatch(userSlice.actions.setUserClick(user._id));
     };
 
     return (
@@ -168,10 +177,10 @@ function PhoneBook() {
                     <h1>Bạn bè ({listFriends?.length})</h1>
 
                     {/* Conversation or MiddleDirectory */}
-                    <div className={cx('conversations')} onClick={tam}>
+                    <div className={cx('conversations')}>
                         {listFriends?.map((user) => {
                             return (
-                                <div key={user?._id}>
+                                <div key={user?._id} onClick={() => tam(user)}>
                                     <Conversation conversation={user} isPhoneBook />
                                 </div>
                             );

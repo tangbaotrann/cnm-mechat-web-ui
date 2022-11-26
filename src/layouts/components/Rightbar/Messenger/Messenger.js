@@ -22,7 +22,7 @@ import {
     faVideoSlash,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
-import { Button, CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import EmojiPicker, { SkinTones } from 'emoji-picker-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -51,7 +51,6 @@ import {
 import listGroupUsers, { blockMember, cancelBlockMember } from '~/redux/features/Group/GroupSlice';
 import ModelWrapper from '~/components/ModelWrapper';
 import Webcam from 'react-webcam';
-import { infoUserConversation } from '~/redux/features/user/userCurrent';
 import images from '~/assets/images';
 
 const cx = classNames.bind(styles);

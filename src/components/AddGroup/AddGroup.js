@@ -184,7 +184,7 @@ function AddGroup({ addMemerber }) {
                                         type="checkBox"
                                         value={searchResult._id}
                                         onChange={handleCheck}
-                                        checked={conversation.members.includes(searchResult._id) ? true : false}
+                                        checked={conversation.members.includes(searchResult._id) ? true : null}
                                     />
                                 ) : (
                                     <input type="checkBox" value={searchResult._id} onChange={handleCheck} />

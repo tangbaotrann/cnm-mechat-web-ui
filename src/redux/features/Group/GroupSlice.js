@@ -27,6 +27,8 @@ export const fetchApiDeleteConversationSingle = createAsyncThunk(
                 },
             );
 
+            console.log('30 - ', res.data);
+
             return res.data;
         } catch (err) {
             console.log(err);
