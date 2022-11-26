@@ -260,6 +260,8 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
     userListSelector,
     listMessage,
     (userInfo, userList, listMessage) => {
+        console.log('listMessage ->',listMessage);
+        console.log('info -> ', userInfo);
         try {
             const _message = listMessage.map((message) => {
                 const user = userList.find((us) => us._id === message.senderID);

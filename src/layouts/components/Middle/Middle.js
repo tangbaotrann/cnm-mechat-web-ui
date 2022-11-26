@@ -96,7 +96,7 @@ function Middle() {
                 ) : (
                     <>
                         {conversations.length > 0 ? (
-                            conversations.map((conversation) => {
+                            conversations.map((conversation, index) => {
                                 return (
                                     <>
                                         {conversation.id && !conversation?.deleteBy.includes(user._id) && (
@@ -106,7 +106,7 @@ function Middle() {
                                                 }
                                                 key={conversation.id}
                                             >
-                                                <Conversation key={conversation.id} conversation={conversation} />
+                                                <Conversation key={conversation.id + index} conversation={conversation} />
                                             </div>
                                         )}
                                     </>

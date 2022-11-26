@@ -36,9 +36,10 @@ function Message({ message, own, conversation }) {
 
     const dispatch = useDispatch();
 
+
     //console.log('[MESSAGE - ACTION] - ', message?.action);
     //console.log('[CONVERSATION] - ', conversation);
-    // console.log('[MESSAGE - ACTION] - ', message);
+    console.log('[MESSAGE - ACTION] - ', message);
 
     // handle delete message
     const handleDeleteMessage = async () => {

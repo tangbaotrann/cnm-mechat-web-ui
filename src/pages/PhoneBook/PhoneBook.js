@@ -49,7 +49,7 @@ function PhoneBook() {
 
     const dispatch = useDispatch();
 
-    console.log('conversation - phone', conversation);
+    //console.log('conversation - phone', conversation);
     // console.log('listFriends - phone', listFriends);
 
     // realtime socket (fetch user)
@@ -146,7 +146,7 @@ function PhoneBook() {
         setChangeLayout(true);
     };
 
-    const tam = (user) => {
+    const handleClickFriend = (user) => {
         // console.log('60---', conversation);
         console.log('user - ', user);
         dispatch(userSlice.actions.setUserClick(user._id));
@@ -180,7 +180,7 @@ function PhoneBook() {
                     <div className={cx('conversations')}>
                         {listFriends?.map((user) => {
                             return (
-                                <div key={user?._id} onClick={() => tam(user)}>
+                                <div key={user?._id} onClick={() => handleClickFriend(user)}>
                                     <Conversation conversation={user} isPhoneBook />
                                 </div>
                             );
@@ -190,8 +190,8 @@ function PhoneBook() {
             </div>
             {showConversation ? (
                 <div className={cx('container')}>
-                    <Messenger />
-                    <ConversationInfo />
+                    <Messenger conversationPhoneBook={conversation} />
+                    <ConversationInfo conversationPhoneBook={conversation} />
                 </div>
             ) : (
                 <div className={cx('wrapper-rightBar')}>
