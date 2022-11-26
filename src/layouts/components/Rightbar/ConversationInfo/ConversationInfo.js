@@ -35,14 +35,16 @@ import { filterUserGroup, userLogin, conversationSlice, listMessage } from '~/re
 
 const cx = classNames.bind(styles);
 
-function ConversationInfo() {
+function ConversationInfo({ conversationPhoneBook }) {
     const infoUser = useSelector(userLogin);
     const filterUser = useSelector(filterUserGroup);
     const userCurrent = useSelector((state) => state.userCurrents.data); // hỏi Nhớ (trùng hàm).
-    const conversation = useSelector(conversationSlice);
+    const _conversation = useSelector(conversationSlice);
     const listMessages = useSelector(listMessage);
 
     const dispatch = useDispatch();
+
+    const conversation = conversationPhoneBook ? conversationPhoneBook : _conversation;
 
     const [show, setShow] = useState(true);
     const [showAddMembers, setShowAddMembers] = useState(true);

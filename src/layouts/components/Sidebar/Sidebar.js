@@ -2,7 +2,7 @@
 import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -21,11 +21,14 @@ import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
 import { MenuSetting } from './Menu';
 import { userInfoSelector } from '~/redux/selector';
+import listGroupUsers from '~/redux/features/Group/GroupSlice';
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
     const user = useSelector(userInfoSelector);
+
+    const dispatch = useDispatch();
 
     return (
         <div className={cx('wrapper')}>
@@ -61,7 +64,14 @@ function Sidebar() {
                         placement="bottom-end"
                         offset={[40, -6]}
                     >
-                        <NavLink className={(nav) => cx('option-item', { active: nav.isActive })} to="/phonebook">
+                        <NavLink
+                            className={(nav) => cx('option-item', { active: nav.isActive })}
+                            to="/phonebook"
+                            onClick={() => {
+                                console.log('click');
+                                dispatch(listGroupUsers.actions.clickConversation(null));
+                            }}
+                        >
                             <FontAwesomeIcon icon={faAddressBook} />
                         </NavLink>
                     </Tippy>

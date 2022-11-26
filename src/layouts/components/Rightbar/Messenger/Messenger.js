@@ -55,7 +55,7 @@ import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
-function Messenger() {
+function Messenger({ conversationPhoneBook }) {
     const [newMessage, setNewMessage] = useState('');
     const [newImageMessage, setNewImageMessage] = useState([]);
     const [newFileMessage, setNewFileMessage] = useState(null);
@@ -69,19 +69,21 @@ function Messenger() {
     const userBlock = useSelector(findUserOtherInConversationSingle);
     const listMessage = useSelector(getMessageFromUserInGroupFromSelector);
     const user = useSelector(userInfoSelector);
-    const conversation = useSelector(conversationSlice);
+    const _conversation = useSelector(conversationSlice);
     const isLoading = useSelector(isLoadingMessenger);
     const notificationBlockedMessage = useSelector(notificationBlockMess);
 
     const scrollMessenger = useRef();
 
-    // console.log('[CONVERSATION] - ', conversation);
+    const conversation = conversationPhoneBook ? conversationPhoneBook : _conversation;
     // console.log('notificationBlockedMessage', notificationBlockedMessage);
-
+    console.log(listMessage);
     // fetch message from conversationId
     useEffect(() => {
-        dispatch(fetchApiMessagesByConversationId(conversation.id));
-
+        dispatch(
+            fetchApiMessagesByConversationId(conversation.id),
+        );
+        console.log('[CONVERSATION] - ', conversation);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversation.id]);
 
