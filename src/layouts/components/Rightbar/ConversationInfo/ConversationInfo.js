@@ -57,10 +57,10 @@ function ConversationInfo({ conversationPhoneBook }) {
     const [avatarGroup, setAvatarGroup] = useState(null);
 
     const infoConversation =
-        infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
+        infoUser._id === conversation?.members[0] ? conversation?.members[1] : conversation?.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
 
-    // console.log('conversation - avt', conversation);
+     console.log('conversation - avt', conversation);
 
     useEffect(() => {
         dispatch(

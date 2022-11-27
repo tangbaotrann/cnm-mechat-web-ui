@@ -14,10 +14,10 @@ import 'react-toastify/dist/ReactToastify.css';
 // me
 import styles from './Conversation.module.scss';
 import Popper from '../Popper';
-import { fetchApiDeleteFriend } from '~/redux/features/user/userSlice';
+import userSlice, { fetchApiDeleteFriend } from '~/redux/features/user/userSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
-import {
+import listGroupUsers, {
     blockMember,
     cancelBlockMember,
     changeLearder,
@@ -78,6 +78,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             };
             toast.success('Xóa bạn thành công.');
             dispatch(fetchApiDeleteFriend(data));
+            dispatch(userSlice.actions.setUserClick(null));
         } else {
             toast.error('Bạn đã hủy yêu cầu xóa bạn!');
             return;
