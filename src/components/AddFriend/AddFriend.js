@@ -9,11 +9,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './AddFriend.module.scss';
-import { searchFilterFriend, userLogin } from '~/redux/selector';
+import { addFriendRequest, searchFilterFriend, userLogin } from '~/redux/selector';
 import filterSlice from '~/redux/features/filter/filterSlice';
 import useDebounce from '../hooks/useDebounce';
 import { usersRemainingSelector } from '~/redux/selector';
-import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
+import { fetchApiRecallRequestAddFriend, friendRequests } from '~/redux/features/friend/friendRequestSlice';
 
 const cx = classNames.bind(styles);
 function AddFriend() {
@@ -24,6 +24,9 @@ function AddFriend() {
     const userSearching = useSelector(usersRemainingSelector);
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
+    const listMeRequest = useSelector(addFriendRequest);
+
+    const meRequest = listMeRequest.filter((friend) => friend.receiverId.includes(phoneNumber._id));
 
     const dispatch = useDispatch();
 
@@ -65,6 +68,16 @@ function AddFriend() {
             setSearchResult(false);
         }
     };
+    // thu hoi ket ban
+    const handleCallback = () => {
+        const data = {
+            status: true,
+            senderID: infoUser._id,
+            idRequest: meRequest[0].idFriendRequest,
+        };
+        dispatch(fetchApiRecallRequestAddFriend(data));
+        toast.success('Bạn đã thu hồi lời mời kết bạn.');
+    };
     return (
         <div>
             <div className={cx('add-phoneNumber')}>
@@ -90,9 +103,17 @@ function AddFriend() {
                         <p className={cx('message')}>{phoneNumber.phoneNumber}</p>
                     </div>
                     {searchFilterFriends === true ? (
-                        <div className={cx('result-add-friend')}>
-                            <button onClick={handleRequest}>Kết bạn</button>
-                        </div>
+                        <>
+                            {meRequest?.length !== 0 ? (
+                                <div className={cx('result-add-friend')}>
+                                    <button onClick={handleCallback}>Thu hồi</button>
+                                </div>
+                            ) : (
+                                <div className={cx('result-add-friend')}>
+                                    <button onClick={handleRequest}>Kết bạn</button>
+                                </div>
+                            )}
+                        </>
                     ) : (
                         <div className={cx('result-friend')}>
                             <p>Bạn bè</p>

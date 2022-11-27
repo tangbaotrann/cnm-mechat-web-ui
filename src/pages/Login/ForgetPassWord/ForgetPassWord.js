@@ -16,7 +16,7 @@ function ForgetPassWord() {
         document.title = 'Trang quên mật khẩu';
     });
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [password, setPassword] = useState('asac');
+    const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [show, setShow] = useState(false);
     //

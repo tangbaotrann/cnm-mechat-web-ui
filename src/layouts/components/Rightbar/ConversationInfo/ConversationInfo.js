@@ -53,14 +53,16 @@ function ConversationInfo({ conversationPhoneBook }) {
     const [openAddGroup, setOpenAddGroup] = useState(false);
     const [modelChangeName, setModelChangeName] = useState(false);
     const [showImg, setShowImg] = useState();
-    const [changeNameGroup, setChangeNameGroup] = useState(conversation?.name);
+    const [changeNameGroup, setChangeNameGroup] = useState('');
     const [avatarGroup, setAvatarGroup] = useState(null);
 
     const infoConversation =
         infoUser._id === conversation?.members[0] ? conversation?.members[1] : conversation?.members[0];
     const debouncedValue = useDebounce(infoConversation, 500);
-
-     console.log('conversation - avt', conversation);
+    useEffect(() => {
+        setChangeNameGroup(conversation?.name);
+    }, [debouncedValue]);
+    // console.log('conversation - avt', conversation);
 
     useEffect(() => {
         dispatch(
@@ -682,7 +684,6 @@ function ConversationInfo({ conversationPhoneBook }) {
                                 {filterUser?.map((user) => {
                                     return (
                                         <div key={user?._id}>
-                                            {/* conversation={user} tao comment tạm cái */}
                                             <Conversation conversation={user} conversationInfo isPhoneBook />
                                         </div>
                                     );

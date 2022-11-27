@@ -24,7 +24,7 @@ import AddFriend from '../AddFriend';
 import AddGroup from '../AddGroup';
 import filterSlice from '~/redux/features/filter/filterSlice';
 // import { useDispatch, useSelector } from 'react-redux';
-import { allSearch } from '~/redux/selector';
+import { addFriendRequest, allSearch, searchFilterFriend } from '~/redux/selector';
 const cx = classNames.bind(styles);
 
 function Search() {
@@ -35,27 +35,39 @@ function Search() {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const [openAddGroup, setOpenAddGroup] = useState(false);
     const userSearching = useSelector(allSearch);
-    const searchRef = useRef();
+    const searchFilterFriends = useSelector(searchFilterFriend);
+    const listMeRequest = useSelector(addFriendRequest);
+    const meRequest = listMeRequest.filter((friend) => friend.receiverId.includes(searchResult._id));
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchValue));
     }, [searchValue]);
-    useEffect(() => {
-        if (!searchValue.trim()) {
-            return;
-        }
+    // useEffect(() => {
+    //     if (!searchValue.trim()) {
+    //         return;
+    //     }
 
-        setLoading(true);
-        //setSearchResult([userSearching[0], userSearching[0]._id]);
-        setLoading(false);
-    }, [dispatch, searchValue]);
+    //     setLoading(true);
+    //     //setSearchResult([userSearching[0], userSearching[0]._id]);
+    //     setLoading(false);
+    // }, [dispatch, searchValue]);
 
     // Handle change value input
+    const searchNamePhoneNumber = (e) => {
+        if (e.key === 'Enter') {
+            if (userSearching && userSearching !== 1) {
+                setShowResult(true);
+                setSearchResult(userSearching[0]);
+                console.log(searchResult);
+            } else {
+                alert('Không tìm thấy');
+            }
+        }
+    };
 
     // Handle button clear text
     const handleBtnClearText = () => {
         setSearchValue('');
-        searchRef.current.focus();
     };
 
     // Handle close result search
@@ -77,6 +89,27 @@ function Search() {
     const handleModelCloseOpenAddGroup = () => {
         setOpenAddGroup(false);
     };
+    //
+    const handleCallback = () => {
+        // const data = {
+        //     status: true,
+        //     senderID: infoUser._id,
+        //     idRequest: meRequest[0].idFriendRequest,
+        // };
+        // dispatch(fetchApiRecallRequestAddFriend(data));
+        // toast.success('Bạn đã thu hồi lời mời kết bạn.');
+    };
+    const handleRequest = () => {
+        // const data = { senderID: infoUser._id, receiverID: phoneNumber._id };
+        // let tam = dispatch(friendRequests(data));
+        // if (tam) {
+        //     toast.success('Gửi lời mời kết bạn thành công.');
+        //     setSearchPhone('');
+        //     setPhoneNumber('');
+        //     dispatch(filterSlice.actions.searchFilterChange(null));
+        //     setSearchResult(false);
+        // }
+    };
     return (
         <div className={cx('wrapper')}>
             <TippyHeadless
@@ -85,16 +118,36 @@ function Search() {
                         <Popper className={cx('menu-list-search')}>
                             <div className={cx('menu-search-title')}>Trò chuyện</div>
                             {/* Render result search */}
-                            {searchResult.map((result, index) => {
-                                console.log('----', result);
-                                return <Conversation key={index} user={result} />;
-                            })}
+                            <div className={cx('list-conversation')}>
+                                <img className={cx('avatar-img')} src={searchResult.avatar} alt="avatar" />
+                                <div className={cx('content')}>
+                                    <h4 className={cx('username')}>{searchResult.fullName}</h4>
+                                    <p className={cx('message')}>{searchResult.phoneNumber}</p>
+                                </div>
+                                {searchFilterFriends === true ? (
+                                    <>
+                                        {meRequest?.length !== 0 ? (
+                                            <div className={cx('result-add-friend')}>
+                                                <button onClick={handleCallback}>Thu hồi</button>
+                                            </div>
+                                        ) : (
+                                            <div className={cx('result-add-friend')}>
+                                                <button onClick={handleRequest}>Kết bạn</button>
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    <div className={cx('result-friend')}>
+                                        <p>Bạn bè</p>
+                                    </div>
+                                )}
+                            </div>
                         </Popper>
                     </div>
                 )}
                 placement="bottom-start"
                 interactive
-                visible={showResult && searchResult.length > 0}
+                visible={showResult}
             >
                 <div className={cx('search')}>
                     <FontAwesomeIcon className={cx('icon-search')} icon={faMagnifyingGlass} />
@@ -103,8 +156,8 @@ function Search() {
                         className={cx('input-search')}
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
-                        onFocus={() => setShowResult(true)}
-                        ref={searchRef}
+                        onKeyPress={searchNamePhoneNumber}
+                        // ref={searchRef}
                         placeholder="Tìm kiếm"
                     />
 
