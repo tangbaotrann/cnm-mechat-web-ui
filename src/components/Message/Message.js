@@ -39,7 +39,7 @@ function Message({ message, own, conversation }) {
 
     //console.log('[MESSAGE - ACTION] - ', message?.action);
     //console.log('[CONVERSATION] - ', conversation);
-    console.log('[MESSAGE - ACTION] - ', message);
+    //console.log('[MESSAGE - ACTION] - ', message);
 
     // handle delete message
     const handleDeleteMessage = async () => {

@@ -77,15 +77,17 @@ function Messenger({ conversationPhoneBook }) {
 
     const conversation = conversationPhoneBook ? conversationPhoneBook : _conversation;
     // console.log('notificationBlockedMessage', notificationBlockedMessage);
-    console.log(listMessage);
+    //console.log(listMessage);
     // fetch message from conversationId
     useEffect(() => {
-        dispatch(
-            fetchApiMessagesByConversationId(conversation.id),
-        );
-        console.log('[CONVERSATION] - ', conversation);
+        //remove conversation & remove friend => conversation => null
+        if (conversation?.id) {
+            dispatch(fetchApiMessagesByConversationId(conversation.id));
+        }
+        console.log(_conversation, conversationPhoneBook);
+        //console.log('[CONVERSATION] - ', conversation);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [conversation.id]);
+    }, [conversation?.id]);
 
     // realtime change name conversation of group
     useEffect(() => {
@@ -159,7 +161,7 @@ function Messenger({ conversationPhoneBook }) {
     // console.log(name);
 
     const infoConversation =
-        infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
+        infoUser._id === conversation?.members[0] ? conversation?.members[1] : conversation?.members[0];
 
     const myVideo = useRef();
     const userVideo = useRef();
@@ -316,6 +318,25 @@ function Messenger({ conversationPhoneBook }) {
                 conversationID: conversation.id,
                 senderID: user._id,
                 content: newMessage.emoji ? newMessage.emoji : newMessage,
+                imageLinks: newImageMessage,
+                fileLink: newFileMessage,
+            }),
+        );
+
+        setNewMessage('');
+        setNewImageMessage([]);
+        setNewFileMessage(null);
+        setBtnClosePreview(false);
+    };
+
+    const handleSendFlastLikeMessage = async (e) => {
+        e.preventDefault();
+
+        dispatch(
+            fetchApiSendMessage({
+                conversationID: conversation.id,
+                senderID: user._id,
+                content: "👍",
                 imageLinks: newImageMessage,
                 fileLink: newFileMessage,
             }),
@@ -702,7 +723,7 @@ function Messenger({ conversationPhoneBook }) {
                                     content="Gửi nhanh biểu tượng cảm xúc"
                                     delay={[200, 0]}
                                 >
-                                    <button className={cx('send-message-like')}>
+                                    <button className={cx('send-message-like')} onClick={handleSendFlastLikeMessage}>
                                         <FontAwesomeIcon icon={faThumbsUp} />
                                     </button>
                                 </Tippy>

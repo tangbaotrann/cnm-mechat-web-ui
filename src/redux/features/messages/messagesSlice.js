@@ -167,7 +167,7 @@ export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessag
         });
 
         // console.log('resFormData', resFormData.data);
-
+        
         return resFormData.data;
     }
 });

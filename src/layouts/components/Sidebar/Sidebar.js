@@ -22,6 +22,7 @@ import Menu from '~/components/Popper/Menu';
 import { MenuSetting } from './Menu';
 import { userInfoSelector } from '~/redux/selector';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
+import userSlice from '~/redux/features/user/userSlice';
 
 const cx = classNames.bind(styles);
 
@@ -68,8 +69,9 @@ function Sidebar() {
                             className={(nav) => cx('option-item', { active: nav.isActive })}
                             to="/phonebook"
                             onClick={() => {
-                                console.log('click');
+                                //reset conversation & user saving
                                 dispatch(listGroupUsers.actions.clickConversation(null));
+                                dispatch(userSlice.actions.setUserClick(null));
                             }}
                         >
                             <FontAwesomeIcon icon={faAddressBook} />

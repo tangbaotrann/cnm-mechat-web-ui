@@ -39,12 +39,14 @@ function PhoneBook() {
     const [openInfoAccount, setOpenInfoAccount] = useState(false);
     const [changeLayout, setChangeLayout] = useState(false);
     const [showConversation, setShowConversation] = useState(null);
+    const [groupClicked, setGroupClicked] = useState(false);
 
     const listFriends = useSelector(listFriend); // loadFriends
     const listMeRequest = useSelector(addFriendRequest);
     const listRequestFriend = useSelector(addFriendRequestAccept);
     const user = useSelector(userInfoSelector);
     const conversation = useSelector(getConversationId);
+    // const conversationGroup = useSelector(conversationSlice);
     const listGroup = useSelector(listGroupUser);
 
     const dispatch = useDispatch();
@@ -144,12 +146,20 @@ function PhoneBook() {
     const handleGroupChat = () => {
         setShowConversation('');
         setChangeLayout(true);
+
+        setGroupClicked(false);
     };
 
     const handleClickFriend = (user) => {
         // console.log('60---', conversation);
         console.log('user - ', user);
         dispatch(userSlice.actions.setUserClick(user._id));
+    };
+
+    const handleClickGroupInPhoneBook = (group) => {
+        console.log('group clicked ->', group);
+        dispatch(listGroupUsers.actions.clickConversation(group));
+        setGroupClicked(true);
     };
 
     return (
@@ -188,12 +198,17 @@ function PhoneBook() {
                     </div>
                 </div>
             </div>
-            {showConversation ? (
+            {showConversation && conversation ? (
                 <div className={cx('container')}>
                     <Messenger conversationPhoneBook={conversation} />
                     <ConversationInfo conversationPhoneBook={conversation} />
                 </div>
-            ) : (
+            ) : groupClicked ? (
+                <>
+                    <Messenger />
+                    <ConversationInfo />
+                </>
+            ): (
                 <div className={cx('wrapper-rightBar')}>
                     <div className={cx('header')}>
                         {!changeLayout ? (
@@ -238,7 +253,11 @@ function PhoneBook() {
                             <div className={cx('list-BoxChat')}>
                                 {listGroup?.map((group) => {
                                     if (group.isGroup === true) {
-                                        return <BoxChat key={group.id} group={group} />;
+                                        return (
+                                            <div key={group.id} onClick={() => handleClickGroupInPhoneBook(group)}>
+                                                <BoxChat key={group.id} group={group} />
+                                            </div>
+                                        );
                                     }
                                 })}
                             </div>
