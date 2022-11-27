@@ -101,7 +101,6 @@ function Messenger({ conversationPhoneBook }) {
     //realtime change avatar conversation of group
     useEffect(() => {
         socket.on('change_avatar_conversation_of_group', (_conversation) => {
-            console.log('[change_avatar_conversation_of_group]', _conversation);
             dispatch(listGroupUsers.actions.arrivalChangeAvatarConversationOfGroupFromSocket(_conversation));
         });
 
@@ -336,7 +335,7 @@ function Messenger({ conversationPhoneBook }) {
             fetchApiSendMessage({
                 conversationID: conversation.id,
                 senderID: user._id,
-                content: "👍",
+                content: '👍',
                 imageLinks: newImageMessage,
                 fileLink: newFileMessage,
             }),
