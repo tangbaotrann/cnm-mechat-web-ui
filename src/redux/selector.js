@@ -260,7 +260,7 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
     userListSelector,
     listMessage,
     (userInfo, userList, listMessage) => {
-        console.log('listMessage ->',listMessage);
+        console.log('listMessage ->', listMessage);
         console.log('info -> ', userInfo);
         try {
             const _message = listMessage.map((message) => {
@@ -269,13 +269,13 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
                     ? null
                     : {
                           _id: message?._id,
-                          action: message.action,
-                          content: message.content,
-                          imageLink: message.imageLink,
-                          fileLink: message.fileLink,
-                          createdAt: message.createdAt,
-                          deleteBy: message.deleteBy,
-                          senderID: message.senderID,
+                          action: message?.action,
+                          content: message?.content,
+                          imageLink: message?.imageLink,
+                          fileLink: message?.fileLink,
+                          createdAt: message?.createdAt,
+                          deleteBy: message?.deleteBy,
+                          senderID: message?.senderID,
                           user: {
                               _id: user?._id,
                               name: user?.fullName,

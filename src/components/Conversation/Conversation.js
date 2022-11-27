@@ -49,7 +49,10 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const filterLeaders = useSelector(filterLeader);
     const listFriendFilters = useSelector(filterFriendGroup);
     const user = useSelector(userInfoSelector);
-    const conversationID = useSelector(getConversationId);
+    const conversationID = useSelector(conversationSlice);
+
+    // const conversationClick = useSelector(conversationSlice);
+    // console.log('conversationID', conversationID);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
@@ -195,7 +198,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
 
     // handle delete conversation single
     const handleDeleteConversationSingle = () => {
-        const choice = window.confirm('Bạn có chắc chắn muốn xóa cuộc hội thoại này không?');
+        const choice = window.confirm('Bạn có chắc chắn muốn xóa cuộc trò chuyện này không?');
 
         if (choice === true) {
             dispatch(
@@ -204,9 +207,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     userId: user._id,
                 }),
             );
-            toast.success('Bạn đã xóa thành công cuộc hội thoại.');
+            toast.success('Bạn đã xóa thành công cuộc trò chuyện này.');
         } else {
-            toast.error('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
+            toast.error('Bạn đã đã hủy yêu cầu xóa cuộc trò chuyện!');
             return;
         }
     };
@@ -292,6 +295,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
                                                 </p>
 
+                                                {/* conversationID conversationClick */}
                                                 {conversationID.blockBy.includes(conversation?._id) ? (
                                                     <p className={cx('deleteFriend')} onClick={handleCancelBlockMember}>
                                                         <button className={cx('item-btn')}>Bỏ chặn</button>
@@ -409,7 +413,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                 className={cx('btn-remove')}
                                                 onClick={handleDeleteConversationSingle}
                                             >
-                                                Xóa cuộc hội thoại
+                                                Xóa cuộc trò chuyện
                                             </button>
                                         </Popper>
                                     </div>
