@@ -9,16 +9,12 @@ export const fetchApiUser = createAsyncThunk('user/fetchApiUser', async (arg, { 
     try {
         const getToken = JSON.parse(localStorage.getItem('user_login'));
         // check token
-        // if (localStorage.getItem('user_login') !== null) {
         if (getToken !== null) {
             const decodedToken = jwt_decode(getToken._token);
 
             const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${decodedToken._id}`);
 
-            // console.log('res', res.data.data);
-
             return res.data.data;
-            // }
         }
     } catch (err) {
         console.log(err);
@@ -78,6 +74,29 @@ export const updateAvatar = createAsyncThunk(
     },
 );
 
+// handle updated info user
+export const userUpdate = createAsyncThunk(
+    // Tên action
+    'user/userUpdate ',
+    async (data) => {
+        // Gọi lên API backend
+        const { idUser } = data;
+        const { fullName, gender, birthday } = data;
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/${idUser}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ fullName, gender, birthday }),
+        });
+
+        // Convert dữ liệu ra json
+        const jsonData = await response.json();
+        console.log('json updated ->', jsonData);
+        return jsonData;
+    },
+);
+
 // handle delete friend
 export const fetchApiDeleteFriend = createAsyncThunk('user/fetchApiDeleteFriend ', async (data) => {
     // Gọi lên API backend
@@ -134,6 +153,10 @@ const userSlice = createSlice({
                 socket.emit('change_avatar_single', {
                     request: action.payload,
                 });
+            })
+            .addCase(userUpdate.fulfilled, (state, action) => {
+                // updated
+                state.data = action.payload;
             })
             .addCase(fetchApiDeleteFriend.fulfilled, (state, action) => {
                 const preReq = action.payload;

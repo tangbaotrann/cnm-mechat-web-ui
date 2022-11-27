@@ -15,7 +15,8 @@ import moment from 'moment';
 import { Radio } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { userUpdate } from '~/redux/features/user/updateUserSlice';
+// import { userUpdate } from '~/redux/features/user/updateUserSlice';
+import { userUpdate } from '~/redux/features/user/userSlice';
 import { updateAvatar } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
 
@@ -52,6 +53,23 @@ function SubModelInfoAccount({ user }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // check date
+        let birthDay = birthday;
+        birthDay = new Date(birthDay).getFullYear();
+        let curr = new Date().getFullYear();
+        let age = curr - birthDay;
+
+        if (birthDay >= curr) {
+            toast.error('Năm sinh phải nhỏ hơn năm hiện tại. Vui lòng thử lại!');
+            return;
+        }
+
+        if (age < 18) {
+            toast.error('Số tuổi cần phải lớn hơn 18. Vui lòng thử lại!');
+            return;
+        }
+
         const data = {
             fullName: fullName,
             gender: optionSex,

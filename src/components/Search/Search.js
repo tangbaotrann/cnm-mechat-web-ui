@@ -132,7 +132,7 @@ function Search() {
                                             </div>
                                         ) : (
                                             <div className={cx('result-add-friend')}>
-                                                <button onClick={handleRequest}>Kết bạn</button>
+                                                <button onClick={handleRequest}>Kết bạn11111</button>
                                             </div>
                                         )}
                                     </>
