@@ -9,6 +9,7 @@ export const userListSelector = (state) => state.users.data;
 // user
 export const userInfoSelector = (state) => state.user.data;
 export const isLoadingInHomePage = (state) => state.user.isLoading;
+export const userClickSelector = (state) => state.user.userClick;
 
 // group
 export const listGroupUser = (state) => state.listGroupUser.data;
@@ -29,6 +30,17 @@ export const isLoadingMessenger = (state) => state.messages.isLoading;
 
 // report
 export const reportSelector = (state) => state.reportSlice.data;
+
+// get conversation id
+export const getConversationId = createSelector(listGroupUser, userClickSelector, (conversations, friendId) => {
+    const conversation = conversations.filter((_conversation) => {
+        return _conversation.isGroup === false && _conversation.members.includes(friendId);
+    });
+    if (conversation.length > 0) {
+        return conversation[0];
+    }
+    return 0;
+});
 
 export const listFriend = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users) {
@@ -251,6 +263,8 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
     userListSelector,
     listMessage,
     (userInfo, userList, listMessage) => {
+        console.log('listMessage ->', listMessage);
+        console.log('info -> ', userInfo);
         try {
             const _message = listMessage.map((message) => {
                 const user = userList.find((us) => us._id === message.senderID);
@@ -258,13 +272,13 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
                     ? null
                     : {
                           _id: message?._id,
-                          action: message.action,
-                          content: message.content,
-                          imageLink: message.imageLink,
-                          fileLink: message.fileLink,
-                          createdAt: message.createdAt,
-                          deleteBy: message.deleteBy,
-                          senderID: message.senderID,
+                          action: message?.action,
+                          content: message?.content,
+                          imageLink: message?.imageLink,
+                          fileLink: message?.fileLink,
+                          createdAt: message?.createdAt,
+                          deleteBy: message?.deleteBy,
+                          senderID: message?.senderID,
                           user: {
                               _id: user?._id,
                               name: user?.fullName,

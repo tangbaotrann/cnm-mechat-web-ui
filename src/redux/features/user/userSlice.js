@@ -9,14 +9,16 @@ export const fetchApiUser = createAsyncThunk('user/fetchApiUser', async (arg, { 
     try {
         const getToken = JSON.parse(localStorage.getItem('user_login'));
         // check token
-        if (localStorage.getItem('user_login') !== null) {
-            if (getToken !== null) {
-                const decodedToken = jwt_decode(getToken._token);
+        // if (localStorage.getItem('user_login') !== null) {
+        if (getToken !== null) {
+            const decodedToken = jwt_decode(getToken._token);
 
-                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${decodedToken._id}`);
+            const res = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${decodedToken._id}`);
 
-                return res.data.data;
-            }
+            // console.log('res', res.data.data);
+
+            return res.data.data;
+            // }
         }
     } catch (err) {
         console.log(err);
@@ -98,6 +100,7 @@ const userSlice = createSlice({
     name: 'user',
     initialState: {
         data: [],
+        userClick: null,
         isSuccess: false,
         isLoading: false,
     },
@@ -114,6 +117,9 @@ const userSlice = createSlice({
             const preReq = action.payload;
 
             state.data.friends = preReq;
+        },
+        setUserClick: (state, action) => {
+            state.userClick = action.payload;
         },
     },
     extraReducers: (builder) => {

@@ -152,7 +152,7 @@ function MessageItem({ message, own }) {
             ) : (
                 <>
                     {/* File message */}
-                    {message.fileLink !== null && message.imageLink.length === 0 ? (
+                    {message?.fileLink !== null && message?.imageLink.length === 0 ? (
                         <div>
                             {message.content && <p className={cx('message-top-text')}>{message.content}</p>}
                             <div className={cx('file-receiver')}>
@@ -160,7 +160,7 @@ function MessageItem({ message, own }) {
                             </div>
                         </div>
                     ) : (
-                        message.fileLink && (
+                        message?.fileLink && (
                             <div className={cx('file-receiver')}>
                                 <FileMessage message={message} />
                             </div>
@@ -168,7 +168,7 @@ function MessageItem({ message, own }) {
                     )}
 
                     {/* Image + video message */}
-                    {message.imageLink !== null && message.imageLink.length > 0 && !message.fileLink && (
+                    {message?.imageLink !== null && message?.imageLink.length > 0 && !message?.fileLink && (
                         <>
                             {message.imageLink[0].split('.')[message.imageLink[0].split('.').length - 1] === 'mp4' ? (
                                 <div>
@@ -196,7 +196,7 @@ function MessageItem({ message, own }) {
                                 </div>
                             ) : (
                                 <>
-                                    {message.imageLink !== null && message.imageLink.length > 0 && (
+                                    {message?.imageLink !== null && message?.imageLink.length > 0 && (
                                         <>
                                             {message.imageLink.length === 1 ? (
                                                 <div>
@@ -215,7 +215,7 @@ function MessageItem({ message, own }) {
                                                     </button>
                                                 </div>
                                             ) : (
-                                                message.imageLink.map((mess, index) => {
+                                                message?.imageLink.map((mess, index) => {
                                                     return (
                                                         <div key={index} className={cx('display-group-item-image')}>
                                                             {/* <p className={cx('message-top-text')}>
@@ -268,7 +268,7 @@ function MessageItem({ message, own }) {
                             )}
                         </>
                     )}
-                    {(message.imageLink === null || message.imageLink.length === 0) && message.fileLink === null && (
+                    {(message?.imageLink === null || message?.imageLink.length === 0) && message?.fileLink === null && (
                         <p className={cx('message-top-text')}>{message.content}</p>
                     )}
                 </>

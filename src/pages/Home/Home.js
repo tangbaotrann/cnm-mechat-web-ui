@@ -1,6 +1,7 @@
 // libs
 import classNames from 'classnames/bind';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,7 +12,7 @@ import styles from './Home.module.scss';
 import Sidebar from '~/layouts/components/Sidebar';
 import Center from '~/layouts/components/Middle';
 import Rightbar from '~/layouts/components/Rightbar';
-import { fetchApiUser } from '~/redux/features/user/userSlice';
+import userSlice, { fetchApiUser } from '~/redux/features/user/userSlice';
 import socket from '~/util/socket';
 
 import { useState } from 'react';
@@ -38,10 +39,8 @@ function Home() {
     const dispatch = useDispatch();
     const [openCall, setOpenCall] = useState(false);
     const user = useSelector(userInfoSelector);
-    const isLoading = useSelector((state) => state.listGroupUser.isLoading);
     const [caller, setCaller] = useState('');
     const [name, setName] = useState('');
-    const userCurrents = useSelector((state) => state.userCurrents.data);
     const connectionRef = useRef();
 
     const [callAccepted, setCallAccepted] = useState(false);
@@ -52,11 +51,31 @@ function Home() {
     const [callEnded, setCallEnded] = useState(false);
     const [showFooter, setShowFooter] = useState(false);
     const [changeIconVideo, setChangeIconVideo] = useState(false);
-
-    // console.log('notificationOutGroup', notificationOutGroup);
-
     const [changeIconMic, setChangeIconMic] = useState(false);
+
+    const navigate = useNavigate();
+
     const infoUser = useSelector(userLogin);
+
+    useEffect(() => {
+        if (user?.status === false) {
+            setTimeout(() => {
+                toast.warning('Tài khoản của bạn đã bị khóa vì vi phạm chính sách của chúng tôi nhiều lần!');
+            }, 1000);
+
+            localStorage.removeItem('user_login');
+            dispatch(userSlice.actions.resetUserInfo([]));
+            navigate('/login');
+        } else if (user?.warning > 0) {
+            toast.warning(
+                `Bạn đã vi phạm chính sách của chúng tôi ${user.warning} lần. Vui lòng kiểm soát hoạt động của mình, xin cảm ơn!`,
+            );
+            return;
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigate, user]);
+
     useEffect(() => {
         document.title = 'Mechat Web';
     }, []);
@@ -214,7 +233,8 @@ function Home() {
                             <div className={cx('avatar-sub')}>
                                 <img
                                     className={cx('avatar-img-sub')}
-                                    src={userCurrents?.avatarLink ? userCurrents?.avatarLink : images.noImg}
+                                    // src={userCurrents?.avatarLink ? userCurrents?.avatarLink : images.noImg}
+                                    src={user?.avatarLink}
                                     alt="avatar"
                                 />
                             </div>
@@ -280,6 +300,9 @@ function Home() {
                     )}
                 </div>
             </ModelWrapper>
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </>
     );
 }

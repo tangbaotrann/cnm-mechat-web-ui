@@ -14,10 +14,10 @@ import 'react-toastify/dist/ReactToastify.css';
 // me
 import styles from './Conversation.module.scss';
 import Popper from '../Popper';
-import { fetchApiDeleteFriend } from '~/redux/features/user/userSlice';
+import userSlice, { fetchApiDeleteFriend } from '~/redux/features/user/userSlice';
 import ModelInfoAccount from '../ModelWrapper/ModelInfoAccount';
 import { useEffect, useState } from 'react';
-import {
+import listGroupUsers, {
     blockMember,
     cancelBlockMember,
     changeLearder,
@@ -36,6 +36,7 @@ import {
     userLogin,
     conversationSlice,
     listMeRequests,
+    getConversationId,
     addFriendRequest,
 } from '~/redux/selector';
 
@@ -54,11 +55,17 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const conversationID = useSelector(conversationSlice);
     const listMeRequest = useSelector(addFriendRequest);
 
+    // const conversationClick = useSelector(conversationSlice);
+    // console.log('conversationID', conversationID);
+
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user._id]);
+
+    // console.log('conversation', conversation);
+    // console.log('conversationID', conversationID);
 
     useEffect(() => {
         listFriendFilters?.map((key) => {
@@ -85,6 +92,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
             };
             toast.success('Xóa bạn thành công.');
             dispatch(fetchApiDeleteFriend(data));
+            dispatch(userSlice.actions.setUserClick(null));
         } else {
             toast.error('Bạn đã hủy yêu cầu xóa bạn!');
             return;
@@ -140,8 +148,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         const data = { senderID: infoUser._id, receiverID: conversation._id };
         let tam = dispatch(friendRequests(data));
         if (tam) {
-            alert('Gửi lời mời kết bạn thành công');
-            //  window.location.reload(true);
+            toast.success('Gửi lời mời kết bạn thành công.');
         }
     };
 
@@ -202,7 +209,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
 
     // handle delete conversation single
     const handleDeleteConversationSingle = () => {
-        const choice = window.confirm('Bạn có chắc chắn muốn xóa cuộc hội thoại này không?');
+        const choice = window.confirm('Bạn có chắc chắn muốn xóa cuộc trò chuyện này không?');
 
         if (choice === true) {
             dispatch(
@@ -211,9 +218,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                     userId: user._id,
                 }),
             );
-            toast.success('Bạn đã xóa thành công cuộc hội thoại.');
+            toast.success('Bạn đã xóa thành công cuộc trò chuyện này.');
         } else {
-            toast.error('Bạn đã đã hủy yêu cầu xóa cuộc hội thoại!');
+            toast.error('Bạn đã đã hủy yêu cầu xóa cuộc trò chuyện!');
             return;
         }
     };
@@ -321,6 +328,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
                                                 </p>
 
+                                                {/* conversationID conversationClick */}
                                                 {conversationID.blockBy.includes(conversation?._id) ? (
                                                     <p className={cx('deleteFriend')} onClick={handleCancelBlockMember}>
                                                         <button className={cx('item-btn')}>Bỏ chặn</button>
@@ -438,7 +446,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                 className={cx('btn-remove')}
                                                 onClick={handleDeleteConversationSingle}
                                             >
-                                                Xóa cuộc hội thoại
+                                                Xóa cuộc trò chuyện
                                             </button>
                                         </Popper>
                                     </div>

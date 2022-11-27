@@ -117,11 +117,14 @@ function SubModelInfoAccount({ user }) {
                         </div>
                         <div className={cx('info-acc')}>
                             <div className={cx('sub-info-image')}>
+                                {/* Preview bg single */}
                                 <img
                                     className={cx('img-cover')}
                                     src={user?.backgroundLink ? user?.backgroundLink : images.noImg}
                                     alt=""
                                 />
+
+                                {/* Preview avatar single */}
                                 <img
                                     className={cx('sub-img-avatar')}
                                     src={avatar?.previews ? avatar?.previews : avatar}
@@ -137,6 +140,18 @@ function SubModelInfoAccount({ user }) {
                                         id="file-info"
                                         accept=".png, .jpg, .jpeg"
                                         onChange={handleChangeAvatar}
+                                    />
+                                </label>
+
+                                {/* Option change bg update */}
+                                <label htmlFor="file-info-bg" className={cx('option-bg')}>
+                                    <FontAwesomeIcon className={cx('icon-camera-bg')} icon={faCamera} />
+                                    <input
+                                        className={cx('hide')}
+                                        type="file"
+                                        id="file-info-bg"
+                                        accept=".png, .jpg, .jpeg"
+                                        // onChange={handleChangeAvatar}
                                     />
                                 </label>
                             </div>

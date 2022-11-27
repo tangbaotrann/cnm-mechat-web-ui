@@ -79,6 +79,7 @@ const messagesSlice = createSlice({
             // delete message
             .addCase(fetchApiDeleteMessage.fulfilled, (state, action) => {
                 const { id } = action.payload;
+                console.log('act-pay', action.payload);
                 const message = state.data.findIndex((mess) => mess._id === id);
 
                 if (message) {
@@ -181,7 +182,7 @@ export const fetchApiDeleteMessage = createAsyncThunk(
                 data: { userId },
                 headers: { Authorization: '***' },
             });
-
+            console.log('del - ', res.data);
             return res.data;
         } catch (err) {
             console.log(err);

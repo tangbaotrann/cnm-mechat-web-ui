@@ -6,7 +6,9 @@ import images from '~/assets/images';
 const cx = classNames.bind(styles);
 function BoxChat(group) {
     return (
-        <div className={cx('list-boxchat')}>
+        <div
+            className={cx('list-boxchat')}
+        >
             <img
                 className={cx('avatar-img')}
                 src={group.group.imageLinkOfConver ? group.group.imageLinkOfConver : images.noImg}

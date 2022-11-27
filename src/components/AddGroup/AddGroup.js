@@ -79,8 +79,8 @@ function AddGroup({ addMemerber }) {
             return;
         }
 
-        if (checked.length === 0) {
-            toast.error('Bạn cần chọn ít nhất 1 người để tạo nhóm!');
+        if (checked.length < 2) {
+            toast.error('Bạn cần chọn ít nhất 2 người để tạo nhóm!');
         } else {
             dispatch(createGroup(data));
             toast.success(`Tạo nhóm thành công với tên nhóm là: ${nameGroup}.`);

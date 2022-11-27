@@ -2,11 +2,12 @@ import styles from './Login.module.scss';
 import classNames from 'classnames/bind';
 import images from '~/assets/images';
 import { CircularProgress } from '@material-ui/core';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { useState, useEffect } from 'react';
 import { PhoneIphone, Lock } from '@material-ui/icons';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-//
 
 const cx = classNames.bind(styles);
 
@@ -21,11 +22,12 @@ function Login() {
     const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
     const [errorPassWord, setErrorPassWord] = useState('');
 
+    // const infoUser = useSelector(userLogin);
+    // console.log('infoUser', infoUser);
+
     const navigate = useNavigate();
 
     const isLoading = useLocation();
-
-    console.log('is -', isLoading.state);
 
     const sign = () => {
         return fetch(`${process.env.REACT_APP_BASE_URL}auths/login`, {
@@ -173,6 +175,9 @@ function Login() {
                     </h1>
                 </div>
             </div>
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </div>
     );
 }

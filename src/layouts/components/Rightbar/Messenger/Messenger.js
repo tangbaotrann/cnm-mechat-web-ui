@@ -22,7 +22,7 @@ import {
     faVideoSlash,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
-import { Button, CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import EmojiPicker, { SkinTones } from 'emoji-picker-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -51,19 +51,17 @@ import {
 import listGroupUsers, { blockMember, cancelBlockMember } from '~/redux/features/Group/GroupSlice';
 import ModelWrapper from '~/components/ModelWrapper';
 import Webcam from 'react-webcam';
-import { infoUserConversation } from '~/redux/features/user/userCurrent';
 import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
-function Messenger() {
+function Messenger({ conversationPhoneBook }) {
     const [newMessage, setNewMessage] = useState('');
     const [newImageMessage, setNewImageMessage] = useState([]);
     const [newFileMessage, setNewFileMessage] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [btnClosePreview, setBtnClosePreview] = useState(false);
     const [previewEmoji, setPreviewEmoji] = useState(false);
-    //
 
     const dispatch = useDispatch();
 
@@ -71,21 +69,25 @@ function Messenger() {
     const userBlock = useSelector(findUserOtherInConversationSingle);
     const listMessage = useSelector(getMessageFromUserInGroupFromSelector);
     const user = useSelector(userInfoSelector);
-    const conversation = useSelector(conversationSlice);
+    const _conversation = useSelector(conversationSlice);
     const isLoading = useSelector(isLoadingMessenger);
     const notificationBlockedMessage = useSelector(notificationBlockMess);
 
     const scrollMessenger = useRef();
 
-    // console.log('[CONVERSATION] - ', conversation);
+    const conversation = conversationPhoneBook ? conversationPhoneBook : _conversation;
     // console.log('notificationBlockedMessage', notificationBlockedMessage);
-
+    //console.log(listMessage);
     // fetch message from conversationId
     useEffect(() => {
-        dispatch(fetchApiMessagesByConversationId(conversation.id));
-
+        //remove conversation & remove friend => conversation => null
+        if (conversation?.id) {
+            dispatch(fetchApiMessagesByConversationId(conversation.id));
+        }
+        console.log(_conversation, conversationPhoneBook);
+        //console.log('[CONVERSATION] - ', conversation);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [conversation.id]);
+    }, [conversation?.id]);
 
     // realtime change name conversation of group
     useEffect(() => {
@@ -99,7 +101,6 @@ function Messenger() {
     //realtime change avatar conversation of group
     useEffect(() => {
         socket.on('change_avatar_conversation_of_group', (_conversation) => {
-            console.log('[change_avatar_conversation_of_group]', _conversation);
             dispatch(listGroupUsers.actions.arrivalChangeAvatarConversationOfGroupFromSocket(_conversation));
         });
 
@@ -159,7 +160,7 @@ function Messenger() {
     // console.log(name);
 
     const infoConversation =
-        infoUser._id === conversation.members[0] ? conversation.members[1] : conversation.members[0];
+        infoUser._id === conversation?.members[0] ? conversation?.members[1] : conversation?.members[0];
 
     const myVideo = useRef();
     const userVideo = useRef();
@@ -263,7 +264,7 @@ function Messenger() {
         });
 
         setNewImageMessage(listImg);
-        setBtnClosePreview(!btnClosePreview);
+        setBtnClosePreview(true); // !btnClosePreview
     };
 
     // handle change file
@@ -273,7 +274,7 @@ function Messenger() {
         file.previewFile = URL.createObjectURL(file);
 
         setNewFileMessage(file);
-        setBtnClosePreview(!btnClosePreview);
+        setBtnClosePreview(true); // !btnClosePreview
     };
 
     // cleanup func
@@ -316,6 +317,25 @@ function Messenger() {
                 conversationID: conversation.id,
                 senderID: user._id,
                 content: newMessage.emoji ? newMessage.emoji : newMessage,
+                imageLinks: newImageMessage,
+                fileLink: newFileMessage,
+            }),
+        );
+
+        setNewMessage('');
+        setNewImageMessage([]);
+        setNewFileMessage(null);
+        setBtnClosePreview(false);
+    };
+
+    const handleSendFlastLikeMessage = async (e) => {
+        e.preventDefault();
+
+        dispatch(
+            fetchApiSendMessage({
+                conversationID: conversation.id,
+                senderID: user._id,
+                content: '👍',
                 imageLinks: newImageMessage,
                 fileLink: newFileMessage,
             }),
@@ -419,7 +439,7 @@ function Messenger() {
                 <div className={cx('model-add-group-bg')}>
                     <div className={cx('add-friend-title')}>
                         <span className={cx('friend-title')}>Me.Chat Call - {userCurrent?.fullName}</span>
-                        <button className={cx('close-btn')}>
+                        <button className={cx('close-btn-close-video-call')}>
                             <FontAwesomeIcon
                                 className={cx('friend-close-ic')}
                                 icon={faXmark}
@@ -702,7 +722,7 @@ function Messenger() {
                                     content="Gửi nhanh biểu tượng cảm xúc"
                                     delay={[200, 0]}
                                 >
-                                    <button className={cx('send-message-like')}>
+                                    <button className={cx('send-message-like')} onClick={handleSendFlastLikeMessage}>
                                         <FontAwesomeIcon icon={faThumbsUp} />
                                     </button>
                                 </Tippy>

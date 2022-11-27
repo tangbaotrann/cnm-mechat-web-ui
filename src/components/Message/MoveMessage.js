@@ -35,6 +35,8 @@ function MoveMessage({ message }) {
             );
             toast.success('Bạn đã chuyển tiếp tin nhắn thành công.');
         }
+
+        setCheckedConversation([]);
     };
 
     // handle checked conversation
