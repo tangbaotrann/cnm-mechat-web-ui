@@ -30,20 +30,12 @@ function Message({ message, own, conversation }) {
 
     const user = useSelector(userInfoSelector);
 
-    //console.log('[MESSAGE - ACTION] - ', message?.action);
-    //console.log('[CONVERSATION] - ', conversation);
-
-    useEffect(() => {
-        console.log('[MESSAGE - ACTION] - ', message);
-        console.log('[user ] - ', user);
-    }, []);
-
     // handle delete message
     const handleDeleteMessage = async () => {
         dispatch(
             fetchApiDeleteMessage({
                 messageId: message._id,
-                userId: user._id, //message.user._id, // thêm message
+                userId: user._id, //message.user._id
             }),
         );
     };

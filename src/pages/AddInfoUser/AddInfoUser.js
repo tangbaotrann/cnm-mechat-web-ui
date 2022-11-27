@@ -4,14 +4,15 @@ import { Radio } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 //me
 import styles from './AddInfoUser.module.scss';
 import images from '~/assets/images';
-import moment from 'moment';
-import { userUpdate } from '~/redux/features/user/updateUserSlice';
+// import { userUpdate } from '~/redux/features/user/updateUserSlice';
+import { userUpdate } from '~/redux/features/user/userSlice';
 import { fetchApiUser, updateAvatar } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -40,6 +41,18 @@ function AddInfoUser() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // check date
+        let birthDay = birthday;
+        birthDay = new Date(birthDay).getFullYear();
+        let curr = new Date().getFullYear();
+        let age = curr - birthDay;
+
+        if (age < 18) {
+            toast.error('Số tuổi cần phải trên 18. Vui lòng thử lại!');
+            return;
+        }
+
         const data = {
             fullName: fullName,
             gender: optionSex,
@@ -175,6 +188,9 @@ function AddInfoUser() {
                     </div>
                 </div>
             </div>
+
+            {/* Show toast status */}
+            <ToastContainer position="top-right" autoClose={4000} closeOnClick={false} />
         </div>
     );
 }

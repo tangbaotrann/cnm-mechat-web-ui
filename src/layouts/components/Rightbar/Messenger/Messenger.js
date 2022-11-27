@@ -46,7 +46,6 @@ import {
     isLoadingMessenger,
     getMessageFromUserInGroupFromSelector,
     findUserOtherInConversationSingle,
-    notificationBlockMess,
 } from '~/redux/selector';
 import listGroupUsers, { blockMember, cancelBlockMember } from '~/redux/features/Group/GroupSlice';
 import ModelWrapper from '~/components/ModelWrapper';
@@ -63,31 +62,60 @@ function Messenger({ conversationPhoneBook }) {
     const [btnClosePreview, setBtnClosePreview] = useState(false);
     const [previewEmoji, setPreviewEmoji] = useState(false);
 
+    // call video
+    const [openCall, setOpenCall] = useState(false);
+    const [changeIconVideo, setChangeIconVideo] = useState(false);
+    const [changeIconMic, setChangeIconMic] = useState(false);
+    const [stream, setStream] = useState();
+    const [callAccepted, setCallAccepted] = useState(false);
+    const [callEnded, setCallEnded] = useState(false);
+
     const dispatch = useDispatch();
 
+    //call video
+    const userCurrent = useSelector((state) => state.userCurrents.data);
     const infoUser = useSelector(userLogin);
     const userBlock = useSelector(findUserOtherInConversationSingle);
     const listMessage = useSelector(getMessageFromUserInGroupFromSelector);
     const user = useSelector(userInfoSelector);
     const _conversation = useSelector(conversationSlice);
     const isLoading = useSelector(isLoadingMessenger);
-    const notificationBlockedMessage = useSelector(notificationBlockMess);
-
-    const scrollMessenger = useRef();
 
     const conversation = conversationPhoneBook ? conversationPhoneBook : _conversation;
-    // console.log('notificationBlockedMessage', notificationBlockedMessage);
-    //console.log(listMessage);
+
+    const infoConversation =
+        infoUser._id === conversation?.members[0] ? conversation?.members[1] : conversation?.members[0];
+
+    const myVideo = useRef();
+    const userVideo = useRef();
+    const connectionRef = useRef();
+    const scrollMessenger = useRef();
+
     // fetch message from conversationId
     useEffect(() => {
         //remove conversation & remove friend => conversation => null
         if (conversation?.id) {
             dispatch(fetchApiMessagesByConversationId(conversation.id));
         }
-        console.log(_conversation, conversationPhoneBook);
-        //console.log('[CONVERSATION] - ', conversation);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversation?.id]);
+
+    // realtime change leader
+    useEffect(() => {
+        socket.on('confirm_change_leader', (request) => {
+            dispatch(listGroupUsers.actions.arrivalChangeLeaderInGroupFromSocket(request));
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        socket.on('updated_member_in_group', (info) => {
+            dispatch(listGroupUsers.actions.arrivalUpdatedMembersInGroup(info));
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // realtime change name conversation of group
     useEffect(() => {
@@ -145,32 +173,13 @@ function Messenger({ conversationPhoneBook }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    //call video
-    const userCurrent = useSelector((state) => state.userCurrents.data);
-
-    const [openCall, setOpenCall] = useState(false);
-    const [changeIconVideo, setChangeIconVideo] = useState(false);
-    const [changeIconMic, setChangeIconMic] = useState(false);
-    const [stream, setStream] = useState();
-    const [callAccepted, setCallAccepted] = useState(false);
-    const [callEnded, setCallEnded] = useState(false);
-    // console.log('userCurrent.fullName', userCurrent.fullName);
-    // const [name, setName] = useState('');
-
-    // console.log(name);
-
-    const infoConversation =
-        infoUser._id === conversation?.members[0] ? conversation?.members[1] : conversation?.members[0];
-
-    const myVideo = useRef();
-    const userVideo = useRef();
-    const connectionRef = useRef();
     useEffect(() => {
         socket.on('me', (id) => {
             console.log(id);
         });
     }, []);
 
+    // call video
     useEffect(() => {
         socket.on('endCallToClient', () => {
             console.log('ok----------------', connectionRef);
@@ -392,10 +401,6 @@ function Messenger({ conversationPhoneBook }) {
             toast.info(`Bạn không muốn bỏ chặn tin nhắn với ${conversation.name}.`);
         }
     };
-
-    useEffect(() => {
-        notificationBlockedMessage && toast.info('Bạn đã bị chặn tin nhắn trong cuộc trò chuyện này!');
-    }, [notificationBlockedMessage]);
 
     return (
         <div className={cx('messenger')}>
