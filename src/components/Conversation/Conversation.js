@@ -27,15 +27,24 @@ import {
     fetchApiDeleteConversationSingle,
     outGroup,
 } from '~/redux/features/Group/GroupSlice';
-import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
+import { fetchApiRecallRequestAddFriend, friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { infoUserConversation } from '~/redux/features/user/userCurrent';
-import { filterFriendGroup, filterLeader, userInfoSelector, userLogin, conversationSlice } from '~/redux/selector';
+import {
+    filterFriendGroup,
+    filterLeader,
+    userInfoSelector,
+    userLogin,
+    conversationSlice,
+    listMeRequests,
+    addFriendRequest,
+} from '~/redux/selector';
 
 const cx = classNames.bind(styles);
 
 function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const [Friend, setFriend] = useState(false);
-
+    const [meRequest, setMeRequest] = useState(false);
+    const [idRequest, setIdRequest] = useState(false);
     const dispatch = useDispatch();
 
     const infoUser = useSelector(userLogin);
@@ -43,6 +52,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const listFriendFilters = useSelector(filterFriendGroup);
     const user = useSelector(userInfoSelector);
     const conversationID = useSelector(conversationSlice);
+    const listMeRequest = useSelector(addFriendRequest);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
@@ -54,6 +64,13 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         listFriendFilters?.map((key) => {
             if (key._id === conversation._id) {
                 setFriend(true);
+            }
+        });
+    }, []);
+    useEffect(() => {
+        listMeRequest?.map((key) => {
+            if (key.receiverId === conversation._id) {
+                setMeRequest(true);
             }
         });
     }, []);
@@ -124,7 +141,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         let tam = dispatch(friendRequests(data));
         if (tam) {
             alert('Gửi lời mời kết bạn thành công');
-            window.location.reload(true);
+            //  window.location.reload(true);
         }
     };
 
@@ -217,6 +234,17 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         }
     };
 
+    // thu hoi ket ban
+    const handleCallback = () => {
+        const Request = listMeRequest.filter((friend) => friend.receiverId.includes(conversation._id));
+        const data = {
+            status: true,
+            senderID: infoUser._id,
+            idRequest: Request[0].idFriendRequest,
+        };
+        dispatch(fetchApiRecallRequestAddFriend(data));
+        toast.success('Bạn đã thu hồi lời mời kết bạn.');
+    };
     return (
         <>
             {conversationInfo ? (
@@ -240,10 +268,18 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                         <h4 className={cx('username')}>{conversation?.name} </h4>
                     </div>
 
-                    {!Friend && infoUser._id !== conversation?._id ? (
-                        <div className={cx('button-addFriend')} onClick={handleAddFriend}>
-                            <button>Kết bạn</button>
-                        </div>
+                    {!Friend && infoUser?._id !== conversation?._id ? (
+                        <>
+                            {meRequest ? (
+                                <div className={cx('button-addFriend')} onClick={handleCallback}>
+                                    <button>Thu hồi</button>
+                                </div>
+                            ) : (
+                                <div className={cx('button-addFriend')} onClick={handleAddFriend}>
+                                    <button>Kết bạn</button>
+                                </div>
+                            )}
+                        </>
                     ) : null}
 
                     {filterLeaders[0]._id === conversation?._id && infoUser._id === filterLeaders[0]._id ? (
@@ -278,6 +314,9 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                     render={(attrs) => (
                                         <div tabIndex="-1" {...attrs}>
                                             <Popper className={cx('own-menu-list-children')}>
+                                                <p className={cx('deleteFriend')} onClick={handleChangeLeader}>
+                                                    <button className={cx('item-btn')}>Chuyển quyền nhóm trưởng</button>
+                                                </p>
                                                 <p className={cx('deleteFriend')} onClick={handleDeleteMemberGroup}>
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
                                                 </p>

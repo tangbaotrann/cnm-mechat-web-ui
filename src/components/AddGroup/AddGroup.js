@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import images from '~/assets/images';
 import filterSlice from '~/redux/features/filter/filterSlice';
-import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
+import { fetchApiRecallRequestAddFriend, friendRequests } from '~/redux/features/friend/friendRequestSlice';
 import { addMember, createGroup } from '~/redux/features/Group/GroupSlice';
 import {
+    addFriendRequest,
     conversationSlice,
     filterFriendGroup,
     listFriend,
@@ -36,7 +37,9 @@ function AddGroup({ addMemerber }) {
     const conversation = useSelector(conversationSlice);
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
+    const listMeRequest = useSelector(addFriendRequest);
 
+    const meRequest = listMeRequest.filter((friend) => friend.receiverId.includes(searchResult._id));
     const handleBtnClearText = (e) => {
         setNameGroup('');
     };
@@ -119,6 +122,8 @@ function AddGroup({ addMemerber }) {
     }, [searchPhone]);
 
     const handleRequest = () => {
+        console.log(searchResult);
+        console.log(searchResult._id);
         const data = { senderID: infoUser._id, receiverID: searchResult._id };
         let tam = dispatch(friendRequests(data));
         if (tam) {
@@ -133,6 +138,16 @@ function AddGroup({ addMemerber }) {
         setChecked('');
         setSearchPhone('');
         setNameGroup('');
+    };
+    // thu hoi ket ban
+    const handleCallback = () => {
+        const data = {
+            status: true,
+            senderID: infoUser._id,
+            idRequest: meRequest[0].idFriendRequest,
+        };
+        dispatch(fetchApiRecallRequestAddFriend(data));
+        toast.success('Bạn đã thu hồi lời mời kết bạn.');
     };
     return (
         <div>
@@ -163,7 +178,7 @@ function AddGroup({ addMemerber }) {
                     className={cx('input-search')}
                     value={searchPhone}
                     onChange={(e) => setSearchPhone(e.target.value)}
-                    placeholder="Nhập tên, số điện thoại..."
+                    placeholder="Nhập số điện thoại..."
                     onKeyPress={searchNamePhoneNumber}
                 />
             </div>
@@ -184,7 +199,7 @@ function AddGroup({ addMemerber }) {
                                         type="checkBox"
                                         value={searchResult._id}
                                         onChange={handleCheck}
-                                        checked={conversation.members.includes(searchResult._id) ? true : false}
+                                        checked={conversation.members.includes(searchResult._id) ? true : null}
                                     />
                                 ) : (
                                     <input type="checkBox" value={searchResult._id} onChange={handleCheck} />
@@ -200,9 +215,17 @@ function AddGroup({ addMemerber }) {
                                 <h4 className={cx('username')}>{searchResult?.fullName} </h4>
                             </div>
                             {searchFilterFriends === true ? (
-                                <div className={cx('result-add-friend')}>
-                                    <button onClick={handleRequest}>Kết bạn</button>
-                                </div>
+                                <>
+                                    {meRequest?.length !== 0 ? (
+                                        <div className={cx('result-add-friend')}>
+                                            <button onClick={handleCallback}>Thu hồi</button>
+                                        </div>
+                                    ) : (
+                                        <div className={cx('result-add-friend')}>
+                                            <button onClick={handleRequest}>Kết bạn</button>
+                                        </div>
+                                    )}
+                                </>
                             ) : (
                                 <div className={cx('result-friend')}>
                                     <p>Bạn bè</p>

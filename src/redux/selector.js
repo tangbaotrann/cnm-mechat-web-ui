@@ -57,10 +57,12 @@ export const usersRemainingSelector = createSelector(
     searchTextSelector,
     listFriend,
     (users, user, search, friends) => {
-        console.log(search);
         if (search) {
             if (search.startsWith('0')) {
+                //don't find
+                console.log('----', search);
                 const usersFilter = users.filter((_user) => _user.phoneNumber === search);
+                console.log('----', usersFilter);
                 //don't find
                 if (!usersFilter.length) {
                     return 1;
@@ -80,6 +82,7 @@ export const usersRemainingSelector = createSelector(
             } else if (search.match('^[A-Z]')) {
                 const friendFilter = friends.filter((friend) => friend.fullName.includes(search));
                 //don't find
+                console.log('----', search);
                 if (!friendFilter.length) {
                     return 1;
                 }
@@ -93,9 +96,9 @@ export const usersRemainingSelector = createSelector(
                     gender: user.gender,
                     isFriend: true,
                 }));
-            } else {
-                return 1;
             }
+        } else {
+            return 1;
         }
         return false;
     },

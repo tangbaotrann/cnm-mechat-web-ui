@@ -59,7 +59,34 @@ function ConFirmOTP() {
             clearInterval(timer);
         };
     }, [counter]);
-
+    const sign = () => {
+        return fetch(`${process.env.REACT_APP_BASE_URL}auths/login`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                phoneNumber: phoneNumber,
+                passWord: password,
+            }),
+        })
+            .then((res) => res.json())
+            .then((resData) => {
+                if (resData.status === 'success') {
+                    return resData;
+                } else if (resData?.error.statusCode === 401) {
+                    throw new Error(401);
+                } else if (resData?.error.statusCode === 403) {
+                    throw new Error(403);
+                } else if (resData?.error.statusCode === 402) {
+                    throw new Error(402);
+                }
+            });
+        // .catch((err) => {
+        //     return Promise.reject(new Error('404 else'));
+        // });
+    };
     const generateRecaptcha = () => {
         window.recaptchaVerifier = new RecaptchaVerifier(
             'tam',
@@ -102,7 +129,24 @@ function ConFirmOTP() {
                                 dispatch(forgetPassWord(data));
                                 if (forgetPassWord()) {
                                     alert('Đổi mật khẩu thành công');
-                                    navigate('/login');
+
+                                    sign()
+                                        .then((token) => {
+                                            if (typeof token != 'undefined') {
+                                                // alert('Đăng nhập thành công');
+
+                                                localStorage.setItem('user_login', JSON.stringify(token));
+                                                navigate('/me.chat', {
+                                                    state: true,
+                                                });
+                                                setTimeout(() => {
+                                                    navigate('/me.chat');
+                                                }, 2000);
+                                            }
+                                        })
+                                        .catch((err) => {
+                                            console.log(err);
+                                        });
                                 }
                             }
                         })
