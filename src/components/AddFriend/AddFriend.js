@@ -9,11 +9,15 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // me
 import styles from './AddFriend.module.scss';
-import { addFriendRequest, searchFilterFriend, userLogin } from '~/redux/selector';
+import { addFriendRequest, addFriendRequestAccept, searchFilterFriend, userLogin } from '~/redux/selector';
 import filterSlice from '~/redux/features/filter/filterSlice';
 import useDebounce from '../hooks/useDebounce';
 import { usersRemainingSelector } from '~/redux/selector';
-import { fetchApiRecallRequestAddFriend, friendRequests } from '~/redux/features/friend/friendRequestSlice';
+import {
+    fetchApiAcceptRequestFriend,
+    fetchApiRecallRequestAddFriend,
+    friendRequests,
+} from '~/redux/features/friend/friendRequestSlice';
 
 const cx = classNames.bind(styles);
 function AddFriend() {
@@ -25,9 +29,11 @@ function AddFriend() {
     const infoUser = useSelector(userLogin);
     const searchFilterFriends = useSelector(searchFilterFriend);
     const listMeRequest = useSelector(addFriendRequest);
-
+    const listRequestFriend = useSelector(addFriendRequestAccept);
+    console.log('listRequestFriend', listRequestFriend);
     const meRequest = listMeRequest.filter((friend) => friend.receiverId.includes(phoneNumber._id));
-
+    const friendRequest = listRequestFriend.filter((friend) => friend.senderId.includes(phoneNumber._id));
+    console.log('friendRequest', friendRequest);
     const dispatch = useDispatch();
 
     // Handle open/ close model info account
@@ -76,7 +82,25 @@ function AddFriend() {
             idRequest: meRequest[0].idFriendRequest,
         };
         dispatch(fetchApiRecallRequestAddFriend(data));
+
         toast.success('Bạn đã thu hồi lời mời kết bạn.');
+    };
+    //handleAccept
+    const handleAccept = () => {
+        const data = {
+            status: true,
+            senderID: friendRequest[0].senderId,
+            receiverID: infoUser._id,
+            idRequest: friendRequest[0].idFriendRequest,
+        };
+
+        dispatch(fetchApiAcceptRequestFriend(data));
+
+        if (fetchApiAcceptRequestFriend()) {
+            toast.success('Chấp nhận kết bạn thành công.');
+        } else {
+            toast.error('Số điện thoại chưa đăng ký tài khoản!');
+        }
     };
     return (
         <div>
@@ -109,9 +133,17 @@ function AddFriend() {
                                     <button onClick={handleCallback}>Thu hồi</button>
                                 </div>
                             ) : (
-                                <div className={cx('result-add-friend')}>
-                                    <button onClick={handleRequest}>Kết bạn</button>
-                                </div>
+                                <>
+                                    {friendRequest?.length !== 0 ? (
+                                        <div className={cx('result-add-friend')}>
+                                            <button onClick={handleAccept}>Chấp nhận</button>
+                                        </div>
+                                    ) : (
+                                        <div className={cx('result-add-friend')}>
+                                            <button onClick={handleRequest}>Kết bạn</button>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </>
                     ) : (

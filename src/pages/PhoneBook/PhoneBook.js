@@ -28,6 +28,7 @@ import {
     addFriendRequest,
     addFriendRequestAccept,
     getConversationId,
+    listMeRequests,
 } from '~/redux/selector';
 import listFriendRequests from '~/redux/features/friend/friendRequestSlice';
 import listGroupUsers from '~/redux/features/Group/GroupSlice';
@@ -43,6 +44,9 @@ function PhoneBook() {
 
     const listFriends = useSelector(listFriend); // loadFriends
     const listMeRequest = useSelector(addFriendRequest);
+    const tttt = useSelector(listMeRequests);
+    console.log('tttt', tttt);
+    console.log('listMeRequest', listMeRequest);
     const listRequestFriend = useSelector(addFriendRequestAccept);
     const user = useSelector(userInfoSelector);
     const conversation = useSelector(getConversationId);
@@ -208,7 +212,7 @@ function PhoneBook() {
                     <Messenger />
                     <ConversationInfo />
                 </>
-            ): (
+            ) : (
                 <div className={cx('wrapper-rightBar')}>
                     <div className={cx('header')}>
                         {!changeLayout ? (

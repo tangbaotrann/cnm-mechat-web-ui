@@ -315,13 +315,12 @@ export const addFriendRequest = createSelector(
 
                     return { ...req, fullName: _user.fullName, imageLink: _user.avatarLink };
                 });
-
+                // console.log('__requests', __requests);
                 return __requests;
             }
         } catch (err) {
             console.log('[addFriendRequest]', err);
         }
-
         return requests;
     },
 );

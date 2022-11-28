@@ -24,7 +24,9 @@ import AddFriend from '../AddFriend';
 import AddGroup from '../AddGroup';
 import filterSlice from '~/redux/features/filter/filterSlice';
 // import { useDispatch, useSelector } from 'react-redux';
-import { addFriendRequest, allSearch, searchFilterFriend } from '~/redux/selector';
+import { addFriendRequest, allSearch, searchFilterFriend, userLogin } from '~/redux/selector';
+import { friendRequests } from '~/redux/features/friend/friendRequestSlice';
+import { toast } from 'react-toastify';
 const cx = classNames.bind(styles);
 
 function Search() {
@@ -38,6 +40,7 @@ function Search() {
     const searchFilterFriends = useSelector(searchFilterFriend);
     const listMeRequest = useSelector(addFriendRequest);
     const meRequest = listMeRequest.filter((friend) => friend.receiverId.includes(searchResult._id));
+    const infoUser = useSelector(userLogin);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchValue));
@@ -100,15 +103,14 @@ function Search() {
         // toast.success('Bạn đã thu hồi lời mời kết bạn.');
     };
     const handleRequest = () => {
-        // const data = { senderID: infoUser._id, receiverID: phoneNumber._id };
-        // let tam = dispatch(friendRequests(data));
-        // if (tam) {
-        //     toast.success('Gửi lời mời kết bạn thành công.');
-        //     setSearchPhone('');
-        //     setPhoneNumber('');
-        //     dispatch(filterSlice.actions.searchFilterChange(null));
-        //     setSearchResult(false);
-        // }
+        const data = { senderID: infoUser._id, receiverID: searchResult._id };
+        let tam = dispatch(friendRequests(data));
+        if (tam) {
+            toast.success('Gửi lời mời kết bạn thành công.');
+            dispatch(filterSlice.actions.searchFilterChange(null));
+        }
+        setShowResult(false);
+        setSearchValue('');
     };
     return (
         <div className={cx('wrapper')}>
@@ -124,22 +126,26 @@ function Search() {
                                     <h4 className={cx('username')}>{searchResult.fullName}</h4>
                                     <p className={cx('message')}>{searchResult.phoneNumber}</p>
                                 </div>
-                                {searchFilterFriends === true ? (
+                                {searchResult._id === infoUser._id ? null : (
                                     <>
-                                        {meRequest?.length !== 0 ? (
-                                            <div className={cx('result-add-friend')}>
-                                                <button onClick={handleCallback}>Thu hồi</button>
-                                            </div>
+                                        {searchFilterFriends === true ? (
+                                            <>
+                                                {meRequest?.length !== 0 ? (
+                                                    <div className={cx('result-add-friend')}>
+                                                        <button onClick={handleCallback}>Thu hồi</button>
+                                                    </div>
+                                                ) : (
+                                                    <div className={cx('result-add-friend')}>
+                                                        <button onClick={handleRequest}>Kết bạn</button>
+                                                    </div>
+                                                )}
+                                            </>
                                         ) : (
-                                            <div className={cx('result-add-friend')}>
-                                                <button onClick={handleRequest}>Kết bạn</button>
+                                            <div className={cx('result-friend')}>
+                                                <p>Bạn bè</p>
                                             </div>
                                         )}
                                     </>
-                                ) : (
-                                    <div className={cx('result-friend')}>
-                                        <p>Bạn bè</p>
-                                    </div>
                                 )}
                             </div>
                         </Popper>

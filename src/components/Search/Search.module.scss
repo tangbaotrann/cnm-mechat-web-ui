@@ -246,3 +246,13 @@
 .list-conversation {
     display: flex;
 }
+.result-add-friend button {
+    padding: 10px;
+    border: 0;
+    border-radius: 6px;
+    background-color: var(--primary);
+    color: var(--white);
+    &:hover {
+        cursor: pointer;
+    }
+}
