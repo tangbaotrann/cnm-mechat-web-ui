@@ -52,8 +52,8 @@ function AddInfoUser() {
             return;
         }
 
-        if (age < 18) {
-            toast.error('Số tuổi cần phải lớn hơn 18. Vui lòng thử lại!');
+        if (age < 11) {
+            toast.error('Số tuổi cần phải lớn hơn 11. Vui lòng thử lại!');
             return;
         }
 

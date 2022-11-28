@@ -97,9 +97,9 @@ const listFriendRequests = createSlice({
             })
             // get request add friend
             .addCase(meRequestFriend.fulfilled, (state, action) => {
-                // console.log('act-pay', action.payload);
+                console.log('action.payload', action.payload);
                 if (action.payload) {
-                    // state.dataSended = action.payload;
+                    state.dataSended = action.payload;
                 }
             })
             .addCase(fetchApiRecallRequestAddFriend.fulfilled, (state, action) => {
@@ -191,7 +191,6 @@ export const meRequestFriend = createAsyncThunk('user/meRequestFriend', async (a
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-of-me/${decodedToken._id}`,
             );
 
-            console.log('get-of-me', res.data);
             return res.data;
         }
     } catch (err) {

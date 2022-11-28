@@ -62,8 +62,8 @@ function SubModelInfoAccount({ user }) {
             return;
         }
 
-        if (age < 18) {
-            toast.error('Số tuổi cần phải lớn hơn 18. Vui lòng thử lại!');
+        if (age < 11) {
+            toast.error('Số tuổi cần phải lớn hơn 10. Vui lòng thử lại!');
             return;
         }
 
@@ -159,7 +159,7 @@ function SubModelInfoAccount({ user }) {
                                 </label>
 
                                 {/* Option change bg update */}
-                                <label htmlFor="file-info-bg" className={cx('option-bg')}>
+                                {/* <label htmlFor="file-info-bg" className={cx('option-bg')}>
                                     <FontAwesomeIcon className={cx('icon-camera-bg')} icon={faCamera} />
                                     <input
                                         className={cx('hide')}
@@ -168,7 +168,7 @@ function SubModelInfoAccount({ user }) {
                                         accept=".png, .jpg, .jpeg"
                                         // onChange={handleChangeAvatar}
                                     />
-                                </label>
+                                </label> */}
                             </div>
                         </div>
                     </div>

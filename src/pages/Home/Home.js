@@ -216,8 +216,8 @@ function Home() {
                         <>
                             {!changeIconVideo ? (
                                 <div className={cx('video')}>
-                                    <Webcam playsInline muted ref={myVideo} autoPlay />
-                                    <Webcam playsInline muted ref={userVideo} autoPlay />
+                                    <Webcam playsInline ref={myVideo} autoPlay />
+                                    <Webcam playsInline ref={userVideo} autoPlay />
                                 </div>
                             ) : (
                                 <img

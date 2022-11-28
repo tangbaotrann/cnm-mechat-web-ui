@@ -28,6 +28,7 @@ function AddGroup({ addMemerber }) {
     const [nameGroup, setNameGroup] = useState('');
     const [searchResult, setSearchResult] = useState([]);
     const [searchResultShow, setSearchResultShow] = useState(false);
+    const [tam12, settam12] = useState(false);
     const [checked, setChecked] = useState([]);
     const [error, setError] = useState(searchPhone);
 

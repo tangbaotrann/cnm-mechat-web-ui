@@ -461,7 +461,6 @@ function Messenger({ conversationPhoneBook }) {
                                             <Webcam
                                                 className={cx('video-webcam-2')}
                                                 playsInline
-                                                muted
                                                 ref={myVideo}
                                                 autoPlay
                                             />
@@ -470,7 +469,6 @@ function Messenger({ conversationPhoneBook }) {
                                             <Webcam
                                                 className={cx('video-webcam-2')}
                                                 playsInline
-                                                muted
                                                 ref={userVideo}
                                                 autoPlay
                                             />
@@ -481,13 +479,7 @@ function Messenger({ conversationPhoneBook }) {
                                 <div className={cx('video')}>
                                     {stream && !changeIconVideo ? (
                                         <div className={cx('avatar-backgroud')}>
-                                            <Webcam
-                                                className={cx('video-webcam')}
-                                                playsInline
-                                                muted
-                                                ref={myVideo}
-                                                autoPlay
-                                            />
+                                            <Webcam className={cx('video-webcam')} playsInline ref={myVideo} autoPlay />
 
                                             <div className={cx('avatar-sub')}>
                                                 <img
