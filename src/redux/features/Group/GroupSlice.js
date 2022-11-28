@@ -451,6 +451,7 @@ const listGroupUsers = createSlice({
 
             currNameGroup.conversationID = preNameGroup.conversationID;
             currNameGroup.name = preNameGroup.name;
+            currNameGroup.action = preNameGroup.action;
 
             if (currNameGroup) {
                 state.conversationClick = currNameGroup;
@@ -567,9 +568,9 @@ const listGroupUsers = createSlice({
                 const preNameGroup = action.payload;
                 const currNameGroup = state.data.find((con) => con.id === preNameGroup.id);
 
-                if (currNameGroup?.name) {
-                    currNameGroup.name = preNameGroup.name;
-                }
+                currNameGroup.id = preNameGroup.id;
+                currNameGroup.name = preNameGroup.name;
+                currNameGroup.action = preNameGroup.action;
 
                 if (currNameGroup) {
                     state.conversationClick = currNameGroup;
