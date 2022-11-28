@@ -12,7 +12,9 @@ const listFriendRequests = createSlice({
     reducers: {
         arrivalFriendRequestFromSocket: (state, action) => {
             const preReq = action.payload;
+            console.log('preReq', preReq);
             const currReq = state.dataSended.some((req) => req.idFriendRequest === preReq.idFriendRequest);
+            console.log('currReq', currReq);
 
             if (!currReq) {
                 state.dataSended.push(action.payload);
@@ -43,6 +45,9 @@ const listFriendRequests = createSlice({
         builder
             // send request add friend
             .addCase(friendRequests.fulfilled, (state, action) => {
+                console.log('act-pay', action.payload.data);
+                const pre = state.dataSended.find((pre) => pre.idFriendRequest === action.payload.data.idFriendRequest);
+                console.log('pre', pre);
                 state.dataSended.push(action.payload.data);
 
                 // socket
@@ -124,7 +129,7 @@ export const friendRequests = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-
+        console.log('128 ->', jsonData);
         return jsonData;
     },
 );
@@ -185,7 +190,7 @@ export const meRequestFriend = createAsyncThunk('user/meRequestFriend', async (a
             const res = await axios.get(
                 `${process.env.REACT_APP_BASE_URL}friendRequests/get-of-me/${decodedToken._id}`,
             );
-            console.log('188-meRequestFriend', res.data);
+
             return res.data;
         }
     } catch (err) {

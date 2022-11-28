@@ -167,8 +167,6 @@ export const fetchApiSendMessage = createAsyncThunk('messages/fetchApiSendMessag
             },
         });
 
-        // console.log('resFormData', resFormData.data);
-
         return resFormData.data;
     }
 });
@@ -182,7 +180,7 @@ export const fetchApiDeleteMessage = createAsyncThunk(
                 data: { userId },
                 headers: { Authorization: '***' },
             });
-            console.log('del - ', res.data);
+
             return res.data;
         } catch (err) {
             console.log(err);
@@ -217,8 +215,6 @@ export const fetchApiMoveMessage = createAsyncThunk('messages/fetchApiMoveMessag
             userId: userId,
             headers: { Authorization: '***' },
         });
-
-        console.log('res -', res.data);
 
         return res.data;
     } catch (err) {

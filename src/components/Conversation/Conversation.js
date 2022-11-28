@@ -38,6 +38,7 @@ import {
     listMeRequests,
     getConversationId,
     addFriendRequest,
+    filterLeaderOther,
 } from '~/redux/selector';
 
 const cx = classNames.bind(styles);
@@ -46,10 +47,12 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     const [Friend, setFriend] = useState(false);
     const [meRequest, setMeRequest] = useState(false);
     const [idRequest, setIdRequest] = useState(false);
+
     const dispatch = useDispatch();
 
     const infoUser = useSelector(userLogin);
     const filterLeaders = useSelector(filterLeader);
+    const filterLeadersOther = useSelector(filterLeaderOther);
     const listFriendFilters = useSelector(filterFriendGroup);
     const user = useSelector(userInfoSelector);
     const conversationID = useSelector(conversationSlice);
@@ -57,6 +60,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
 
     // const conversationClick = useSelector(conversationSlice);
     // console.log('conversationID', conversationID);
+    // console.log('conversation', conversation);
 
     useEffect(() => {
         dispatch(fetchApiConversationById(user._id));
@@ -64,23 +68,20 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user._id]);
 
-    // console.log('conversation', conversation);
-    // console.log('conversationID', conversationID);
-
-    useEffect(() => {
-        listFriendFilters?.map((key) => {
-            if (key._id === conversation._id) {
-                setFriend(true);
-            }
-        });
-    }, []);
-    useEffect(() => {
-        listMeRequest?.map((key) => {
-            if (key.receiverId === conversation._id) {
-                setMeRequest(true);
-            }
-        });
-    }, []);
+    // useEffect(() => {
+    //     listFriendFilters?.map((key) => {
+    //         if (key._id === conversation._id) {
+    //             setFriend(true);
+    //         }
+    //     });
+    // }, []);
+    // useEffect(() => {
+    //     listMeRequest?.map((key) => {
+    //         if (key.receiverId === conversation._id) {
+    //             setMeRequest(true);
+    //         }
+    //     });
+    // }, []);
 
     const handleCancel = () => {
         let deletes = window.confirm('Bạn có chắc chắn muốn xóa không?');
@@ -111,21 +112,21 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     // };
 
     //xoa thanh vien khoi nhom
-    const handleDeleteMemberGroup = () => {
-        let deletes = window.confirm('Bạn có chắc chắn muốn xóa thành viên này không?');
-        if (deletes === true) {
-            const data = {
-                conversationId: conversationID.id,
-                memberId: conversation._id,
-                mainId: filterLeaders[0]._id,
-            };
-            toast.success('Xóa thành viên thành công.');
-            dispatch(deleteMember(data));
-        } else {
-            toast.error('Bạn đã hủy yêu cầu!');
-            return;
-        }
-    };
+    // const handleDeleteMemberGroup = () => {
+    //     let deletes = window.confirm('Bạn có chắc chắn muốn xóa thành viên này không?');
+    //     if (deletes === true) {
+    //         const data = {
+    //             conversationId: conversationID.id,
+    //             memberId: conversation._id,
+    //             mainId: filterLeaders[0]._id,
+    //         };
+    //         toast.success('Xóa thành viên thành công.');
+    //         dispatch(deleteMember(data));
+    //     } else {
+    //         toast.error('Bạn đã hủy yêu cầu!');
+    //         return;
+    //     }
+    // };
 
     //roi nhom
     const handleOutGroup = () => {
@@ -176,36 +177,36 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
     };
 
     // handle block message user
-    const handleBlockMember = () => {
-        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chặn tin nhắn không?');
-        if (checkOutGroup === true) {
-            const data = {
-                conversationId: conversationID.id,
-                userId: conversation._id,
-            };
-            dispatch(blockMember(data));
-            toast.success('Bạn đã chặn tin nhắn thành công.');
-        } else {
-            toast.error('Bạn đã hủy yêu cầu chặn tin nhắn!');
-            return;
-        }
-    };
+    // const handleBlockMember = () => {
+    //     let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chặn tin nhắn không?');
+    //     if (checkOutGroup === true) {
+    //         const data = {
+    //             conversationId: conversationID.id,
+    //             userId: conversation._id,
+    //         };
+    //         dispatch(blockMember(data));
+    //         toast.success('Bạn đã chặn tin nhắn thành công.');
+    //     } else {
+    //         toast.error('Bạn đã hủy yêu cầu chặn tin nhắn!');
+    //         return;
+    //     }
+    // };
 
     // handle un-block message user
-    const handleCancelBlockMember = () => {
-        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn bỏ chặn tin nhắn không?');
-        if (checkOutGroup === true) {
-            const data = {
-                conversationId: conversationID.id,
-                userId: conversation._id,
-            };
-            dispatch(cancelBlockMember(data));
-            toast.success('Bạn đã bỏ chặn tin nhắn thành công.');
-        } else {
-            toast.error('Bạn đã hủy yêu cầu bỏ chặn tin nhắn!');
-            return;
-        }
-    };
+    // const handleCancelBlockMember = () => {
+    //     let checkOutGroup = window.confirm('Bạn có chắc chắn muốn bỏ chặn tin nhắn không?');
+    //     if (checkOutGroup === true) {
+    //         const data = {
+    //             conversationId: conversationID.id,
+    //             userId: conversation._id,
+    //         };
+    //         dispatch(cancelBlockMember(data));
+    //         toast.success('Bạn đã bỏ chặn tin nhắn thành công.');
+    //     } else {
+    //         toast.error('Bạn đã hủy yêu cầu bỏ chặn tin nhắn!');
+    //         return;
+    //     }
+    // };
 
     // handle delete conversation single
     const handleDeleteConversationSingle = () => {
@@ -225,21 +226,22 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
         }
     };
 
-    const handleChangeLeader = () => {
-        let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chuyển quyền trưởng nhóm không?');
-        if (checkOutGroup === true) {
-            const data = {
-                conversationId: conversationID.id,
-                userId: conversation._id,
-            };
-            dispatch(changeLearder(data));
-            if (changeLearder()) {
-                alert('Bạn đã chuyển quyền trưởng nhóm');
-            }
-        } else {
-            alert('bạn đã hủy yêu cầu chuyển quyền trưởng nhóm');
-        }
-    };
+    // const handleChangeLeader = () => {
+    //     let checkOutGroup = window.confirm('Bạn có chắc chắn muốn chuyển quyền trưởng nhóm không?');
+    //     if (checkOutGroup === true) {
+    //         const data = {
+    //             conversationId: conversationID.id,
+    //             userId: conversation._id,
+    //         };
+    //         dispatch(changeLearder(data));
+    //         if (changeLearder()) {
+    //             toast.success('Bạn đã chuyển quyền trưởng nhóm thành công.');
+    //         }
+    //     } else {
+    //         toast.info('Bạn đã hủy yêu cầu chuyển quyền trưởng nhóm!');
+    //         return;
+    //     }
+    // };
 
     // thu hoi ket ban
     const handleCallback = () => {
@@ -321,15 +323,15 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                     render={(attrs) => (
                                         <div tabIndex="-1" {...attrs}>
                                             <Popper className={cx('own-menu-list-children')}>
-                                                <p className={cx('deleteFriend')} onClick={handleChangeLeader}>
+                                                {/* <p className={cx('deleteFriend')} onClick={handleChangeLeader}>
                                                     <button className={cx('item-btn')}>Chuyển quyền nhóm trưởng</button>
                                                 </p>
                                                 <p className={cx('deleteFriend')} onClick={handleDeleteMemberGroup}>
                                                     <button className={cx('item-btn')}>Xóa khỏi nhóm</button>
-                                                </p>
+                                                </p> */}
 
                                                 {/* conversationID conversationClick */}
-                                                {conversationID.blockBy.includes(conversation?._id) ? (
+                                                {/* {conversationID.blockBy.includes(conversation?._id) ? (
                                                     <p className={cx('deleteFriend')} onClick={handleCancelBlockMember}>
                                                         <button className={cx('item-btn')}>Bỏ chặn</button>
                                                     </p>
@@ -337,7 +339,7 @@ function Conversation({ conversation, isPhoneBook, Group, conversationInfo }) {
                                                     <p className={cx('deleteFriend')} onClick={handleBlockMember}>
                                                         <button className={cx('item-btn')}>Chặn tin nhắn</button>
                                                     </p>
-                                                )}
+                                                )} */}
                                             </Popper>
                                         </div>
                                     )}

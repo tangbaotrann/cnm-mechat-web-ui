@@ -245,9 +245,9 @@ function PhoneBook() {
                                     {listMeRequest?.map((_user) => {
                                         return (
                                             <>
-                                                {_user?.receiverId === user?._id ? null : (
-                                                    <FriendRequestList key={_user.idFriendRequest} user={_user} />
-                                                )}
+                                                {/* {_user?.receiverId === user?._id ? null : ( */}
+                                                <FriendRequestList key={_user.idFriendRequest} user={_user} />
+                                                {/* )} */}
                                             </>
                                         );
                                     })}

@@ -1,53 +1,26 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import socket from '~/util/socket';
 
 // lay danh sach da gui yeu cau ket ban
-export const userUpdate = createAsyncThunk(
-    // Tên action
-    'user/userUpdate ',
-    async (data) => {
-        // Gọi lên API backend
-        const { idUser } = data;
-        const { fullName, gender, birthday } = data;
-        const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/${idUser}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ fullName, gender, birthday }),
-        });
-
-        // Convert dữ liệu ra json
-        const jsonData = await response.json();
-        console.log(jsonData);
-        return jsonData;
-    },
-);
-//updateAvatar
-// const createFormData = (data) => {
-//     const { _id, avatarLink } = data;
-//     //console.log(data);
-//     const dataForm = new FormData();
-
-//     dataForm.append('_id', _id);
-//     dataForm.append('avatarLink', avatarLink);
-
-//     return dataForm;
-// };
-// export const updateAvatar = createAsyncThunk(
+// export const userUpdate = createAsyncThunk(
 //     // Tên action
-//     'user/updateAvatar ',
+//     'user/userUpdate ',
 //     async (data) => {
-//         if (data) {
-//             let formData = createFormData(data);
+//         // Gọi lên API backend
+//         const { idUser } = data;
+//         const { fullName, gender, birthday } = data;
+//         const response = await fetch(`${process.env.REACT_APP_BASE_URL}users/${idUser}`, {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({ fullName, gender, birthday }),
+//         });
 
-//             const res = await axios.post(`${process.env.REACT_APP_BASE_URL}users/update-avatar/${data._id}`, formData, {
-//                 headers: {
-//                     'content-type': 'multipart/form-data',
-//                 },
-//             });
-//             console.log('48 - ', res.data);
-//             return res.data;
-//         }
+//         // Convert dữ liệu ra json
+//         const jsonData = await response.json();
+//         console.log('json updated ->', jsonData);
+//         return jsonData;
 //     },
 // );
 
@@ -55,17 +28,21 @@ const updateUserSlice = createSlice({
     name: 'user',
     initialState: { data: [] },
     extraReducers: (builder) => {
-        builder.addCase(userUpdate.fulfilled, (state, action) => {
-            // console.log(action.payload);
-            state.data = action.payload;
-        });
-        // .addCase(updateAvatar.fulfilled, (state, action) => {
-        //     console.log('-> 64 -', action.payload);
-
-        //     // state.data = action.payload;
-
-        //     socket.emit('change_avatar_single', {
-        //         request: action.payload,
+        //builder
+        // .addCase(userUpdate.fulfilled, (state, action) => {
+        //     console.log('act-pay', action.payload);
+        //     const preUser = action.payload;
+        //     const currUser = state.data.find((user) => user._id === preUser._id);
+        //     // updated
+        //     currUser._id = preUser._id;
+        //     currUser.fullName = preUser.fullName;
+        //     currUser.gender = preUser.gender;
+        //     currUser.birthday = preUser.birthday;
+        //     if (currUser) {
+        //         state.data = currUser;
+        //     }
+        //     socket.emit('change_info_user', {
+        //         info: action.payload,
         //     });
         // });
     },

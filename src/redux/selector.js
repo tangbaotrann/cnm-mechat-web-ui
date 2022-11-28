@@ -228,6 +228,23 @@ export const filterLeader = createSelector(conversationSlice, userListSelector, 
     }));
 });
 
+//tim nhom truong other
+export const filterLeaderOther = createSelector(conversationSlice, userListSelector, (c, users) => {
+    const usersFilter1 = users.filter((_user) => _user._id.includes(c?.createBy));
+
+    if (!usersFilter1.length) {
+        return 1;
+    }
+
+    return usersFilter1.map((user) => ({
+        _id: user._id,
+        name: user.fullName,
+        imageLinkOfConver: user.avatarLink,
+        phoneNumber: user.phoneNumber,
+        isFriend: false,
+    }));
+});
+
 export const allSearch = createSelector(
     userListSelector,
     userInfoSelector,
@@ -263,8 +280,6 @@ export const getMessageFromUserInGroupFromSelector = createSelector(
     userListSelector,
     listMessage,
     (userInfo, userList, listMessage) => {
-        console.log('listMessage ->', listMessage);
-        console.log('info -> ', userInfo);
         try {
             const _message = listMessage.map((message) => {
                 const user = userList.find((us) => us._id === message.senderID);

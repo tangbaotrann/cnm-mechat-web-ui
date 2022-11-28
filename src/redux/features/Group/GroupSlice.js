@@ -27,8 +27,6 @@ export const fetchApiDeleteConversationSingle = createAsyncThunk(
                 },
             );
 
-            console.log('30 - ', res.data);
-
             return res.data;
         } catch (err) {
             console.log(err);
@@ -37,7 +35,6 @@ export const fetchApiDeleteConversationSingle = createAsyncThunk(
 );
 
 //
-
 export const listGroupUser = createAsyncThunk('user/listGroupUser', async (arg, { rejectWithValue }) => {
     try {
         const getToken = JSON.parse(localStorage.getItem('user_login'));
@@ -70,22 +67,23 @@ export const createGroup = createAsyncThunk(
 
         // Convert dữ liệu ra json
         const jsonData = await response.json();
-        console.log(jsonData);
+
         return jsonData;
     },
 );
 
 // add member to group
-export const fetchApiAddMemberToGroup = createAsyncThunk('listGroupUser/fetchApiAddMemberToGroup', async (memberId) => {
-    try {
-        const res = await axios.post(
-            `${process.env.REACT_APP_BASE_URL}conversations/add-member-conversation/${memberId}`,
-        );
-        console.log('44 - res -', res.data);
-    } catch (err) {
-        console.log(err);
-    }
-});
+// export const fetchApiAddMemberToGroup = createAsyncThunk('listGroupUser/fetchApiAddMemberToGroup', async (memberId) => {
+//     try {
+//         const res = await axios.post(
+//             `${process.env.REACT_APP_BASE_URL}conversations/add-member-conversation/${memberId}`,
+//         );
+//         console.log('44 - res -', res.data);
+
+//     } catch (err) {
+//         console.log(err);
+//     }
+// });
 
 //xoa thanh vien
 export const deleteMember = createAsyncThunk(
@@ -105,7 +103,7 @@ export const deleteMember = createAsyncThunk(
         });
 
         const jsonData = await response.json();
-        console.log('[json] - deleteMember', jsonData);
+
         return jsonData;
     },
 );
@@ -130,7 +128,7 @@ export const addMember = createAsyncThunk(
         );
 
         const jsonData = await response.json();
-        console.log(jsonData);
+
         return jsonData;
     },
 );
@@ -156,7 +154,6 @@ export const outGroup = createAsyncThunk(
         );
 
         const jsonData = await response.json();
-        console.log('[out - gr - json - data]', jsonData);
 
         return jsonData;
     },
@@ -180,7 +177,7 @@ export const changeNameGroups = createAsyncThunk(
         });
 
         const jsonData = await response.json();
-        console.log('change name group - json', jsonData);
+
         return jsonData;
     },
 );
@@ -243,7 +240,7 @@ export const deleteConversation = createAsyncThunk(
         );
 
         const jsonData = await response.json();
-        console.log(jsonData);
+
         return jsonData;
     },
 );
@@ -268,7 +265,7 @@ export const blockMember = createAsyncThunk(
         );
 
         const jsonData = await response.json();
-        console.log(jsonData);
+
         return jsonData;
     },
 );
@@ -293,7 +290,7 @@ export const cancelBlockMember = createAsyncThunk(
         );
 
         const jsonData = await response.json();
-        console.log(jsonData);
+
         return jsonData;
     },
 );
@@ -317,7 +314,7 @@ export const changeLearder = createAsyncThunk(
         );
 
         const jsonData = await response.json();
-        console.log(jsonData);
+
         return jsonData;
     },
 );
@@ -335,7 +332,7 @@ const listGroupUsers = createSlice({
     },
     reducers: {
         clickConversation: (state, action) => {
-            console.log('[click conversation by id] - ', action.payload);
+            // console.log('[click conversation by id] - ', action.payload);
             state.conversationClick = action.payload;
         },
         arrivalCreateGroupFromSocket: (state, action) => {
@@ -374,6 +371,8 @@ const listGroupUsers = createSlice({
             currConversation._id = preConversation._id;
             currConversation.idMember = preConversation.idMember;
             currConversation.members = preConversation.members;
+            currConversation.action = preConversation.action;
+            currConversation.time = preConversation.time;
 
             if (currConversation) {
                 state.conversationClick = currConversation;
@@ -441,7 +440,6 @@ const listGroupUsers = createSlice({
 
             if (currConversation) {
                 state.conversationClick = currConversation;
-                state.notificationBlockMessage = true;
             } else {
                 console.log('Error blocked message user!');
                 return;
@@ -453,6 +451,7 @@ const listGroupUsers = createSlice({
 
             currNameGroup.conversationID = preNameGroup.conversationID;
             currNameGroup.name = preNameGroup.name;
+            currNameGroup.action = preNameGroup.action;
 
             if (currNameGroup) {
                 state.conversationClick = currNameGroup;
@@ -467,6 +466,19 @@ const listGroupUsers = createSlice({
 
             if (currAvatarGroup) {
                 state.conversationClick = currAvatarGroup;
+            }
+        },
+        arrivalChangeLeaderInGroupFromSocket: (state, action) => {
+            const preConversation = action.payload;
+            const currConversation = state.data.find((con) => con.id === preConversation.idConversation);
+
+            // updated
+            currConversation.idConversation = preConversation.idConversation;
+            currConversation.createdBy = preConversation.createBy;
+            currConversation.action = preConversation.action;
+
+            if (currConversation) {
+                state.conversationClick = currConversation;
             }
         },
     },
@@ -503,7 +515,6 @@ const listGroupUsers = createSlice({
             })
             .addCase(deleteMember.fulfilled, (state, action) => {
                 const preMember = action.payload;
-                console.log('delete member - act-pay', action.payload);
 
                 const currConversation = state.data.find((con) => con.id === preMember._id);
 
@@ -522,7 +533,6 @@ const listGroupUsers = createSlice({
                 });
             })
             .addCase(addMember.fulfilled, (state, action) => {
-                console.log('[add_user_to_group]', action.payload);
                 const preConversation = action.payload;
                 const currConversation = state.data.find((con) => (con.id = preConversation.id));
 
@@ -548,7 +558,6 @@ const listGroupUsers = createSlice({
             })
             .addCase(outGroup.fulfilled, (state, action) => {
                 state.conversationClick = null;
-                console.log('[out - gr]', action.payload);
 
                 // socket
                 socket.emit('user_out_group', {
@@ -559,9 +568,9 @@ const listGroupUsers = createSlice({
                 const preNameGroup = action.payload;
                 const currNameGroup = state.data.find((con) => con.id === preNameGroup.id);
 
-                if (currNameGroup?.name) {
-                    currNameGroup.name = preNameGroup.name;
-                }
+                currNameGroup.id = preNameGroup.id;
+                currNameGroup.name = preNameGroup.name;
+                currNameGroup.action = preNameGroup.action;
 
                 if (currNameGroup) {
                     state.conversationClick = currNameGroup;
@@ -579,7 +588,6 @@ const listGroupUsers = createSlice({
                 });
             })
             .addCase(blockMember.fulfilled, (state, action) => {
-                console.log('[block_message_user_in_group]', action.payload);
                 const preConversation = action.payload;
                 const currConversation = state.data.find((con) => con.id === preConversation.id);
 
@@ -597,7 +605,6 @@ const listGroupUsers = createSlice({
             })
             .addCase(cancelBlockMember.fulfilled, (state, action) => {
                 const preConversation = action.payload;
-                // console.log('[preConversation]', preConversation);
 
                 const currConversation = state.data.findIndex((con) => con.id === preConversation.conversationId);
                 const currBlockedConversation = state.data.find((con) => con.id === preConversation.id);
@@ -632,6 +639,24 @@ const listGroupUsers = createSlice({
 
                 socket.emit('change_avatar_group', {
                     conversation: action.payload,
+                });
+            })
+            .addCase(changeLearder.fulfilled, (state, action) => {
+                const preConversation = action.payload;
+                const currConversation = state.data.find((con) => con.id === preConversation.idConversation);
+
+                // updated
+                currConversation.idConversation = preConversation.idConversation;
+                currConversation.createdBy = preConversation.createBy;
+                currConversation.action = preConversation.action;
+
+                if (currConversation) {
+                    state.conversationClick = currConversation;
+                }
+
+                // socket
+                socket.emit('change_leader', {
+                    request: action.payload,
                 });
             });
     },

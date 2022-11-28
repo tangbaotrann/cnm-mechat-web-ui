@@ -1,7 +1,6 @@
 // libs
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-// import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPenToSquare, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,9 +12,8 @@ import images from '~/assets/images';
 import ModelWrapper from '../ModelWrapper';
 import moment from 'moment';
 import { Radio } from '@mui/material';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { userUpdate } from '~/redux/features/user/updateUserSlice';
+import { userUpdate } from '~/redux/features/user/userSlice';
 import { updateAvatar } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
 
@@ -52,6 +50,23 @@ function SubModelInfoAccount({ user }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // check date
+        let birthDay = birthday;
+        birthDay = new Date(birthDay).getFullYear();
+        let curr = new Date().getFullYear();
+        let age = curr - birthDay;
+
+        if (birthDay >= curr) {
+            toast.error('Năm sinh phải nhỏ hơn năm hiện tại. Vui lòng thử lại!');
+            return;
+        }
+
+        if (age < 11) {
+            toast.error('Số tuổi cần phải lớn hơn 10. Vui lòng thử lại!');
+            return;
+        }
+
         const data = {
             fullName: fullName,
             gender: optionSex,
@@ -144,7 +159,7 @@ function SubModelInfoAccount({ user }) {
                                 </label>
 
                                 {/* Option change bg update */}
-                                <label htmlFor="file-info-bg" className={cx('option-bg')}>
+                                {/* <label htmlFor="file-info-bg" className={cx('option-bg')}>
                                     <FontAwesomeIcon className={cx('icon-camera-bg')} icon={faCamera} />
                                     <input
                                         className={cx('hide')}
@@ -153,7 +168,7 @@ function SubModelInfoAccount({ user }) {
                                         accept=".png, .jpg, .jpeg"
                                         // onChange={handleChangeAvatar}
                                     />
-                                </label>
+                                </label> */}
                             </div>
                         </div>
                     </div>

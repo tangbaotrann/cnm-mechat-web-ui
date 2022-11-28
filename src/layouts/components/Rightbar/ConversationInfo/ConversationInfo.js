@@ -32,6 +32,7 @@ import Conversation from '~/components/Conversation';
 import AddGroup from '~/components/AddGroup';
 import { changeNameGroups, fetchApiUpdateAvatarOfGroup, outGroup } from '~/redux/features/Group/GroupSlice';
 import { filterUserGroup, userLogin, conversationSlice, listMessage } from '~/redux/selector';
+import UserInGroup from '~/components/UserInGroup';
 
 const cx = classNames.bind(styles);
 
@@ -286,7 +287,7 @@ function ConversationInfo({ conversationPhoneBook }) {
                         </div>
 
                         <div className={cx('separator')}></div>
-                        {conversation.createdBy !== null ? (
+                        {conversation.isGroup ? (
                             <>
                                 <div className={cx('members-group')}>
                                     <div className={cx('members-group-title')}>
@@ -472,7 +473,7 @@ function ConversationInfo({ conversationPhoneBook }) {
                                             icon={faTrash}
                                             // onClick={handleModelOpenAddGroup}
                                         />
-                                        <label>Xóa lịch sử cuộc trò chuyện</label>
+                                        {/* <label>Xóa lịch sử cuộc trò chuyện</label> */}
                                     </button>
                                     <button className={cx('btn-click-footer')} onClick={handleOutGroup}>
                                         <FontAwesomeIcon
@@ -681,13 +682,15 @@ function ConversationInfo({ conversationPhoneBook }) {
                             <div className={cx('separator')}></div>
                             <div className={cx('list-members')}>
                                 <label>Danh sách thành viên ({conversation.members.length})</label>
-                                {filterUser?.map((user) => {
-                                    return (
-                                        <div key={user?._id}>
-                                            <Conversation conversation={user} conversationInfo isPhoneBook />
-                                        </div>
-                                    );
-                                })}
+                                {conversation.isGroup
+                                    ? filterUser?.map((user) => {
+                                          return (
+                                              <div key={user?._id}>
+                                                  <UserInGroup user={user} conversationInfo isPhoneBook />
+                                              </div>
+                                          );
+                                      })
+                                    : null}
                             </div>
                         </div>
                     )}
