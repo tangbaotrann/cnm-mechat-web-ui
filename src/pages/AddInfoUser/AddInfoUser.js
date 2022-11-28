@@ -11,7 +11,6 @@ import 'react-toastify/dist/ReactToastify.css';
 //me
 import styles from './AddInfoUser.module.scss';
 import images from '~/assets/images';
-// import { userUpdate } from '~/redux/features/user/updateUserSlice';
 import { userUpdate } from '~/redux/features/user/userSlice';
 import { fetchApiUser, updateAvatar } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
@@ -48,8 +47,13 @@ function AddInfoUser() {
         let curr = new Date().getFullYear();
         let age = curr - birthDay;
 
+        if (birthDay >= curr) {
+            toast.error('Năm sinh phải nhỏ hơn năm hiện tại. Vui lòng thử lại!');
+            return;
+        }
+
         if (age < 18) {
-            toast.error('Số tuổi cần phải trên 18. Vui lòng thử lại!');
+            toast.error('Số tuổi cần phải lớn hơn 18. Vui lòng thử lại!');
             return;
         }
 
@@ -68,7 +72,6 @@ function AddInfoUser() {
         );
         if (userUpdate() || updateAvatar()) {
             navigate('/me.chat');
-            console.log('ok');
         }
     };
     const handleChange = (e) => {

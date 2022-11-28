@@ -473,7 +473,7 @@ function ConversationInfo({ conversationPhoneBook }) {
                                             icon={faTrash}
                                             // onClick={handleModelOpenAddGroup}
                                         />
-                                        <label>Xóa lịch sử cuộc trò chuyện</label>
+                                        {/* <label>Xóa lịch sử cuộc trò chuyện</label> */}
                                     </button>
                                     <button className={cx('btn-click-footer')} onClick={handleOutGroup}>
                                         <FontAwesomeIcon

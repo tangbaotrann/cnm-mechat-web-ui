@@ -30,7 +30,7 @@ const cx = classNames.bind(styles);
 function UserInGroup({ user, conversationInfo }) {
     const [Friend, setFriend] = useState(false);
     const [meRequest, setMeRequest] = useState(false);
-
+    console.log('[meRequest] -> ', meRequest);
     const dispatch = useDispatch();
 
     const filterLeaders = useSelector(filterLeader);
@@ -38,6 +38,8 @@ function UserInGroup({ user, conversationInfo }) {
     const listMeRequest = useSelector(addFriendRequest);
     const listFriendFilters = useSelector(filterFriendGroup);
     const conversationClicked = useSelector(conversationSlice);
+
+    console.log('[listMeRequest] -> ', listMeRequest);
 
     useEffect(() => {
         listFriendFilters?.map((key) => {
@@ -202,7 +204,8 @@ function UserInGroup({ user, conversationInfo }) {
 
                     {!Friend && infoUser?._id !== user?._id ? (
                         <>
-                            {meRequest ? (
+                            {/* meRequest */}
+                            {listMeRequest[0]?.receiverId === user?._id ? (
                                 <div className={cx('button-addFriend')} onClick={handleCallback}>
                                     <button>Thu hồi</button>
                                 </div>

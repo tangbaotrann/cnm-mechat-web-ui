@@ -1,7 +1,6 @@
 // libs
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-// import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faPenToSquare, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,9 +12,7 @@ import images from '~/assets/images';
 import ModelWrapper from '../ModelWrapper';
 import moment from 'moment';
 import { Radio } from '@mui/material';
-
 import { useDispatch, useSelector } from 'react-redux';
-// import { userUpdate } from '~/redux/features/user/updateUserSlice';
 import { userUpdate } from '~/redux/features/user/userSlice';
 import { updateAvatar } from '~/redux/features/user/userSlice';
 import { userInfoSelector } from '~/redux/selector';
