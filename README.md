@@ -18,8 +18,17 @@ Bạn có thể chạy app bằng cách:
 
 Bạn có thể đăng nhập nhanh bằng tài khoản bên dưới (nếu không muốn tạo tài khoản mới).
 
+-   Account 1:
+
 ```bash
 - Số điện thoại: 0879284567
+- Mật khẩu: 123456
+```
+
+-   Account 2:
+
+```bash
+- Số điện thoại: 0879271234
 - Mật khẩu: 123456
 ```
 
